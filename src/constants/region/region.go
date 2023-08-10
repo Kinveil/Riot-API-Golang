@@ -2,6 +2,7 @@ package region
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/junioryono/Riot-API-Golang/src/constants/continent"
 )
@@ -140,4 +141,36 @@ func (r Region) Continent() continent.Continent {
 
 func (r Region) String() string {
 	return string(r)
+}
+
+func FormatString(rgn string) Region {
+	rgn = strings.ToUpper(rgn)
+	switch rgn {
+	case "BR":
+		return "BR1"
+	case "EUN":
+		fallthrough
+	case "EUNE":
+		return "EUN1"
+	case "EUW":
+		return "EUW1"
+	case "JP":
+		return "JP1"
+	case "KR":
+		return "KR"
+	case "LAN":
+		return "LA1"
+	case "LAS":
+		return "LA2"
+	case "NA":
+		return "NA1"
+	case "OCE":
+		return "OC1"
+	case "RU":
+		return "RU"
+	case "TR":
+		return "TR1"
+	default:
+		panic(fmt.Sprintf("region %s is invalid", rgn))
+	}
 }

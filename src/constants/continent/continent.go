@@ -1,21 +1,17 @@
 package continent
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Continent string
 
 const (
-	// Serves NA, BR, LAN and LAS
 	AMERICAS Continent = "AMERICAS"
-
-	// Serves KR and JP
-	ASIA Continent = "ASIA"
-
-	// Serves EUNE, EUW, TR and RU
-	EUROPE Continent = "EUROPE"
-
-	// Serves OCE, PH2, SG2, TH2, TW2 and VN2
-	SEA Continent = "SEA"
+	ASIA     Continent = "ASIA"
+	EUROPE   Continent = "EUROPE"
+	SEA      Continent = "SEA"
 )
 
 // Returns the full hostname corresponding to the region.
@@ -36,4 +32,20 @@ func (c Continent) Host() string {
 
 func (c Continent) String() string {
 	return string(c)
+}
+
+func FormatString(cntnt string) Continent {
+	cntnt = strings.ToUpper(cntnt)
+	switch cntnt {
+	case "AMERICAS":
+		return AMERICAS
+	case "ASIA":
+		return ASIA
+	case "EUROPE":
+		return EUROPE
+	case "SEA":
+		return SEA
+	default:
+		panic(fmt.Sprintf("continent %s is invalid", cntnt))
+	}
 }
