@@ -288,7 +288,7 @@ func (rl *RateLimiter) updateRateLimit(methodId MethodId, limitInfo, countInfo s
 }
 
 func isBadRequest(resp *http.Response) bool {
-	return resp.StatusCode == http.StatusBadRequest || resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden ||
+	return resp == nil || resp.StatusCode == http.StatusBadRequest || resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden ||
 		resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusMethodNotAllowed || resp.StatusCode == http.StatusUnsupportedMediaType
 }
 
