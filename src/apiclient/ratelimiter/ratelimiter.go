@@ -181,14 +181,12 @@ func (rl *RateLimiter) Start() {
 					req.Response <- resp
 				}
 
-				retryAfterDuration := handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
-				time.Sleep(retryAfterDuration)
+				handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
 
 				// Remove the request from the limiter channels
 				regionLimiter.shortLimiter.Release()
 				regionLimiter.longLimiter.Release()
 				methodLimiter.shortLimiter.Release()
-
 			} else {
 				if !isBadRequest(resp) && (req.Retries < rl.maxRetries || rl.maxRetries == -1) {
 					req.Retries++
@@ -297,7 +295,7 @@ func getShortAndLongLimits(limitHeader string) (string, string) {
 	return limits[0], limits[1]
 }
 
-func handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, methodLimiter *RateLimit) time.Duration {
+func handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, methodLimiter *RateLimit) {
 	retryAfterHeader := resp.Header.Get("Retry-After")
 	rateLimitTypeHeader := resp.Header.Get("X-Rate-Limit-Type")
 	retryAfter, _ := strconv.Atoi(retryAfterHeader)
@@ -309,5 +307,5 @@ func handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, me
 		methodLimiter.blockedUntil = time.Now().Add(retryAfterDuration)
 	}
 
-	return retryAfterDuration
+	time.Sleep(retryAfterDuration)
 }
