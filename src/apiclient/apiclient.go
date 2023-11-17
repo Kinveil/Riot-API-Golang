@@ -146,11 +146,11 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 	c.ratelimiter.Requests <- &newRequest
 	response := <-responseChan
 
-	defer response.Body.Close()
-
-	if response.StatusCode != 200 {
-		return response, fmt.Errorf("apiclient: unexpected status %s", response.Status)
+	if response.StatusCode != http.StatusOK {
+		return response, fmt.Errorf("unexpected status code: %d", response.StatusCode)
 	}
+
+	defer response.Body.Close()
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
