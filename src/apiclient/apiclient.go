@@ -152,7 +152,7 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
+	if response.StatusCode != 200 {
 		return response, fmt.Errorf("unexpected status code: %d", response.StatusCode)
 	}
 
