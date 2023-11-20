@@ -32,7 +32,7 @@ type patchesWithStartTimeHttpResponse struct {
 
 func GetPatchesWithStartTime() (PatchesWithStartTime, error) {
 	var res patchesWithStartTimeHttpResponse
-	err := getJSON("https://cdn.merakianalytics.com/riot/lol/resources/patches.json", &res)
+	err := getJSON("https://junioryono.github.io/LoLPatches/github-pages/patches.json", &res)
 	if err != nil {
 		return nil, err
 	}
