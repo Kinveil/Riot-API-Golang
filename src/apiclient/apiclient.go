@@ -146,11 +146,15 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 	c.ratelimiter.Requests <- &newRequest
 	response := <-responseChan
 
-	if response.StatusCode != http.StatusOK {
-		return response, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	if response == nil {
+		return nil, fmt.Errorf("response is nil")
 	}
 
 	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return response, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
