@@ -94,70 +94,70 @@ func (rl *RateLimiter) Start() {
 	methodMutex := sync.RWMutex{}
 
 	for req := range rl.Requests {
-		var regionLimiter *RateLimit
-		var methodLimiter *RateLimit
-
-		var wg sync.WaitGroup
-		wg.Add(2)
-		go func() {
-			defer wg.Done()
-
-			var ok bool
-			regionMutex.RLock()
-			regionLimiter, ok = regionLimiters[req.Region]
-			regionMutex.RUnlock()
-
-			if !ok {
-				regionMutex.Lock()
-				regionLimiters[req.Region] = &RateLimit{
-					shortLimiter: newLimiterMu(initialRegionLimit),
-					longLimiter:  newLimiterMu(initialRegionLimit),
-					blockedUntil: time.Time{},
-				}
-				regionLimiter = regionLimiters[req.Region]
-				regionMutex.Unlock()
-			}
-		}()
-
-		go func() {
-			defer wg.Done()
-
-			var ok bool
-			methodMutex.RLock()
-			methodLimiter, ok = methodLimiters[req.Region+req.MethodId.String()]
-			methodMutex.RUnlock()
-
-			if !ok {
-				methodMutex.Lock()
-				methodLimiters[req.Region+req.MethodId.String()] = &RateLimit{
-					shortLimiter: newLimiterMu(initialMethodLimit),
-					longLimiter:  newLimiterMu(initialMethodLimit),
-					blockedUntil: time.Time{},
-				}
-				methodLimiter = methodLimiters[req.Region+req.MethodId.String()]
-				methodMutex.Unlock()
-			}
-		}()
-
-		wg.Wait()
-
-		// Check if the region is blocked
-		if time.Now().Before(regionLimiter.blockedUntil) {
-			time.Sleep(time.Until(regionLimiter.blockedUntil))
-		}
-
-		// Check if the method is blocked
-		if time.Now().Before(methodLimiter.blockedUntil) {
-			time.Sleep(time.Until(methodLimiter.blockedUntil))
-		}
-
-		// Obtain a lock on the region and method limiters
-		// Add the request to the limiter channels
-		regionLimiter.shortLimiter.Obtain()
-		regionLimiter.longLimiter.Obtain()
-		methodLimiter.shortLimiter.Obtain()
-
 		go func(req *APIRequest) {
+			var regionLimiter *RateLimit
+			var methodLimiter *RateLimit
+
+			var wg sync.WaitGroup
+			wg.Add(2)
+			go func() {
+				defer wg.Done()
+
+				var ok bool
+				regionMutex.RLock()
+				regionLimiter, ok = regionLimiters[req.Region]
+				regionMutex.RUnlock()
+
+				if !ok {
+					regionMutex.Lock()
+					regionLimiters[req.Region] = &RateLimit{
+						shortLimiter: newLimiterMu(initialRegionLimit),
+						longLimiter:  newLimiterMu(initialRegionLimit),
+						blockedUntil: time.Time{},
+					}
+					regionLimiter = regionLimiters[req.Region]
+					regionMutex.Unlock()
+				}
+			}()
+
+			go func() {
+				defer wg.Done()
+
+				var ok bool
+				methodMutex.RLock()
+				methodLimiter, ok = methodLimiters[req.Region+req.MethodId.String()]
+				methodMutex.RUnlock()
+
+				if !ok {
+					methodMutex.Lock()
+					methodLimiters[req.Region+req.MethodId.String()] = &RateLimit{
+						shortLimiter: newLimiterMu(initialMethodLimit),
+						longLimiter:  newLimiterMu(initialMethodLimit),
+						blockedUntil: time.Time{},
+					}
+					methodLimiter = methodLimiters[req.Region+req.MethodId.String()]
+					methodMutex.Unlock()
+				}
+			}()
+
+			wg.Wait()
+
+			// Check if the region is blocked
+			if time.Now().Before(regionLimiter.blockedUntil) {
+				time.Sleep(time.Until(regionLimiter.blockedUntil))
+			}
+
+			// Check if the method is blocked
+			if time.Now().Before(methodLimiter.blockedUntil) {
+				time.Sleep(time.Until(methodLimiter.blockedUntil))
+			}
+
+			// Obtain a lock on the region and method limiters
+			// Add the request to the limiter channels
+			regionLimiter.shortLimiter.Obtain()
+			regionLimiter.longLimiter.Obtain()
+			methodLimiter.shortLimiter.Obtain()
+
 			// Create a new HTTP request and set the API key as a header
 			httpRequest, err := http.NewRequest("GET", req.URL, nil)
 			if err != nil {
