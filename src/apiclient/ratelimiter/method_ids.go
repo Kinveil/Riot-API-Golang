@@ -7,6 +7,10 @@ func (m MethodId) String() string {
 }
 
 const (
+	// ----- Account API -----
+	GetAccountByPUUID  MethodId = "GetAccountByPUUID"
+	GetAccountByRiotId MethodId = "GetAccountByRiotId"
+
 	// ----- Champion Mastery API -----
 	GetChampionMasteriesBySummonerId            MethodId = "GetChampionMasteriesBySummonerId"
 	GetChampionMasteryBySummonerIdAndChampionId MethodId = "GetChampionMasteryBySummonerIdAndChampionId"

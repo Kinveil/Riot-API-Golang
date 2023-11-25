@@ -21,6 +21,11 @@ type Client interface {
 	SetAPIKey(apiKey string)
 	SetMaxRetries(maxRetries int)
 
+	// Account API
+
+	GetAccountByPUUID(continent continent.Continent, puuid string) (*Account, error)
+	GetAccountByRiotId(continent continent.Continent, gameName, tagLine string) (*Account, error)
+
 	// Champion Mastery API
 
 	GetChampionMasteriesBySummonerId(region region.Region, summonerId string) ([]ChampionMastery, error)
