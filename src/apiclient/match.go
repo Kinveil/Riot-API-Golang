@@ -90,7 +90,7 @@ type MatchInfo struct {
 	MapID              int                    `json:"mapId"`              // ex: 11
 	Participants       []MatchInfoParticipant `json:"participants"`
 	PlatformID         string                 `json:"platformId"` // ex: NA1
-	QueueId            int                    `json:"queueId"`    // ex: 420
+	QueueID            int                    `json:"queueId"`    // ex: 420
 	Teams              []MatchInfoTeam        `json:"teams"`
 	TournamentCode     string                 `json:"tournamentCode"`
 }
@@ -163,7 +163,7 @@ type MatchInfoParticipant struct {
 	ObjectivesStolen               int                             `json:"objectivesStolen"`
 	ObjectivesStolenAssists        int                             `json:"objectivesStolenAssists"`
 	OnMyWayPings                   int                             `json:"onMyWayPings"`
-	ParticipantId                  int                             `json:"participantId"`
+	ParticipantID                  int                             `json:"participantId"`
 	PentaKills                     int                             `json:"pentaKills"`
 	Perks                          MatchInfoParticipantPerks       `json:"perks"`
 	PhysicalDamageDealt            int                             `json:"physicalDamageDealt"`
@@ -182,9 +182,9 @@ type MatchInfoParticipant struct {
 	Spell3Casts                    int                             `json:"spell3Casts"`
 	Spell4Casts                    int                             `json:"spell4Casts"`
 	Summoner1Casts                 int                             `json:"summoner1Casts"`
-	Summoner1Id                    int                             `json:"summoner1Id"`
+	Summoner1ID                    int                             `json:"summoner1Id"`
 	Summoner2Casts                 int                             `json:"summoner2Casts"`
-	Summoner2Id                    int                             `json:"summoner2Id"`
+	Summoner2ID                    int                             `json:"summoner2Id"`
 	SummonerID                     string                          `json:"summonerId"`
 	SummonerLevel                  int                             `json:"summonerLevel"`
 	SummonerName                   string                          `json:"summonerName"`
@@ -455,7 +455,7 @@ type MatchTimelineParticipantFrame struct {
 	JungleMinionsKilled      int                        `json:"jungleMinionsKilled"`
 	Level                    int                        `json:"level"`
 	MinionsKilled            int                        `json:"minionsKilled"`
-	ParticipantId            int                        `json:"participantId"`
+	ParticipantID            int                        `json:"participantId"`
 	Position                 MatchTimelinePosition      `json:"position"`
 	TimeEnemySpentControlled int                        `json:"timeEnemySpentControlled"`
 	TotalGold                int                        `json:"totalGold"`
@@ -532,26 +532,26 @@ type MatchTimelineEvent struct {
 	TowerType               string                 `json:"towerType"`
 	TeamID                  int                    `json:"teamId"`
 	AscendedType            string                 `json:"ascendedType"`
-	KillerId                int                    `json:"killerId"`
+	KillerID                int                    `json:"killerId"`
 	LevelUpType             string                 `json:"levelUpType"`
 	PointCaptured           string                 `json:"pointCaptured"`
-	AssistingParticipantIds []int                  `json:"assistingParticipantIds"`
+	AssistingParticipantIDs []int                  `json:"assistingParticipantIds"`
 	WardType                string                 `json:"wardType"`
 	MonsterType             string                 `json:"monsterType"`
 	Type                    MatchTimelineEventType `json:"type"`
 	TransformType           string                 `json:"transformType"`
 	SkillSlot               int                    `json:"skillSlot"`
-	VictimId                int                    `json:"victimId"`
+	VictimID                int                    `json:"victimId"`
 	Timestamp               int64                  `json:"timestamp"`
-	AfterId                 int                    `json:"afterId"`
+	AfterID                 int                    `json:"afterId"`
 	MonsterSubType          string                 `json:"monsterSubType"`
 	LaneType                string                 `json:"laneType"`
-	ItemId                  int                    `json:"itemId"`
-	ParticipantId           int                    `json:"participantId"`
+	ItemID                  int                    `json:"itemId"`
+	ParticipantID           int                    `json:"participantId"`
 	BuildingType            string                 `json:"buildingType"`
-	CreatorId               int                    `json:"creatorId"`
+	CreatorID               int                    `json:"creatorId"`
 	Position                MatchTimelinePosition  `json:"position"`
-	BeforeId                int                    `json:"beforeId"`
+	BeforeID                int                    `json:"beforeId"`
 }
 
 func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
