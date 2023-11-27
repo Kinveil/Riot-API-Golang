@@ -23,15 +23,15 @@ type Client interface {
 
 	// Account API
 
-	GetAccountByPUUID(continent continent.Continent, puuid string) (*Account, error)
-	GetAccountByRiotId(continent continent.Continent, gameName, tagLine string) (*Account, error)
+	GetAccountByPuuid(continent continent.Continent, puuid string) (*Account, error)
+	GetAccountByRiotID(continent continent.Continent, gameName, tagLine string) (*Account, error)
 
 	// Champion Mastery API
 
-	GetChampionMasteriesBySummonerId(region region.Region, summonerId string) ([]ChampionMastery, error)
-	GetChampionMasteryBySummonerIdAndChampionId(region region.Region, summonerId string, championId int) (*ChampionMastery, error)
-	GetChampionMasteriesTopBySummonerId(region region.Region, summonerId string) ([]ChampionMastery, error)
-	GetChampionMasteryScoreTotalBySummonerId(region region.Region, summonerId string) (int, error)
+	GetChampionMasteriesBySummonerID(region region.Region, summonerID string) ([]ChampionMastery, error)
+	GetChampionMasteryBySummonerIDAndChampionID(region region.Region, summonerID string, championID int) (*ChampionMastery, error)
+	GetChampionMasteriesTopBySummonerID(region region.Region, summonerID string) ([]ChampionMastery, error)
+	GetChampionMasteryScoreTotalBySummonerID(region region.Region, summonerID string) (int, error)
 
 	// Champion API
 
@@ -39,12 +39,12 @@ type Client interface {
 
 	// Clash API
 
-	GetClashPlayersByPUUID(region region.Region, puuid string) (*ClashPlayers, error)
-	GetClashPlayersBySummonerId(region region.Region, summonerId string) (*ClashPlayers, error)
-	GetClashTeamById(region region.Region, teamId string) (*ClashTeam, error)
+	GetClashPlayersByPuuid(region region.Region, puuid string) (*ClashPlayers, error)
+	GetClashPlayersBySummonerID(region region.Region, summonerID string) (*ClashPlayers, error)
+	GetClashTeamByID(region region.Region, teamID string) (*ClashTeam, error)
 	GetClashTournaments(region region.Region) (*ClashTournaments, error)
-	GetClashTournamentByTeamId(region region.Region, teamId string) (*ClashTournament, error)
-	GetClashTournamentById(region region.Region, tournamentId string) (*ClashTournament, error)
+	GetClashTournamentByTeamID(region region.Region, teamID string) (*ClashTournament, error)
+	GetClashTournamentByID(region region.Region, tournamentID string) (*ClashTournament, error)
 
 	// League Exp API
 
@@ -56,17 +56,17 @@ type Client interface {
 	GetLeagueEntriesGrandmaster(region region.Region, q queue.Queue) (*LeagueList, error)
 	GetLeagueEntriesMaster(region region.Region, q queue.Queue) (*LeagueList, error)
 	GetLeagueEntries(region region.Region, q queue.Queue, tier, division string, page int) ([]LeaguePosition, error)
-	GetLeagueEntriesById(region region.Region, leagueId string) (*LeagueList, error)
-	GetLeagueEntriesBySummonerId(region region.Region, summonerId string) ([]LeaguePosition, error)
+	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
+	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeaguePosition, error)
 
 	// LOL Challenges API
 
 	GetChallengesConfig(region region.Region) (*ChallengesConfig, error)
 	GetChallengesPercentiles(region region.Region) (*ChallengesPercentiles, error)
-	GetChallengesConfigById(region region.Region, challengeId string) (*ChallengesConfig, error)
-	GetChallengesLeaderboardsByLevel(region region.Region, challengeId, level string) (*ChallengesLeaderboards, error)
-	GetChallengesPercentilesById(region region.Region, challengeId string) (*ChallengesPercentiles, error)
-	GetChallengesPlayerDataByPUUID(region region.Region, puuid string) (*ChallengesPlayerData, error)
+	GetChallengesConfigByID(region region.Region, challengeID string) (*ChallengesConfig, error)
+	GetChallengesLeaderboardsByLevel(region region.Region, challengeID, level string) (*ChallengesLeaderboards, error)
+	GetChallengesPercentilesByID(region region.Region, challengeID string) (*ChallengesPercentiles, error)
+	GetChallengesPlayerDataByPuuid(region region.Region, puuid string) (*ChallengesPlayerData, error)
 
 	// LOL Status API
 
@@ -75,21 +75,21 @@ type Client interface {
 	// Match API
 
 	GetMatchlist(continent continent.Continent, puuid string, opts *GetMatchlistOptions) (*Matchlist, error)
-	GetMatch(continent continent.Continent, matchId string) (*Match, error)
-	GetMatchTimeline(continent continent.Continent, matchId string) (*MatchTimeline, error)
+	GetMatch(continent continent.Continent, matchID string) (*Match, error)
+	GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error)
 
 	// Spectator API
 
-	GetSpectatorActiveGameBySummonerId(region region.Region, summonerId string) (*ActiveGame, error)
+	GetSpectatorActiveGameBySummonerID(region region.Region, summonerID string) (*ActiveGame, error)
 	GetSpectatorFeaturedGames(region region.Region) (*FeaturedGames, error)
 
 	// Summoner API
 
 	GetSummonerByRsoPUUID(region region.Region, rsoPuuid string) (*Summoner, error)
-	GetSummonerByAccountId(region region.Region, accountId string) (*Summoner, error)
+	GetSummonerByAccountID(region region.Region, accountID string) (*Summoner, error)
 	GetSummonerBySummonerName(region region.Region, name string) (*Summoner, error)
 	GetSummonerBySummonerPUUID(region region.Region, puuid string) (*Summoner, error)
-	GetSummonerBySummonerId(region region.Region, summonerId string) (*Summoner, error)
+	GetSummonerBySummonerID(region region.Region, summonerID string) (*Summoner, error)
 }
 
 // client is the internal implementation of Client.
@@ -127,7 +127,7 @@ type HostProvider interface {
 	String() string
 }
 
-func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodId ratelimiter.MethodId, dest interface{}) (*http.Response, error) {
+func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) (*http.Response, error) {
 	var suffix, separator string
 
 	if len(parameters) > 0 {
@@ -143,7 +143,7 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 	responseChan := make(chan *http.Response)
 	newRequest := ratelimiter.APIRequest{
 		Region:   strings.ToUpper(regionOrContinent.String()),
-		MethodId: methodId,
+		MethodID: methodID,
 		URL:      URL,
 		Response: responseChan,
 	}

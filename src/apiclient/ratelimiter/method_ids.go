@@ -1,68 +1,68 @@
 package ratelimiter
 
-type MethodId string
+type MethodID string
 
-func (m MethodId) String() string {
+func (m MethodID) String() string {
 	return string(m)
 }
 
 const (
 	// ----- Account API -----
-	GetAccountByPUUID  MethodId = "GetAccountByPUUID"
-	GetAccountByRiotId MethodId = "GetAccountByRiotId"
+	GetAccountByPuuid  MethodID = "GetAccountByPuuid"
+	GetAccountByRiotID MethodID = "GetAccountByRiotID"
 
 	// ----- Champion Mastery API -----
-	GetChampionMasteriesBySummonerId            MethodId = "GetChampionMasteriesBySummonerId"
-	GetChampionMasteryBySummonerIdAndChampionId MethodId = "GetChampionMasteryBySummonerIdAndChampionId"
-	GetChampionMasteriesTopBySummonerId         MethodId = "GetChampionMasteriesTopBySummonerId"
-	GetChampionMasteryScoreTotalBySummonerId    MethodId = "GetChampionMasteryScoreTotalBySummonerId"
+	GetChampionMasteriesBySummonerID            MethodID = "GetChampionMasteriesBySummonerID"
+	GetChampionMasteryBySummonerIDAndChampionID MethodID = "GetChampionMasteryBySummonerIDAndChampionID"
+	GetChampionMasteriesTopBySummonerID         MethodID = "GetChampionMasteriesTopBySummonerID"
+	GetChampionMasteryScoreTotalBySummonerID    MethodID = "GetChampionMasteryScoreTotalBySummonerID"
 
 	// ----- Champion API -----
-	GetChampionRotations MethodId = "GetChampionRotations"
+	GetChampionRotations MethodID = "GetChampionRotations"
 
 	// ----- Clash API -----
-	GetClashPlayersByPUUID      MethodId = "GetClashPlayersByPUUID"
-	GetClashPlayersBySummonerId MethodId = "GetClashPlayersBySummonerId"
-	GetClashTeamById            MethodId = "GetClashTeamById"
-	GetClashTournaments         MethodId = "GetClashTournaments"
-	GetClashTournamentByTeamId  MethodId = "GetClashTournamentByTeamId"
-	GetClashTournamentById      MethodId = "GetClashTournamentById"
+	GetClashPlayersByPuuid      MethodID = "GetClashPlayersByPuuid"
+	GetClashPlayersBySummonerID MethodID = "GetClashPlayersBySummonerID"
+	GetClashTeamByID            MethodID = "GetClashTeamByID"
+	GetClashTournaments         MethodID = "GetClashTournaments"
+	GetClashTournamentByTeamID  MethodID = "GetClashTournamentByTeamID"
+	GetClashTournamentByID      MethodID = "GetClashTournamentByID"
 
 	// ----- League Exp API -----
-	GetLeagueExpEntries MethodId = "GetLeagueExpEntries"
+	GetLeagueExpEntries MethodID = "GetLeagueExpEntries"
 
 	// ----- League API -----
-	GetLeagueEntriesChallenger   MethodId = "GetLeagueEntriesChallenger"
-	GetLeagueEntriesGrandmaster  MethodId = "GetLeagueEntriesGrandmaster"
-	GetLeagueEntriesMaster       MethodId = "GetLeagueEntriesMaster"
-	GetLeagueEntries             MethodId = "GetLeagueEntries"
-	GetLeagueEntriesById         MethodId = "GetLeagueEntriesById"
-	GetLeagueEntriesBySummonerId MethodId = "GetLeagueEntriesBySummonerId"
+	GetLeagueEntriesChallenger   MethodID = "GetLeagueEntriesChallenger"
+	GetLeagueEntriesGrandmaster  MethodID = "GetLeagueEntriesGrandmaster"
+	GetLeagueEntriesMaster       MethodID = "GetLeagueEntriesMaster"
+	GetLeagueEntries             MethodID = "GetLeagueEntries"
+	GetLeagueEntriesByID         MethodID = "GetLeagueEntriesByID"
+	GetLeagueEntriesBySummonerID MethodID = "GetLeagueEntriesBySummonerID"
 
 	// ----- LOL Challenges API -----
-	GetChallengesConfig              MethodId = "GetChallengesConfig"
-	GetChallengesPercentiles         MethodId = "GetChallengesPercentiles"
-	GetChallengesConfigById          MethodId = "GetChallengesConfigById"
-	GetChallengesLeaderboardsByLevel MethodId = "GetChallengesLeaderboardsByLevel"
-	GetChallengesPercentilesById     MethodId = "GetChallengesPercentilesById"
-	GetChallengesPlayerDataByPUUID   MethodId = "GetChallengesPlayerDataByPUUID"
+	GetChallengesConfig              MethodID = "GetChallengesConfig"
+	GetChallengesPercentiles         MethodID = "GetChallengesPercentiles"
+	GetChallengesConfigByID          MethodID = "GetChallengesConfigByID"
+	GetChallengesLeaderboardsByLevel MethodID = "GetChallengesLeaderboardsByLevel"
+	GetChallengesPercentilesByID     MethodID = "GetChallengesPercentilesByID"
+	GetChallengesPlayerDataByPuuid   MethodID = "GetChallengesPlayerDataByPuuid"
 
 	// ----- LOL Status API -----
-	GetStatusPlatformData MethodId = "GetStatusPlatformData"
+	GetStatusPlatformData MethodID = "GetStatusPlatformData"
 
 	// ----- Match API -----
-	GetMatchlist     MethodId = "GetMatchlist"
-	GetMatch         MethodId = "GetMatch"
-	GetMatchTimeline MethodId = "GetMatchTimeline"
+	GetMatchlist     MethodID = "GetMatchlist"
+	GetMatch         MethodID = "GetMatch"
+	GetMatchTimeline MethodID = "GetMatchTimeline"
 
 	// ----- Spectator API -----
-	GetSpectatorActiveGameBySummonerId MethodId = "GetSpectatorActiveGameBySummonerId"
-	GetSpectatorFeaturedGames          MethodId = "GetSpectatorFeaturedGames"
+	GetSpectatorActiveGameBySummonerID MethodID = "GetSpectatorActiveGameBySummonerID"
+	GetSpectatorFeaturedGames          MethodID = "GetSpectatorFeaturedGames"
 
 	// ----- Summoner API -----
-	GetSummonerByRsoPUUID      MethodId = "GetSummonerByRsoPUUID"
-	GetSummonerByAccountId     MethodId = "GetSummonerByAccountId"
-	GetSummonerBySummonerName  MethodId = "GetSummonerBySummonerName"
-	GetSummonerBySummonerPUUID MethodId = "GetSummonerBySummonerPUUID"
-	GetSummonerBySummonerId    MethodId = "GetSummonerBySummonerId"
+	GetSummonerByRsoPUUID      MethodID = "GetSummonerByRsoPUUID"
+	GetSummonerByAccountID     MethodID = "GetSummonerByAccountID"
+	GetSummonerBySummonerName  MethodID = "GetSummonerBySummonerName"
+	GetSummonerBySummonerPUUID MethodID = "GetSummonerBySummonerPUUID"
+	GetSummonerBySummonerID    MethodID = "GetSummonerBySummonerID"
 )

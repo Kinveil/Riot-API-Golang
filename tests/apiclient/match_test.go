@@ -69,14 +69,14 @@ func TestGetMatch(t *testing.T) {
 		t.Fatalf("Expected non-empty matchlist but got %v", matchlist)
 	}
 
-	matchId := (*matchlist)[0]
+	matchID := (*matchlist)[0]
 
-	match, err := client.GetMatch(summonerContinent, matchId)
+	match, err := client.GetMatch(summonerContinent, matchID)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
-	if match == nil || match.Metadata.MatchId != matchId {
+	if match == nil || match.Metadata.MatchID != matchID {
 		t.Fatalf("Expected valid match but got %v", match)
 	}
 }
@@ -107,14 +107,14 @@ func TestGetMatchTimeline(t *testing.T) {
 		t.Fatalf("Expected non-empty matchlist but got %v", matchlist)
 	}
 
-	matchId := (*matchlist)[0]
+	matchID := (*matchlist)[0]
 
-	match, err := client.GetMatchTimeline(summonerContinent, matchId)
+	match, err := client.GetMatchTimeline(summonerContinent, matchID)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
-	if match == nil || match.MatchTimelineMetadata.MatchId != matchId {
+	if match == nil || match.MatchTimelineMetadata.MatchID != matchID {
 		t.Fatalf("Expected valid match but got %v", match)
 	}
 }

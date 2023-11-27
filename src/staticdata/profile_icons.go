@@ -11,7 +11,7 @@ import (
 type ProfileIcons []ProfileIcon
 
 type ProfileIcon struct {
-	Id    int   `json:"id"`
+	ID    int   `json:"id"`
 	Image Image `json:"image"`
 }
 
@@ -53,7 +53,7 @@ func GetProfileIcons(v patch.Patch, lang language.Language) (ProfileIcons, error
 		}
 
 		profileIcon := ProfileIcon{
-			Id:    id,
+			ID:    id,
 			Image: image,
 		}
 
@@ -63,12 +63,12 @@ func GetProfileIcons(v patch.Patch, lang language.Language) (ProfileIcons, error
 	return profileIcons, err
 }
 
-func (pis ProfileIcons) ProfileIcon(profileIconId int) (ProfileIcon, error) {
+func (pis ProfileIcons) ProfileIcon(profileIconID int) (ProfileIcon, error) {
 	for _, pi := range pis {
-		if pi.Id == profileIconId {
+		if pi.ID == profileIconID {
 			return pi, nil
 		}
 	}
 
-	return ProfileIcon{}, fmt.Errorf("profileicon %v not found", profileIconId)
+	return ProfileIcon{}, fmt.Errorf("profileicon %v not found", profileIconID)
 }

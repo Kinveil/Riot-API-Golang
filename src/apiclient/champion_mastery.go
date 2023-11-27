@@ -9,7 +9,7 @@ import (
 
 type ChampionMastery struct {
 	Puuid                        string `json:"puuid"`
-	ChampionId                   int    `json:"championId"`
+	ChampionID                   int    `json:"championId"`
 	ChampionLevel                int    `json:"championLevel"`
 	ChampionPoints               int    `json:"championPoints"`
 	LastPlayTime                 int    `json:"lastPlayTime"`
@@ -17,29 +17,29 @@ type ChampionMastery struct {
 	ChampionPointsUntilNextLevel int    `json:"championPointsUntilNextLevel"`
 	ChestGranted                 bool   `json:"chestGranted"`
 	TokensEarned                 int    `json:"tokensEarned"`
-	SummonerId                   string `json:"summonerId"`
+	SummonerID                   string `json:"summonerId"`
 }
 
-func (c *client) GetChampionMasteriesBySummonerId(r region.Region, summonerId string) ([]ChampionMastery, error) {
+func (c *client) GetChampionMasteriesBySummonerID(r region.Region, summonerID string) ([]ChampionMastery, error) {
 	var res []ChampionMastery
-	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/champion-masteries/by-summoner", fmt.Sprintf("/%s", summonerId), nil, ratelimiter.GetChampionMasteriesBySummonerId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/champion-masteries/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetChampionMasteriesBySummonerID, &res)
 	return res, err
 }
 
-func (c *client) GetChampionMasteryBySummonerIdAndChampionId(r region.Region, summonerId string, championId int) (*ChampionMastery, error) {
+func (c *client) GetChampionMasteryBySummonerIDAndChampionID(r region.Region, summonerID string, championID int) (*ChampionMastery, error) {
 	var res ChampionMastery
-	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/champion-masteries/by-summoner", fmt.Sprintf("/%s/by-champion/%d", summonerId, championId), nil, ratelimiter.GetChampionMasteryBySummonerIdAndChampionId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/champion-masteries/by-summoner", fmt.Sprintf("/%s/by-champion/%d", summonerID, championID), nil, ratelimiter.GetChampionMasteryBySummonerIDAndChampionID, &res)
 	return &res, err
 }
 
-func (c *client) GetChampionMasteriesTopBySummonerId(r region.Region, summonerId string) ([]ChampionMastery, error) {
+func (c *client) GetChampionMasteriesTopBySummonerID(r region.Region, summonerID string) ([]ChampionMastery, error) {
 	var res []ChampionMastery
-	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/champion-masteries/by-summoner", fmt.Sprintf("/%s/top", summonerId), nil, ratelimiter.GetChampionMasteriesTopBySummonerId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/champion-masteries/by-summoner", fmt.Sprintf("/%s/top", summonerID), nil, ratelimiter.GetChampionMasteriesTopBySummonerID, &res)
 	return res, err
 }
 
-func (c *client) GetChampionMasteryScoreTotalBySummonerId(r region.Region, summonerId string) (int, error) {
+func (c *client) GetChampionMasteryScoreTotalBySummonerID(r region.Region, summonerID string) (int, error) {
 	var res int
-	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/scores/by-summoner", fmt.Sprintf("/%s", summonerId), nil, ratelimiter.GetChampionMasteryScoreTotalBySummonerId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/champion-mastery/v4/scores/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetChampionMasteryScoreTotalBySummonerID, &res)
 	return res, err
 }

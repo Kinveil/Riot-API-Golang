@@ -66,7 +66,7 @@ func TestGetLeagueEntries(t *testing.T) {
 	}
 }
 
-func TestGetLeagueEntriesBySummonerId(t *testing.T) {
+func TestGetLeagueEntriesBySummonerID(t *testing.T) {
 	client := newTestClient(t, nil)
 
 	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
@@ -74,9 +74,9 @@ func TestGetLeagueEntriesBySummonerId(t *testing.T) {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
 
-	leaguePositions, err := client.GetLeagueEntriesBySummonerId(region.NA1, summoner.Id)
+	leaguePositions, err := client.GetLeagueEntriesBySummonerID(region.NA1, summoner.ID)
 	if err != nil {
-		t.Fatalf("Failed to get league entries by summoner Id: %v", err)
+		t.Fatalf("Failed to get league entries by summoner ID: %v", err)
 	}
 
 	if len(leaguePositions) == 0 {

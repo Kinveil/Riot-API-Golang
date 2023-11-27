@@ -33,9 +33,9 @@ func main() {
 		panic(err)
 	}
 
-	matchId := (*matchlist)[0]
+	matchID := (*matchlist)[0]
 
-	match, err := client.GetMatch(region.NA1.Continent(), matchId)
+	match, err := client.GetMatch(region.NA1.Continent(), matchID)
 	if err != nil {
 		panic(err)
 	}
@@ -90,7 +90,7 @@ The region's conservation percentage will still be followed.
 conservation := ratelimiter.ConserveUsage{
     RegionPercent: 30,
     MethodPercent: 30,
-    IgnoreLimits: []ratelimiter.MethodId{
+    IgnoreLimits: []ratelimiter.MethodID{
         ratelimiter.GetLeagueEntriesChallenger,
         ratelimiter.GetLeagueEntriesGrandmaster,
         ratelimiter.GetLeagueEntriesMaster,

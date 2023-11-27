@@ -32,7 +32,7 @@ func TestGetChallengesPercentiles(t *testing.T) {
 	}
 }
 
-func TestGetChallengesPlayerDataByPUUID(t *testing.T) {
+func TestGetChallengesPlayerDataByPuuid(t *testing.T) {
 	client := newTestClient(t, nil)
 
 	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
@@ -40,7 +40,7 @@ func TestGetChallengesPlayerDataByPUUID(t *testing.T) {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
 
-	playerData, err := client.GetChallengesPlayerDataByPUUID(region.NA1, summoner.Puuid)
+	playerData, err := client.GetChallengesPlayerDataByPuuid(region.NA1, summoner.Puuid)
 	if err != nil {
 		t.Fatalf("Failed to get challenges player data by PUUID: %v", err)
 	}

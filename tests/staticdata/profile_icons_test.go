@@ -37,7 +37,7 @@ func TestGetProfileIcon(t *testing.T) {
 		t.Fatalf("Failed to get item: %v", err)
 	}
 
-	if profileIcon.Id != 1 {
-		t.Fatalf("Expected profile icon id to be 1, got %v", profileIcon.Id)
+	if profileIcon.ID != 1 {
+		t.Fatalf("Expected profile icon id to be 1, got %v", profileIcon.ID)
 	}
 }

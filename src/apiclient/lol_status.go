@@ -8,7 +8,7 @@ import (
 )
 
 type StatusPlatformData struct {
-	Id           string        `json:"id"`
+	ID           string        `json:"id"`
 	Name         string        `json:"name"`
 	Locales      []string      `json:"locales"`
 	Maintenances []Maintenance `json:"maintenances"`
@@ -23,7 +23,7 @@ type Maintenance struct {
 	IncidentSeverity  *string    `json:"incident_severity"`
 	UpdatedAt         *time.Time `json:"updated_at"`
 	Platforms         []string   `json:"platforms"`
-	Id                int        `json:"id"`
+	ID                int        `json:"id"`
 	CreatedAt         time.Time  `json:"created_at"`
 }
 
@@ -31,7 +31,7 @@ type Incident struct {
 	MaintenanceStatus string   `json:"maintenance_status"`
 	CreatedAt         string   `json:"created_at"` // Note: time format is not clear from example
 	UpdatedAt         *string  `json:"updated_at"` // Note: time format is not clear from example
-	Id                int      `json:"id"`
+	ID                int      `json:"id"`
 	Titles            []Title  `json:"titles"`
 	Updates           []Update `json:"updates"`
 	Platforms         []string `json:"platforms"`
@@ -49,7 +49,7 @@ type Update struct {
 	PublishLocations []string `json:"publish_locations"`
 	UpdatedAt        string   `json:"updated_at"` // Note: time format is not clear from example
 	Publish          bool     `json:"publish"`
-	Id               int      `json:"id"`
+	ID               int      `json:"id"`
 	Translations     []Title  `json:"translations"`
 	CreatedAt        string   `json:"created_at"` // Note: time format is not clear from example
 }

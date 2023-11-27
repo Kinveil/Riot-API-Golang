@@ -9,10 +9,10 @@ import (
 )
 
 type Summoner struct {
-	AccountId     string `json:"accountId"`
-	Id            string `json:"id"`
+	AccountID     string `json:"accountId"`
+	ID            string `json:"id"`
 	Name          string `json:"name"`
-	ProfileIconId int    `json:"profileIconId"`
+	ProfileIconID int    `json:"profileIconId"`
 	Puuid         string `json:"puuid"`
 	RevisionDate  int    `json:"revisionDate"`
 	SummonerLevel int    `json:"summonerLevel"`
@@ -32,9 +32,9 @@ func (c *client) GetSummonerByRsoPUUID(r region.Region, rsoPuuid string) (*Summo
 	return &res, err
 }
 
-func (c *client) GetSummonerByAccountId(r region.Region, accountId string) (*Summoner, error) {
+func (c *client) GetSummonerByAccountID(r region.Region, accountID string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", accountId), nil, ratelimiter.GetSummonerByAccountId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", accountID), nil, ratelimiter.GetSummonerByAccountID, &res)
 	return &res, err
 }
 
@@ -50,8 +50,8 @@ func (c *client) GetSummonerBySummonerPUUID(r region.Region, puuid string) (*Sum
 	return &res, err
 }
 
-func (c *client) GetSummonerBySummonerId(r region.Region, summonerId string) (*Summoner, error) {
+func (c *client) GetSummonerBySummonerID(r region.Region, summonerID string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners", fmt.Sprintf("/%s", summonerId), nil, ratelimiter.GetSummonerBySummonerId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetSummonerBySummonerID, &res)
 	return &res, err
 }

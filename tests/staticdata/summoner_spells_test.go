@@ -37,7 +37,7 @@ func TestGetSummonerSpell(t *testing.T) {
 		t.Fatalf("Failed to get summoner spell: %v", err)
 	}
 
-	if summonerSpell.Id != "SummonerBarrier" {
-		t.Fatalf("Expected SummonerBarrier, got %v", summonerSpell.Id)
+	if summonerSpell.ID != "SummonerBarrier" {
+		t.Fatalf("Expected SummonerBarrier, got %v", summonerSpell.ID)
 	}
 }

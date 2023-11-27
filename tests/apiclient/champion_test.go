@@ -14,11 +14,11 @@ func TestGetChampionRotations(t *testing.T) {
 		t.Fatalf("Failed to get champion rotations: %v", err)
 	}
 
-	if len(championRotations.FreeChampionIds) == 0 {
+	if len(championRotations.FreeChampionIDs) == 0 {
 		t.Fatalf("Expected to receive free champion Ids but got an empty slice")
 	}
 
-	if len(championRotations.FreeChampionIdsForNewPlayers) == 0 {
+	if len(championRotations.FreeChampionIDsForNewPlayers) == 0 {
 		t.Fatalf("Expected to receive free champion Ids for new players but got an empty slice")
 	}
 }

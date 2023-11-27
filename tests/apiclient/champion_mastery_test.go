@@ -6,7 +6,7 @@ import (
 	"github.com/junioryono/Riot-API-Golang/src/constants/region"
 )
 
-func TestGetChampionMasteriesBySummonerId(t *testing.T) {
+func TestGetChampionMasteriesBySummonerID(t *testing.T) {
 	client := newTestClient(t, nil)
 
 	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
@@ -14,7 +14,7 @@ func TestGetChampionMasteriesBySummonerId(t *testing.T) {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
 
-	championMasteries, err := client.GetChampionMasteriesBySummonerId(region.NA1, summoner.Id)
+	championMasteries, err := client.GetChampionMasteriesBySummonerID(region.NA1, summoner.ID)
 	if err != nil {
 		t.Fatalf("Failed to get champion masteries: %v", err)
 	}
@@ -24,7 +24,7 @@ func TestGetChampionMasteriesBySummonerId(t *testing.T) {
 	}
 }
 
-func TestGetChampionMasteryBySummonerIdAndChampionId(t *testing.T) {
+func TestGetChampionMasteryBySummonerIDAndChampionID(t *testing.T) {
 	client := newTestClient(t, nil)
 
 	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
@@ -32,17 +32,17 @@ func TestGetChampionMasteryBySummonerIdAndChampionId(t *testing.T) {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
 
-	championMastery, err := client.GetChampionMasteryBySummonerIdAndChampionId(region.NA1, summoner.Id, 1)
+	championMastery, err := client.GetChampionMasteryBySummonerIDAndChampionID(region.NA1, summoner.ID, 1)
 	if err != nil {
 		t.Fatalf("Failed to get champion mastery: %v", err)
 	}
 
-	if championMastery.ChampionId != 1 {
-		t.Fatalf("Expected champion Id to be 1 but got %d", championMastery.ChampionId)
+	if championMastery.ChampionID != 1 {
+		t.Fatalf("Expected champion ID to be 1 but got %d", championMastery.ChampionID)
 	}
 }
 
-func TestGetChampionMasteriesTopBySummonerId(t *testing.T) {
+func TestGetChampionMasteriesTopBySummonerID(t *testing.T) {
 	client := newTestClient(t, nil)
 
 	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
@@ -50,7 +50,7 @@ func TestGetChampionMasteriesTopBySummonerId(t *testing.T) {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
 
-	championMasteries, err := client.GetChampionMasteriesTopBySummonerId(region.NA1, summoner.Id)
+	championMasteries, err := client.GetChampionMasteriesTopBySummonerID(region.NA1, summoner.ID)
 	if err != nil {
 		t.Fatalf("Failed to get champion masteries: %v", err)
 	}
@@ -60,7 +60,7 @@ func TestGetChampionMasteriesTopBySummonerId(t *testing.T) {
 	}
 }
 
-func TestGetChampionMasteryScoreTotalBySummonerId(t *testing.T) {
+func TestGetChampionMasteryScoreTotalBySummonerID(t *testing.T) {
 	client := newTestClient(t, nil)
 
 	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
@@ -68,7 +68,7 @@ func TestGetChampionMasteryScoreTotalBySummonerId(t *testing.T) {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
 
-	score, err := client.GetChampionMasteryScoreTotalBySummonerId(region.NA1, summoner.Id)
+	score, err := client.GetChampionMasteryScoreTotalBySummonerID(region.NA1, summoner.ID)
 	if err != nil {
 		t.Fatalf("Failed to get champion mastery score: %v", err)
 	}

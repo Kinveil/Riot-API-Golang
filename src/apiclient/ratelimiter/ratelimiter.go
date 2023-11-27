@@ -11,7 +11,7 @@ import (
 type ConserveUsage struct {
 	RegionPercent int
 	MethodPercent int
-	IgnoreLimits  []MethodId
+	IgnoreLimits  []MethodID
 }
 
 type RateLimiter struct {
@@ -35,7 +35,7 @@ func NewRateLimiter(requests chan *APIRequest, apiKey string) *RateLimiter {
 		conserveUsage: ConserveUsage{
 			RegionPercent: 0,
 			MethodPercent: 0,
-			IgnoreLimits:  []MethodId{},
+			IgnoreLimits:  []MethodID{},
 		},
 	}
 }
@@ -69,7 +69,7 @@ func (rl *RateLimiter) SetMaxRetries(maxRetries int) {
 
 type APIRequest struct {
 	Region   string
-	MethodId MethodId
+	MethodID MethodID
 	URL      string
 	Response chan<- *http.Response
 	Retries  int
@@ -125,17 +125,17 @@ func (rl *RateLimiter) Start() {
 
 				var ok bool
 				methodMutex.RLock()
-				methodLimiter, ok = methodLimiters[req.Region+req.MethodId.String()]
+				methodLimiter, ok = methodLimiters[req.Region+req.MethodID.String()]
 				methodMutex.RUnlock()
 
 				if !ok {
 					methodMutex.Lock()
-					methodLimiters[req.Region+req.MethodId.String()] = &RateLimit{
+					methodLimiters[req.Region+req.MethodID.String()] = &RateLimit{
 						shortLimiter: newLimiterMu(initialMethodLimit),
 						longLimiter:  newLimiterMu(initialMethodLimit),
 						blockedUntil: time.Time{},
 					}
-					methodLimiter = methodLimiters[req.Region+req.MethodId.String()]
+					methodLimiter = methodLimiters[req.Region+req.MethodID.String()]
 					methodMutex.Unlock()
 				}
 			}()
@@ -168,7 +168,7 @@ func (rl *RateLimiter) Start() {
 			// Send the HTTP request
 			resp, err := (*rl.httpClient).Do(httpRequest)
 			if err == nil && resp.StatusCode == http.StatusOK {
-				rl.updateRateLimits(resp, req.MethodId, regionLimiter, methodLimiter)
+				rl.updateRateLimits(resp, req.MethodID, regionLimiter, methodLimiter)
 				req.Response <- resp
 			} else if err == nil && resp.StatusCode == http.StatusForbidden {
 				req.Response <- resp
@@ -206,7 +206,7 @@ func (rl *RateLimiter) Start() {
 	}
 }
 
-func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodId MethodId, regionLimiter *RateLimit, methodLimiter *RateLimit) {
+func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodID MethodID, regionLimiter *RateLimit, methodLimiter *RateLimit) {
 	appRateLimitHeader := resp.Header.Get("X-App-Rate-Limit")
 	appRateLimitCountHeader := resp.Header.Get("X-App-Rate-Limit-Count")
 	methodRateLimitHeader := resp.Header.Get("X-Method-Rate-Limit")
@@ -216,8 +216,8 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodId MethodId, 
 		shortLimitInfo, longLimitInfo := getShortAndLongLimits(appRateLimitHeader)
 		shortCountInfo, longCountInfo := getShortAndLongLimits(appRateLimitCountHeader)
 
-		rl.updateRateLimit(methodId, shortLimitInfo, shortCountInfo, regionLimiter, regionLimiter.shortLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
-		rl.updateRateLimit(methodId, longLimitInfo, longCountInfo, regionLimiter, regionLimiter.longLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
+		rl.updateRateLimit(methodID, shortLimitInfo, shortCountInfo, regionLimiter, regionLimiter.shortLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
+		rl.updateRateLimit(methodID, longLimitInfo, longCountInfo, regionLimiter, regionLimiter.longLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
 	} else {
 		// Remove the request from the limiter channels
 		go func() {
@@ -228,7 +228,7 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodId MethodId, 
 	}
 
 	if methodRateLimitHeader != "" && methodRateLimitCountHeader != "" {
-		rl.updateRateLimit(methodId, methodRateLimitHeader, methodRateLimitCountHeader, methodLimiter, methodLimiter.shortLimiter, &methodLimiter.blockedUntil, rl.conserveUsage.MethodPercent, false)
+		rl.updateRateLimit(methodID, methodRateLimitHeader, methodRateLimitCountHeader, methodLimiter, methodLimiter.shortLimiter, &methodLimiter.blockedUntil, rl.conserveUsage.MethodPercent, false)
 	} else {
 		// Remove the request from the limiter channels
 		go func() {
@@ -238,7 +238,7 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodId MethodId, 
 	}
 }
 
-func (rl *RateLimiter) updateRateLimit(methodId MethodId, limitInfo, countInfo string, limiter *RateLimit, limiterChannel *limiterMu, blockedUntil *time.Time, conservePercent int, isRegionHeader bool) {
+func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo string, limiter *RateLimit, limiterChannel *limiterMu, blockedUntil *time.Time, conservePercent int, isRegionHeader bool) {
 	limitSplit := strings.Split(limitInfo, ":")
 	countSplit := strings.Split(countInfo, ":")
 
@@ -254,7 +254,7 @@ func (rl *RateLimiter) updateRateLimit(methodId MethodId, limitInfo, countInfo s
 
 		if !isRegionHeader {
 			for i := 0; i < len(rl.conserveUsage.IgnoreLimits); i++ {
-				if rl.conserveUsage.IgnoreLimits[i] == methodId {
+				if rl.conserveUsage.IgnoreLimits[i] == methodID {
 					useConservation = false
 					break
 				}

@@ -73,7 +73,7 @@ type Match struct {
 
 type MatchMetadata struct {
 	DataVersion  string   `json:"dataVersion"` // ex: 2
-	MatchId      string   `json:"matchId"`     // ex: NA1_1234567890
+	MatchID      string   `json:"matchId"`     // ex: NA1_1234567890
 	Participants []string `json:"participants"`
 }
 
@@ -81,15 +81,15 @@ type MatchInfo struct {
 	GameCreation       int                    `json:"gameCreation"`       // ex: 1483140696030
 	GameDuration       int                    `json:"gameDuration"`       // ex: 1561
 	GameEndTimestamp   int                    `json:"gameEndTimestamp"`   // ex: 1483142251591
-	GameId             int                    `json:"gameId"`             // ex: 1234567890
+	GameID             int                    `json:"gameId"`             // ex: 1234567890
 	GameMode           string                 `json:"gameMode"`           // ex: CLASSIC
 	GameName           string                 `json:"gameName"`           // ex: teambuilder-match-4742129795
 	GameStartTimestamp int                    `json:"gameStartTimestamp"` // ex: 1483140696030
 	GameType           string                 `json:"gameType"`           // ex: MATCHED_GAME
 	GameVersion        patch.Patch            `json:"gameVersion"`        // ex: 6.24.204.6436
-	MapId              int                    `json:"mapId"`              // ex: 11
+	MapID              int                    `json:"mapId"`              // ex: 11
 	Participants       []MatchInfoParticipant `json:"participants"`
-	PlatformId         string                 `json:"platformId"` // ex: NA1
+	PlatformID         string                 `json:"platformId"` // ex: NA1
 	QueueId            int                    `json:"queueId"`    // ex: 420
 	Teams              []MatchInfoTeam        `json:"teams"`
 	TournamentCode     string                 `json:"tournamentCode"`
@@ -106,7 +106,7 @@ type MatchInfoParticipant struct {
 	Challenges                     *MatchInfoParticipantChallenges `json:"challenges"`
 	ChampExperience                int                             `json:"champExperience"`
 	ChampLevel                     int                             `json:"champLevel"`
-	ChampionId                     int64                           `json:"championId"`
+	ChampionID                     int64                           `json:"championId"`
 	ChampionName                   string                          `json:"championName"`
 	ChampionTransform              int                             `json:"championTransform"`
 	CommandPings                   int                             `json:"commandPings"`
@@ -185,12 +185,12 @@ type MatchInfoParticipant struct {
 	Summoner1Id                    int                             `json:"summoner1Id"`
 	Summoner2Casts                 int                             `json:"summoner2Casts"`
 	Summoner2Id                    int                             `json:"summoner2Id"`
-	SummonerId                     string                          `json:"summonerId"`
+	SummonerID                     string                          `json:"summonerId"`
 	SummonerLevel                  int                             `json:"summonerLevel"`
 	SummonerName                   string                          `json:"summonerName"`
 	SummonerPuuid                  string                          `json:"puuid"`
 	TeamEarlySurrendered           bool                            `json:"teamEarlySurrendered"`
-	TeamId                         int                             `json:"teamId"`
+	TeamID                         int                             `json:"teamId"`
 	TeamPosition                   string                          `json:"teamPosition"`
 	TimeCCingOthers                int                             `json:"timeCCingOthers"`
 	TimePlayed                     int                             `json:"timePlayed"`
@@ -360,13 +360,13 @@ type MatchInfoParticipantPerksStylesSelection struct {
 type MatchInfoTeam struct {
 	Bans       []MatchInfoTeamBan      `json:"bans"`
 	Objectives MatchInfoTeamObjectives `json:"objectives"`
-	TeamId     int                     `json:"teamId"`
+	TeamID     int                     `json:"teamId"`
 	Win        bool                    `json:"win"`
 }
 
 type MatchInfoTeamBan struct {
 	PickTurn   int   `json:"pickTurn"`
-	ChampionId int64 `json:"championId"`
+	ChampionID int64 `json:"championId"`
 }
 
 type MatchInfoTeamObjectives struct {
@@ -391,9 +391,9 @@ func (m *MatchInfo) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, m)
 }
 
-func (c *client) GetMatch(continent continent.Continent, matchId string) (*Match, error) {
+func (c *client) GetMatch(continent continent.Continent, matchID string) (*Match, error) {
 	var res Match
-	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s", matchId), nil, ratelimiter.GetMatch, &res)
+	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s", matchID), nil, ratelimiter.GetMatch, &res)
 	return &res, err
 }
 
@@ -404,14 +404,14 @@ type MatchTimeline struct {
 
 type MatchTimelineMetadata struct {
 	DataVersion  string   `json:"dataVersion"`
-	MatchId      string   `json:"matchId"`
+	MatchID      string   `json:"matchId"`
 	Participants []string `json:"participants"`
 }
 
 type MatchTimelineInfo struct {
 	FrameInterval int64                      `json:"frameInterval"`
 	Frames        []MatchTimelineFrame       `json:"frames"`
-	GameId        int64                      `json:"gameId"`
+	GameID        int64                      `json:"gameId"`
 	Participants  []MatchTimelineParticipant `json:"participants"`
 }
 
@@ -530,7 +530,7 @@ const (
 type MatchTimelineEvent struct {
 	EventType               string                 `json:"eventType"`
 	TowerType               string                 `json:"towerType"`
-	TeamId                  int                    `json:"teamId"`
+	TeamID                  int                    `json:"teamId"`
 	AscendedType            string                 `json:"ascendedType"`
 	KillerId                int                    `json:"killerId"`
 	LevelUpType             string                 `json:"levelUpType"`
@@ -554,8 +554,8 @@ type MatchTimelineEvent struct {
 	BeforeId                int                    `json:"beforeId"`
 }
 
-func (c *client) GetMatchTimeline(continent continent.Continent, matchId string) (*MatchTimeline, error) {
+func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
 	var res MatchTimeline
-	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s/timeline", matchId), nil, ratelimiter.GetMatchTimeline, &res)
+	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s/timeline", matchID), nil, ratelimiter.GetMatchTimeline, &res)
 	return &res, err
 }

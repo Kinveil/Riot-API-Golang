@@ -10,7 +10,7 @@ import (
 type SummonerSpells []SummonerSpell
 
 type SummonerSpell struct {
-	Id            string    `json:"id"`
+	ID            string    `json:"id"`
 	Name          string    `json:"name"`
 	Description   string    `json:"description"`
 	Tooltip       string    `json:"tooltip"`
@@ -48,7 +48,7 @@ func GetSummonerSpells(v patch.Patch, lang language.Language) (SummonerSpells, e
 
 func (s SummonerSpells) SummonerSpell(summonerSpellId string) (SummonerSpell, error) {
 	for _, summonerSpell := range s {
-		if summonerSpell.Id == summonerSpellId {
+		if summonerSpell.ID == summonerSpellId {
 			return summonerSpell, nil
 		}
 	}

@@ -8,10 +8,10 @@ import (
 )
 
 type ClashTeam struct {
-	Id           string        `json:"id"`
-	TournamentId int           `json:"tournamentId"`
+	ID           string        `json:"id"`
+	TournamentID int           `json:"tournamentId"`
 	Name         string        `json:"name"`
-	IconId       int           `json:"iconId"`
+	IconID       int           `json:"iconId"`
 	Tier         int           `json:"tier"`
 	Captain      string        `json:"captain"`
 	Abbreviation string        `json:"abbreviation"`
@@ -23,9 +23,9 @@ type ClashPlayers struct {
 }
 
 type ClashPlayer struct {
-	TeamId       string `json:"teamId"`
+	TeamID       string `json:"teamId"`
 	Position     string `json:"position"`
-	SummonerId   string `json:"summonerId"`
+	SummonerID   string `json:"summonerId"`
 	SummonerName string `json:"summonerName"`
 	GameName     string `json:"gameName"`
 	TeamRole     string `json:"teamRole"`
@@ -37,12 +37,12 @@ type ClashTournaments struct {
 }
 
 type ClashTournament struct {
-	Id               int    `json:"id"`
+	ID               int    `json:"id"`
 	ThemeId          int    `json:"themeId"`
 	NameKey          string `json:"nameKey"`
 	NameKeySecondary string `json:"nameKeySecondary"`
 	Schedule         []struct {
-		Id               int    `json:"id"`
+		ID               int    `json:"id"`
 		RegistrationTime int64  `json:"registrationTime"`
 		StartTime        int64  `json:"startTime"`
 		WaitTime         int    `json:"waitTime"`
@@ -51,11 +51,11 @@ type ClashTournament struct {
 	} `json:"schedule"`
 	CompletedPhase int `json:"completedPhase"`
 	Prizes         []struct {
-		TeamId string `json:"teamId"`
+		TeamID string `json:"teamId"`
 		Prize  int    `json:"prize"`
 	} `json:"prizes"`
 	Stages []struct {
-		Id                  int   `json:"id"`
+		ID                  int   `json:"id"`
 		Stage               int   `json:"stage"`
 		StartTime           int64 `json:"startTime"`
 		WaitTime            int   `json:"waitTime"`
@@ -71,13 +71,13 @@ type ClashTournament struct {
 	SignupTime  int64 `json:"signupTime"`
 	StartTime   int64 `json:"startTime"`
 	Winners     []struct {
-		TeamId string `json:"teamId"`
+		TeamID string `json:"teamId"`
 		Place  int    `json:"place"`
 	} `json:"winners"`
 	TeamSize int `json:"teamSize"`
 	Entrants []struct {
-		Id                    string        `json:"id"`
-		TeamId                string        `json:"teamId"`
+		ID                    string        `json:"id"`
+		TeamID                string        `json:"teamId"`
 		TeamName              string        `json:"teamName"`
 		TeamIconId            int           `json:"teamIconId"`
 		TeamIcon              string        `json:"teamIcon"`
@@ -88,21 +88,21 @@ type ClashTournament struct {
 	} `json:"entrants"`
 }
 
-func (c *client) GetClashPlayersByPUUID(r region.Region, puuid string) (*ClashPlayers, error) {
+func (c *client) GetClashPlayersByPuuid(r region.Region, puuid string) (*ClashPlayers, error) {
 	var res ClashPlayers
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetClashPlayersByPUUID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetClashPlayersByPuuid, &res)
 	return &res, err
 }
 
-func (c *client) GetClashPlayersBySummonerId(r region.Region, summonerId string) (*ClashPlayers, error) {
+func (c *client) GetClashPlayersBySummonerID(r region.Region, summonerID string) (*ClashPlayers, error) {
 	var res ClashPlayers
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-summoner", fmt.Sprintf("/%s", summonerId), nil, ratelimiter.GetClashPlayersBySummonerId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetClashPlayersBySummonerID, &res)
 	return &res, err
 }
 
-func (c *client) GetClashTeamById(r region.Region, teamId string) (*ClashTeam, error) {
+func (c *client) GetClashTeamByID(r region.Region, teamID string) (*ClashTeam, error) {
 	var res ClashTeam
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/teams", fmt.Sprintf("/%s", teamId), nil, ratelimiter.GetClashTeamById, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/teams", fmt.Sprintf("/%s", teamID), nil, ratelimiter.GetClashTeamByID, &res)
 	return &res, err
 }
 
@@ -112,14 +112,14 @@ func (c *client) GetClashTournaments(r region.Region) (*ClashTournaments, error)
 	return &res, err
 }
 
-func (c *client) GetClashTournamentByTeamId(r region.Region, teamId string) (*ClashTournament, error) {
+func (c *client) GetClashTournamentByTeamID(r region.Region, teamID string) (*ClashTournament, error) {
 	var res ClashTournament
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments/by-team", fmt.Sprintf("/%s", teamId), nil, ratelimiter.GetClashTournamentByTeamId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments/by-team", fmt.Sprintf("/%s", teamID), nil, ratelimiter.GetClashTournamentByTeamID, &res)
 	return &res, err
 }
 
-func (c *client) GetClashTournamentById(r region.Region, tournamentId string) (*ClashTournament, error) {
+func (c *client) GetClashTournamentByID(r region.Region, tournamentID string) (*ClashTournament, error) {
 	var res ClashTournament
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments", fmt.Sprintf("/%s", tournamentId), nil, ratelimiter.GetClashTournamentById, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments", fmt.Sprintf("/%s", tournamentID), nil, ratelimiter.GetClashTournamentByID, &res)
 	return &res, err
 }

@@ -10,7 +10,7 @@ import (
 type Champions []Champion
 
 type Champion struct {
-	Id      string        `json:"id"`
+	ID      string        `json:"id"`
 	Key     string        `json:"key"`
 	Name    string        `json:"name"`
 	Title   string        `json:"title"`
@@ -68,18 +68,18 @@ func GetChampions(v patch.Patch, lang language.Language) (Champions, error) {
 	return champions, err
 }
 
-func (c Champions) Champion(championId string) (Champion, error) {
+func (c Champions) Champion(championID string) (Champion, error) {
 	for _, champion := range c {
-		if champion.Id == championId {
+		if champion.ID == championID {
 			return champion, nil
 		}
 	}
 
-	return Champion{}, fmt.Errorf("champion %s not found", championId)
+	return Champion{}, fmt.Errorf("champion %s not found", championID)
 }
 
 type ChampionDetailed struct {
-	Id        string          `json:"id"`
+	ID        string          `json:"id"`
 	Key       string          `json:"key"`
 	Name      string          `json:"name"`
 	Title     string          `json:"title"`
@@ -98,14 +98,14 @@ type ChampionDetailed struct {
 }
 
 type ChampionSkin struct {
-	Id      string `json:"id"`
+	ID      string `json:"id"`
 	Num     int    `json:"num"`
 	Name    string `json:"name"`
 	Chromas bool   `json:"chromas"`
 }
 
 type ChampionSpell struct {
-	Id           string             `json:"id"`
+	ID           string             `json:"id"`
 	Name         string             `json:"name"`
 	Description  string             `json:"description"`
 	Tooltip      string             `json:"tooltip"`
@@ -143,12 +143,12 @@ type ChampionPassive struct {
 	Image       Image  `json:"image"`
 }
 
-func GetChampion(v patch.Patch, lang language.Language, championId string) (ChampionDetailed, error) {
+func GetChampion(v patch.Patch, lang language.Language, championID string) (ChampionDetailed, error) {
 	type Response struct {
 		Data map[string]ChampionDetailed `json:"data"`
 	}
 
 	var res Response
-	err := getJSON(fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/%s/champion/%s.json", v, lang, championId), &res)
-	return res.Data[championId], err
+	err := getJSON(fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/%s/champion/%s.json", v, lang, championID), &res)
+	return res.Data[championID], err
 }

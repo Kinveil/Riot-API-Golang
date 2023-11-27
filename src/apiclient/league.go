@@ -10,7 +10,7 @@ import (
 )
 
 type LeagueList struct {
-	LeagueId string           `json:"leagueId"`
+	LeagueID string           `json:"leagueId"`
 	Tier     string           `json:"tier"`
 	Entries  []LeaguePosition `json:"entries"`
 	Queue    queue.Queue      `json:"queue"`
@@ -21,12 +21,12 @@ type LeaguePosition struct {
 	FreshBlood   bool        `json:"freshBlood"`
 	HotStreak    bool        `json:"hotStreak"`
 	Inactive     bool        `json:"inactive"`
-	LeagueId     string      `json:"leagueId"`
+	LeagueID     string      `json:"leagueId"`
 	LeaguePoints int         `json:"leaguePoints"`
 	Losses       int         `json:"losses"`
 	QueueType    string      `json:"queueType"`
 	Rank         string      `json:"rank"`
-	SummonerId   string      `json:"summonerId"`
+	SummonerID   string      `json:"summonerId"`
 	SummonerName string      `json:"summonerName"`
 	Tier         string      `json:"tier"`
 	Veteran      bool        `json:"veteran"`
@@ -65,14 +65,14 @@ func (c *client) GetLeagueEntries(r region.Region, q queue.Queue, tier, division
 	return res, err
 }
 
-func (c *client) GetLeagueEntriesById(r region.Region, leagueId string) (*LeagueList, error) {
+func (c *client) GetLeagueEntriesByID(r region.Region, leagueID string) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/leagues", fmt.Sprintf("/%s", leagueId), nil, ratelimiter.GetLeagueEntriesById, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/leagues", fmt.Sprintf("/%s", leagueID), nil, ratelimiter.GetLeagueEntriesByID, &res)
 	return &res, err
 }
 
-func (c *client) GetLeagueEntriesBySummonerId(r region.Region, summonerId string) ([]LeaguePosition, error) {
+func (c *client) GetLeagueEntriesBySummonerID(r region.Region, summonerID string) ([]LeaguePosition, error) {
 	var res []LeaguePosition
-	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries/by-summoner", fmt.Sprintf("/%s", summonerId), nil, ratelimiter.GetLeagueEntriesBySummonerId, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetLeagueEntriesBySummonerID, &res)
 	return res, err
 }
