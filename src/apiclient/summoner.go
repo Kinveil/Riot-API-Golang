@@ -26,9 +26,9 @@ func (s *Summoner) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, s)
 }
 
-func (c *client) GetSummonerByRsoPUUID(r region.Region, rsoPuuid string) (*Summoner, error) {
+func (c *client) GetSummonerByRsoPuuid(r region.Region, rsoPuuid string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", rsoPuuid), nil, ratelimiter.GetSummonerByRsoPUUID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", rsoPuuid), nil, ratelimiter.GetSummonerByRsoPuuid, &res)
 	return &res, err
 }
 
@@ -44,9 +44,9 @@ func (c *client) GetSummonerBySummonerName(r region.Region, name string) (*Summo
 	return &res, err
 }
 
-func (c *client) GetSummonerBySummonerPUUID(r region.Region, puuid string) (*Summoner, error) {
+func (c *client) GetSummonerBySummonerPuuid(r region.Region, puuid string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSummonerBySummonerPUUID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSummonerBySummonerPuuid, &res)
 	return &res, err
 }
 

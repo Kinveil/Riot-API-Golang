@@ -42,7 +42,7 @@ func TestGetChallengesPlayerDataByPuuid(t *testing.T) {
 
 	playerData, err := client.GetChallengesPlayerDataByPuuid(region.NA1, summoner.Puuid)
 	if err != nil {
-		t.Fatalf("Failed to get challenges player data by PUUID: %v", err)
+		t.Fatalf("Failed to get challenges player data by Puuid: %v", err)
 	}
 
 	if playerData == nil {

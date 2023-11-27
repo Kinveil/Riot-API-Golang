@@ -60,9 +60,9 @@ const (
 	GetSpectatorFeaturedGames          MethodID = "GetSpectatorFeaturedGames"
 
 	// ----- Summoner API -----
-	GetSummonerByRsoPUUID      MethodID = "GetSummonerByRsoPUUID"
+	GetSummonerByRsoPuuid      MethodID = "GetSummonerByRsoPuuid"
 	GetSummonerByAccountID     MethodID = "GetSummonerByAccountID"
 	GetSummonerBySummonerName  MethodID = "GetSummonerBySummonerName"
-	GetSummonerBySummonerPUUID MethodID = "GetSummonerBySummonerPUUID"
+	GetSummonerBySummonerPuuid MethodID = "GetSummonerBySummonerPuuid"
 	GetSummonerBySummonerID    MethodID = "GetSummonerBySummonerID"
 )

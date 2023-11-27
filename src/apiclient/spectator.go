@@ -22,7 +22,7 @@ type ActiveGame struct {
 }
 
 type ActiveGameParticipant struct {
-	PUUID         string                             `json:"puuid"`         // The PUUID of the player
+	Puuid         string                             `json:"puuid"`         // The Puuid of the player
 	ProfileIconID int64                              `json:"profileIconId"` // The ID of the profile icon used by this participant
 	ChampionID    int64                              `json:"championId"`    // The ID of the champion played by this participant
 	SummonerName  string                             `json:"summonerName"`  // The summoner name of this participant
