@@ -35,7 +35,7 @@ func TestRateLimiter(t *testing.T) {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-			_, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
+			_, err := client.GetSummonerByName(region.NA1, "Mighty Junior")
 			if err != nil {
 				errCh <- fmt.Errorf("Failed to get summoner on iteration %d: %v", i, err)
 			}

@@ -14,7 +14,7 @@ func TestGetMatchlist(t *testing.T) {
 	summonerContinent := summonerRegion.Continent()
 	summonerName := "Mighty Junior"
 
-	summoner, err := client.GetSummonerBySummonerName(summonerRegion, summonerName)
+	summoner, err := client.GetSummonerByName(summonerRegion, summonerName)
 	if err != nil {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
@@ -50,7 +50,7 @@ func TestGetMatch(t *testing.T) {
 	summonerContinent := summonerRegion.Continent()
 	summonerName := "Mighty Junior"
 
-	summoner, err := client.GetSummonerBySummonerName(summonerRegion, summonerName)
+	summoner, err := client.GetSummonerByName(summonerRegion, summonerName)
 	if err != nil {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}
@@ -88,7 +88,7 @@ func TestGetMatchTimeline(t *testing.T) {
 	summonerContinent := summonerRegion.Continent()
 	summonerName := "Mighty Junior"
 
-	summoner, err := client.GetSummonerBySummonerName(summonerRegion, summonerName)
+	summoner, err := client.GetSummonerByName(summonerRegion, summonerName)
 	if err != nil {
 		t.Fatalf("Failed to get summoner: %v", err)
 	}

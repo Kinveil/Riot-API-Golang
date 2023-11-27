@@ -38,15 +38,15 @@ func (c *client) GetSummonerByAccountID(r region.Region, accountID string) (*Sum
 	return &res, err
 }
 
-func (c *client) GetSummonerBySummonerName(r region.Region, name string) (*Summoner, error) {
+func (c *client) GetSummonerByName(r region.Region, name string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-name", fmt.Sprintf("/%s", name), nil, ratelimiter.GetSummonerBySummonerName, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-name", fmt.Sprintf("/%s", name), nil, ratelimiter.GetSummonerByName, &res)
 	return &res, err
 }
 
-func (c *client) GetSummonerBySummonerPuuid(r region.Region, puuid string) (*Summoner, error) {
+func (c *client) GetSummonerByPuuid(r region.Region, puuid string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSummonerBySummonerPuuid, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSummonerByPuuid, &res)
 	return &res, err
 }
 

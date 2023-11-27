@@ -87,8 +87,8 @@ type Client interface {
 
 	GetSummonerByRsoPuuid(region region.Region, rsoPuuid string) (*Summoner, error)
 	GetSummonerByAccountID(region region.Region, accountID string) (*Summoner, error)
-	GetSummonerBySummonerName(region region.Region, name string) (*Summoner, error)
-	GetSummonerBySummonerPuuid(region region.Region, puuid string) (*Summoner, error)
+	GetSummonerByName(region region.Region, name string) (*Summoner, error)
+	GetSummonerByPuuid(region region.Region, puuid string) (*Summoner, error)
 	GetSummonerBySummonerID(region region.Region, summonerID string) (*Summoner, error)
 }
 

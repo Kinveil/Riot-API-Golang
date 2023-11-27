@@ -23,7 +23,7 @@ func main() {
 	apiKey := "RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 	client := apiclient.New(apiKey)
 
-	summoner, err := client.GetSummonerBySummonerName(region.NA1, "Mighty Junior")
+	summoner, err := client.GetSummonerByName(region.NA1, "Mighty Junior")
 	if err != nil {
 		panic(err)
 	}
