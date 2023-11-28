@@ -11,6 +11,40 @@ const (
 	RankedSolo5x5 Queue = 420
 	RankedFlexSR  Queue = 440
 	RankedFlexTT  Queue = 470
+
+	Snowdown                      Queue = 73
+	Hexakill                      Queue = 75
+	Nemesis                       Queue = 310
+	BlackMarketBrawlers           Queue = 313
+	DefinitelyNotDominion         Queue = 317
+	AllRandom                     Queue = 325
+	NormalDraft                   Queue = 400
+	NormalBlind                   Queue = 430
+	ARAM                          Queue = 450
+	BloodHuntAssassin             Queue = 600
+	DarkStarSingularity           Queue = 610
+	Clash                         Queue = 700
+	CoopVsAI                      Queue = 850
+	URF                           Queue = 900
+	Ascension                     Queue = 910
+	LegendOfThePoroKing           Queue = 920
+	NexusSiege                    Queue = 940
+	DoomBotsVoting                Queue = 950
+	DoomBotsStandard              Queue = 960
+	StarGuardianInvasionNormal    Queue = 980
+	StarGuardianInvasionOnslaught Queue = 990
+	ProjectHunters                Queue = 1000
+	ARURF                         Queue = 1010
+	OneForAll                     Queue = 1020
+	OdysseyExtractionIntro        Queue = 1030
+	OdysseyExtractionCadet        Queue = 1040
+	OdysseyExtractionCrewmember   Queue = 1050
+	OdysseyExtractionCaptain      Queue = 1060
+	OdysseyExtractionOnslaught    Queue = 1070
+	NexusBlitz                    Queue = 1300
+	Ultimates                     Queue = 1400
+	Arena                         Queue = 1700
+	Tutorial                      Queue = 2020
 )
 
 var queueMap = map[string]Queue{
