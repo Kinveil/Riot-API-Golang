@@ -7,7 +7,7 @@ import (
 
 type Queue int
 
-var (
+const (
 	RankedSolo5x5 Queue = 420
 	RankedFlexSR  Queue = 440
 	RankedFlexTT  Queue = 470
