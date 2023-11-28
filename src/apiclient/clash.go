@@ -83,7 +83,7 @@ type ClashTournament struct {
 		TeamIcon              string        `json:"teamIcon"`
 		TeamTier              int           `json:"teamTier"`
 		Players               []ClashPlayer `json:"players"`
-		ProvisioningFlowId    string        `json:"provisioningFlowId"`
+		ProvisioningFlowID    string        `json:"provisioningFlowId"`
 		ProvisioningFlowState string        `json:"provisioningFlowState"`
 	} `json:"entrants"`
 }

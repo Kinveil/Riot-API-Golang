@@ -10,7 +10,7 @@ import (
 type Queues []Queue
 
 type Queue struct {
-	QueueId     int    `json:"queueId"`
+	QueueID     int    `json:"queueId"`
 	Map         string `json:"map"`
 	Description string `json:"description"`
 	Notes       string `json:"notes"`
@@ -24,7 +24,7 @@ func GetQueues(v patch.Patch, lang language.Language) (Queues, error) {
 
 func (queues Queues) Queue(queueId int) (Queue, error) {
 	for _, queue := range queues {
-		if queue.QueueId == queueId {
+		if queue.QueueID == queueId {
 			return queue, nil
 		}
 	}

@@ -10,10 +10,10 @@ import (
 type ChallengesConfig struct {
 	ChallengeID string `json:"challengeId"`
 	Levels      []struct {
-		LevelId string `json:"levelId"`
+		LevelID string `json:"levelId"`
 		Order   int    `json:"order"`
 	} `json:"levels"`
-	QueueId string `json:"queueId"`
+	QueueID string `json:"queueId"`
 }
 
 type ChallengesLeaderboards struct {
@@ -23,9 +23,9 @@ type ChallengesLeaderboards struct {
 			Rank       int     `json:"rank"`
 			Total      int     `json:"total"`
 		} `json:"entries"`
-		LevelId string `json:"levelId"`
+		LevelID string `json:"levelId"`
 	} `json:"entries"`
-	QueueId string `json:"queueId"`
+	QueueID string `json:"queueId"`
 }
 
 type ChallengesPercentiles struct {
@@ -33,7 +33,7 @@ type ChallengesPercentiles struct {
 		Percentile float64 `json:"percentile"`
 		Total      int     `json:"total"`
 	} `json:"percentiles"`
-	QueueId string `json:"queueId"`
+	QueueID string `json:"queueId"`
 }
 
 type ChallengesPlayerData struct {
@@ -43,9 +43,9 @@ type ChallengesPlayerData struct {
 			Rank       int     `json:"rank"`
 			Total      int     `json:"total"`
 		} `json:"entries"`
-		LevelId string `json:"levelId"`
+		LevelID string `json:"levelId"`
 	} `json:"entries"`
-	QueueId string `json:"queueId"`
+	QueueID string `json:"queueId"`
 }
 
 func (c *client) GetChallengesConfig(r region.Region) (*ChallengesConfig, error) {
