@@ -173,7 +173,7 @@ type MatchInfoParticipant struct {
 	ProfileIcon                    int                             `json:"profileIcon"`
 	PushPings                      int                             `json:"pushPings"`
 	QuadraKills                    int                             `json:"quadraKills"`
-	RiotIdName                     string                          `json:"riotIdName"`
+	RiotIdGameName                 string                          `json:"riotIdGameName"`
 	RiotIdTagline                  string                          `json:"riotIdTagline"`
 	Role                           string                          `json:"role"`
 	SightWardsBoughtInGame         int                             `json:"sightWardsBoughtInGame"`
