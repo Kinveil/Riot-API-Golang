@@ -44,6 +44,34 @@ func main() {
 }
 ```
 
+## Example Usage (Riot API - With Context)
+
+```go
+func main() {
+	apiKey := "RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+	client := apiclient.New(apiKey)
+
+	summoner, err := client.WithContext(context.Background()).GetSummonerByName(region.NA1, "Mighty Junior")
+	if err != nil {
+		panic(err)
+	}
+
+	matchlist, err := client.GetMatchlist(region.NA1.Continent(), summoner.Puuid, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	matchID := (*matchlist)[0]
+
+	match, err := client.GetMatch(region.NA1.Continent(), matchID)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(match.Info.GameCreation)
+}
+```
+
 ## Example Usage (DDragon)
 
 ```go
