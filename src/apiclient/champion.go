@@ -13,6 +13,6 @@ type ChampionRotations struct {
 
 func (c *client) GetChampionRotations(r region.Region) (*ChampionRotations, error) {
 	var championRotation ChampionRotations
-	_, err := c.dispatchAndUnmarshal(r, "/lol/platform/v3/champion-rotations", "", nil, ratelimiter.GetChampionRotations, &championRotation)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/platform/v3/champion-rotations", "", nil, ratelimiter.GetChampionRotations, &championRotation)
 	return &championRotation, err
 }

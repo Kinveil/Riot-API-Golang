@@ -28,30 +28,30 @@ func (s *Summoner) UnmarshalBinary(data []byte) error {
 
 func (c *client) GetSummonerByRsoPuuid(r region.Region, rsoPuuid string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", rsoPuuid), nil, ratelimiter.GetSummonerByRsoPuuid, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", rsoPuuid), nil, ratelimiter.GetSummonerByRsoPuuid, &res)
 	return &res, err
 }
 
 func (c *client) GetSummonerByAccountID(r region.Region, accountID string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", accountID), nil, ratelimiter.GetSummonerByAccountID, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/summoner/v4/summoners/by-account", fmt.Sprintf("/%s", accountID), nil, ratelimiter.GetSummonerByAccountID, &res)
 	return &res, err
 }
 
 func (c *client) GetSummonerByName(r region.Region, name string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-name", fmt.Sprintf("/%s", name), nil, ratelimiter.GetSummonerByName, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/summoner/v4/summoners/by-name", fmt.Sprintf("/%s", name), nil, ratelimiter.GetSummonerByName, &res)
 	return &res, err
 }
 
 func (c *client) GetSummonerByPuuid(r region.Region, puuid string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSummonerByPuuid, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/summoner/v4/summoners/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSummonerByPuuid, &res)
 	return &res, err
 }
 
 func (c *client) GetSummonerBySummonerID(r region.Region, summonerID string) (*Summoner, error) {
 	var res Summoner
-	_, err := c.dispatchAndUnmarshal(r, "/lol/summoner/v4/summoners", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetSummonerBySummonerID, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/summoner/v4/summoners", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetSummonerBySummonerID, &res)
 	return &res, err
 }

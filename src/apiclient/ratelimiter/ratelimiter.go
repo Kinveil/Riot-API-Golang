@@ -1,6 +1,8 @@
 package ratelimiter
 
 import (
+	"context"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -68,6 +70,7 @@ func (rl *RateLimiter) SetMaxRetries(maxRetries int) {
 }
 
 type APIRequest struct {
+	Context  context.Context
 	Region   string
 	MethodID MethodID
 	URL      string
@@ -159,7 +162,7 @@ func (rl *RateLimiter) Start() {
 			methodLimiter.shortLimiter.Obtain()
 
 			// Create a new HTTP request and set the API key as a header
-			httpRequest, err := http.NewRequest("GET", req.URL, nil)
+			httpRequest, err := http.NewRequestWithContext(req.Context, "GET", req.URL, nil)
 			if err != nil {
 				return
 			}
@@ -182,6 +185,13 @@ func (rl *RateLimiter) Start() {
 				}
 
 				handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
+
+				// Remove the request from the limiter channels
+				regionLimiter.shortLimiter.Release()
+				regionLimiter.longLimiter.Release()
+				methodLimiter.shortLimiter.Release()
+			} else if err != nil && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded)) {
+				req.Response <- nil
 
 				// Remove the request from the limiter channels
 				regionLimiter.shortLimiter.Release()

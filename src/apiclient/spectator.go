@@ -64,7 +64,7 @@ type BannedChampion struct {
 
 func (c *client) GetSpectatorActiveGameBySummonerID(r region.Region, summonerID string) (*ActiveGame, error) {
 	var res ActiveGame
-	_, err := c.dispatchAndUnmarshal(r, "/lol/spectator/v4/active-games/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetSpectatorActiveGameBySummonerID, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/spectator/v4/active-games/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetSpectatorActiveGameBySummonerID, &res)
 	return &res, err
 }
 
@@ -100,6 +100,6 @@ type FeaturedGameParticipantDTO struct {
 
 func (c *client) GetSpectatorFeaturedGames(r region.Region) (*FeaturedGames, error) {
 	var res FeaturedGames
-	_, err := c.dispatchAndUnmarshal(r, "/lol/spectator/v4/featured-games", "", nil, ratelimiter.GetSpectatorFeaturedGames, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/spectator/v4/featured-games", "", nil, ratelimiter.GetSpectatorFeaturedGames, &res)
 	return &res, err
 }
