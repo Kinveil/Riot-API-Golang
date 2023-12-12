@@ -14,38 +14,37 @@ const (
 	SEA      Continent = "SEA"
 )
 
-// Returns the full hostname corresponding to the region.
-func (c Continent) Host() string {
-	switch c {
-	case AMERICAS:
-		return "https://americas.api.riotgames.com"
-	case ASIA:
-		return "https://asia.api.riotgames.com"
-	case EUROPE:
-		return "https://europe.api.riotgames.com"
-	case SEA:
-		return "https://sea.api.riotgames.com"
-	default:
-		panic(fmt.Sprintf("region %s does not have a configured host", c))
-	}
-}
-
 func (c Continent) String() string {
 	return string(c)
 }
 
-func FormatString(cntnt string) Continent {
-	cntnt = strings.ToUpper(cntnt)
-	switch cntnt {
-	case "AMERICAS":
-		return AMERICAS
-	case "ASIA":
-		return ASIA
-	case "EUROPE":
-		return EUROPE
-	case "SEA":
-		return SEA
-	default:
-		panic(fmt.Sprintf("continent %s is invalid", cntnt))
+var stringToContinent = map[string]Continent{
+	"AMERICAS": AMERICAS,
+	"ASIA":     ASIA,
+	"EUROPE":   EUROPE,
+	"SEA":      SEA,
+}
+
+func FromString(cntnt string) Continent {
+	if continent, ok := stringToContinent[strings.ToUpper(cntnt)]; ok {
+		return continent
 	}
+
+	panic(fmt.Sprintf("continent %s does not have a configured continent", cntnt))
+}
+
+var continentToHost = map[Continent]string{
+	AMERICAS: "https://americas.api.riotgames.com",
+	ASIA:     "https://asia.api.riotgames.com",
+	EUROPE:   "https://europe.api.riotgames.com",
+	SEA:      "https://sea.api.riotgames.com",
+}
+
+// Returns the full hostname corresponding to the region.
+func (c Continent) Host() string {
+	if host, ok := continentToHost[c]; ok {
+		return host
+	}
+
+	panic(fmt.Sprintf("continent %s does not have a configured host", c))
 }

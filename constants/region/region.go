@@ -59,118 +59,118 @@ const (
 	VN2 Region = "VN2"
 )
 
-// Returns the full hostname corresponding to the region.
-func (r Region) Host() string {
-	switch r {
-	case BR1:
-		return "https://br1.api.riotgames.com"
-	case EUN1:
-		return "https://eun1.api.riotgames.com"
-	case EUW1:
-		return "https://euw1.api.riotgames.com"
-	case JP1:
-		return "https://jp1.api.riotgames.com"
-	case KR:
-		return "https://kr.api.riotgames.com"
-	case LA1:
-		return "https://la1.api.riotgames.com"
-	case LA2:
-		return "https://la2.api.riotgames.com"
-	case NA1:
-		return "https://na1.api.riotgames.com"
-	case OC1:
-		return "https://oc1.api.riotgames.com"
-	case PH2:
-		return "https://ph2.api.riotgames.com"
-	case RU:
-		return "https://ru.api.riotgames.com"
-	case SG2:
-		return "https://sg2.api.riotgames.com"
-	case TH2:
-		return "https://th2.api.riotgames.com"
-	case TR1:
-		return "https://tr1.api.riotgames.com"
-	case TW2:
-		return "https://tw2.api.riotgames.com"
-	case VN2:
-		return "https://vn2.api.riotgames.com"
-	default:
-		panic(fmt.Sprintf("region %s does not have a configured host", r))
-	}
-}
-
-// Returns the continent that the region is in. (Match v5)
-func (r Region) Continent() continent.Continent {
-	switch r {
-	case BR1:
-		return continent.AMERICAS
-	case EUN1:
-		return continent.EUROPE
-	case EUW1:
-		return continent.EUROPE
-	case JP1:
-		return continent.ASIA
-	case KR:
-		return continent.ASIA
-	case LA1:
-		return continent.AMERICAS
-	case LA2:
-		return continent.AMERICAS
-	case NA1:
-		return continent.AMERICAS
-	case OC1:
-		return continent.SEA
-	case PH2:
-		return continent.SEA
-	case RU:
-		return continent.EUROPE
-	case SG2:
-		return continent.SEA
-	case TH2:
-		return continent.SEA
-	case TR1:
-		return continent.EUROPE
-	case TW2:
-		return continent.ASIA
-	case VN2:
-		return continent.SEA
-	default:
-		panic(fmt.Sprintf("region %s does not have a configured host", r))
-	}
-}
-
 func (r Region) String() string {
 	return string(r)
 }
 
-func FormatString(rgn string) Region {
-	rgn = strings.ToUpper(rgn)
-	switch rgn {
-	case "BR":
-		return "BR1"
-	case "EUN":
-		fallthrough
-	case "EUNE":
-		return "EUN1"
-	case "EUW":
-		return "EUW1"
-	case "JP":
-		return "JP1"
-	case "KR":
-		return "KR"
-	case "LAN":
-		return "LA1"
-	case "LAS":
-		return "LA2"
-	case "NA":
-		return "NA1"
-	case "OCE":
-		return "OC1"
-	case "RU":
-		return "RU"
-	case "TR":
-		return "TR1"
-	default:
-		panic(fmt.Sprintf("region %s is invalid", rgn))
+var stringToRegion = map[string]Region{
+	"BR1":  BR1,
+	"EUN1": EUN1,
+	"EUW1": EUW1,
+	"JP1":  JP1,
+	"KR":   KR,
+	"LA1":  LA1,
+	"LA2":  LA2,
+	"NA1":  NA1,
+	"OC1":  OC1,
+	"PH2":  PH2,
+	"RU":   RU,
+	"SG2":  SG2,
+	"TH2":  TH2,
+	"TR1":  TR1,
+	"TW2":  TW2,
+	"VN2":  VN2,
+}
+
+func FromString(rgn string) Region {
+	if region, ok := stringToRegion[strings.ToUpper(rgn)]; ok {
+		return region
 	}
+
+	panic(fmt.Sprintf("region %s is invalid", rgn))
+}
+
+var regionToHost = map[Region]string{
+	BR1:  "https://br1.api.riotgames.com",
+	EUN1: "https://eun1.api.riotgames.com",
+	EUW1: "https://euw1.api.riotgames.com",
+	JP1:  "https://jp1.api.riotgames.com",
+	KR:   "https://kr.api.riotgames.com",
+	LA1:  "https://la1.api.riotgames.com",
+	LA2:  "https://la2.api.riotgames.com",
+	NA1:  "https://na1.api.riotgames.com",
+	OC1:  "https://oc1.api.riotgames.com",
+	PH2:  "https://ph2.api.riotgames.com",
+	RU:   "https://ru.api.riotgames.com",
+	SG2:  "https://sg2.api.riotgames.com",
+	TH2:  "https://th2.api.riotgames.com",
+	TR1:  "https://tr1.api.riotgames.com",
+	TW2:  "https://tw2.api.riotgames.com",
+	VN2:  "https://vn2.api.riotgames.com",
+}
+
+// Returns the full hostname corresponding to the region.
+func (r Region) Host() string {
+	if host, ok := regionToHost[r]; ok {
+		return host
+	}
+
+	panic(fmt.Sprintf("region %s does not have a configured host", r))
+}
+
+var regionToContinentMatchV5 = map[Region]continent.Continent{
+	BR1:  continent.AMERICAS,
+	EUN1: continent.EUROPE,
+	EUW1: continent.EUROPE,
+	JP1:  continent.ASIA,
+	KR:   continent.ASIA,
+	LA1:  continent.AMERICAS,
+	LA2:  continent.AMERICAS,
+	NA1:  continent.AMERICAS,
+	OC1:  continent.SEA,
+	PH2:  continent.SEA,
+	RU:   continent.EUROPE,
+	SG2:  continent.SEA,
+	TH2:  continent.SEA,
+	TR1:  continent.EUROPE,
+	TW2:  continent.ASIA,
+	VN2:  continent.SEA,
+}
+
+// Returns the continent that the region is in
+func (r Region) ContinentMatchV5() continent.Continent {
+	if continent, ok := regionToContinentMatchV5[r]; ok {
+		return continent
+	}
+
+	panic(fmt.Sprintf("region %s does not have a configured continent", r))
+}
+
+// Map the nearest region to the continent
+var regionToContinentAccountV1 = map[Region]continent.Continent{
+	BR1:  continent.AMERICAS,
+	EUN1: continent.EUROPE,
+	EUW1: continent.EUROPE,
+	JP1:  continent.ASIA,
+	KR:   continent.ASIA,
+	LA1:  continent.AMERICAS,
+	LA2:  continent.AMERICAS,
+	NA1:  continent.AMERICAS,
+	OC1:  continent.AMERICAS,
+	PH2:  continent.AMERICAS,
+	RU:   continent.ASIA,
+	SG2:  continent.ASIA,
+	TH2:  continent.ASIA,
+	TR1:  continent.EUROPE,
+	TW2:  continent.ASIA,
+	VN2:  continent.ASIA,
+}
+
+// Returns the continent that the region is in
+func (r Region) ContinentAccountV1() continent.Continent {
+	if continent, ok := regionToContinentAccountV1[r]; ok {
+		return continent
+	}
+
+	panic(fmt.Sprintf("region %s does not have a configured continent", r))
 }
