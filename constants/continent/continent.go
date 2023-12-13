@@ -26,7 +26,9 @@ var stringToContinent = map[string]Continent{
 }
 
 func FromString(cntnt string) Continent {
-	if continent, ok := stringToContinent[strings.ToUpper(cntnt)]; ok {
+	cntnt = strings.ToUpper(cntnt)
+
+	if continent, ok := stringToContinent[cntnt]; ok {
 		return continent
 	}
 

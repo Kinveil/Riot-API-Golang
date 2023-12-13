@@ -3,6 +3,7 @@ package region
 import (
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/junioryono/Riot-API-Golang/constants/continent"
 )
@@ -83,7 +84,19 @@ var stringToRegion = map[string]Region{
 }
 
 func FromString(rgn string) Region {
-	if region, ok := stringToRegion[strings.ToUpper(rgn)]; ok {
+	// Remove all numbers from the string
+	rgn = strings.Map(func(r rune) rune {
+		if unicode.IsNumber(r) {
+			return -1
+		}
+
+		return r
+	}, rgn)
+
+	// Capitalize the string
+	rgn = strings.ToUpper(rgn)
+
+	if region, ok := stringToRegion[rgn]; ok {
 		return region
 	}
 
