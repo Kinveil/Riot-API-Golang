@@ -32,7 +32,7 @@ func (v *Patch) ShortPatch() ShortPatch {
 type PatchWithStartTime struct {
 	Patch     ShortPatch
 	StartTime time.Time
-	Shifts    map[region.Region]int64
+	Shifts    map[region.Region]int
 }
 
 func (v *PatchWithStartTime) GetRegionStartDate(region region.Region) time.Time {

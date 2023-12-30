@@ -25,9 +25,9 @@ type PatchesWithStartTime []patch.PatchWithStartTime
 type patchesWithStartTimeHttpResponse struct {
 	Patches []struct {
 		Name  string `json:"name"`
-		Start int64  `json:"start"`
+		Start int    `json:"start"`
 	} `json:"patches"`
-	Shifts map[region.Region]int64 `json:"shifts"`
+	Shifts map[region.Region]int `json:"shifts"`
 }
 
 func GetPatchesWithStartTime() (PatchesWithStartTime, error) {
@@ -45,7 +45,7 @@ func GetPatchesWithStartTime() (PatchesWithStartTime, error) {
 	for _, p := range res.Patches {
 		patches = append(patches, patch.PatchWithStartTime{
 			Patch:     patch.ShortPatch(p.Name),
-			StartTime: time.Unix(p.Start, 0),
+			StartTime: time.Unix(int64(p.Start), 0),
 			Shifts:    res.Shifts,
 		})
 	}

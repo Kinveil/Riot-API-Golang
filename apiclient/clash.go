@@ -43,8 +43,8 @@ type ClashTournament struct {
 	NameKeySecondary string `json:"nameKeySecondary"`
 	Schedule         []struct {
 		ID               int    `json:"id"`
-		RegistrationTime int64  `json:"registrationTime"`
-		StartTime        int64  `json:"startTime"`
+		RegistrationTime int    `json:"registrationTime"`
+		StartTime        int    `json:"startTime"`
 		WaitTime         int    `json:"waitTime"`
 		NotifyAt         int    `json:"notifyAt"`
 		State            string `json:"state"`
@@ -55,21 +55,21 @@ type ClashTournament struct {
 		Prize  int    `json:"prize"`
 	} `json:"prizes"`
 	Stages []struct {
-		ID                  int   `json:"id"`
-		Stage               int   `json:"stage"`
-		StartTime           int64 `json:"startTime"`
-		WaitTime            int   `json:"waitTime"`
-		NotifyAt            int   `json:"notifyAt"`
-		RegistrationTime    int64 `json:"registrationTime"`
-		Length              int   `json:"length"`
-		TeamSize            int   `json:"teamSize"`
-		MaxTeams            int   `json:"maxTeams"`
-		IsMajor             bool  `json:"isMajor"`
-		RegistrationEnabled bool  `json:"registrationEnabled"`
+		ID                  int  `json:"id"`
+		Stage               int  `json:"stage"`
+		StartTime           int  `json:"startTime"`
+		WaitTime            int  `json:"waitTime"`
+		NotifyAt            int  `json:"notifyAt"`
+		RegistrationTime    int  `json:"registrationTime"`
+		Length              int  `json:"length"`
+		TeamSize            int  `json:"teamSize"`
+		MaxTeams            int  `json:"maxTeams"`
+		IsMajor             bool `json:"isMajor"`
+		RegistrationEnabled bool `json:"registrationEnabled"`
 	} `json:"stages"`
-	MaxNumTeams int   `json:"maxNumTeams"`
-	SignupTime  int64 `json:"signupTime"`
-	StartTime   int64 `json:"startTime"`
+	MaxNumTeams int `json:"maxNumTeams"`
+	SignupTime  int `json:"signupTime"`
+	StartTime   int `json:"startTime"`
 	Winners     []struct {
 		TeamID string `json:"teamId"`
 		Place  int    `json:"place"`

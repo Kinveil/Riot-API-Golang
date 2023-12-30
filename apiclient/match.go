@@ -106,7 +106,7 @@ type MatchInfoParticipant struct {
 	Challenges                     *MatchInfoParticipantChallenges `json:"challenges"`
 	ChampExperience                int                             `json:"champExperience"`
 	ChampLevel                     int                             `json:"champLevel"`
-	ChampionID                     int64                           `json:"championId"`
+	ChampionID                     int                             `json:"championId"`
 	ChampionName                   string                          `json:"championName"`
 	ChampionTransform              int                             `json:"championTransform"`
 	CommandPings                   int                             `json:"commandPings"`
@@ -169,6 +169,24 @@ type MatchInfoParticipant struct {
 	PhysicalDamageDealt            int                             `json:"physicalDamageDealt"`
 	PhysicalDamageDealtToChampions int                             `json:"physicalDamageDealtToChampions"`
 	PhysicalDamageTaken            int                             `json:"physicalDamageTaken"`
+	Placement                      int                             `json:"placement"`
+	PlayerAugment1                 int                             `json:"playerAugment1"`
+	PlayerAugment2                 int                             `json:"playerAugment2"`
+	PlayerAugment3                 int                             `json:"playerAugment3"`
+	PlayerAugment4                 int                             `json:"playerAugment4"`
+	PlayerScore0                   int                             `json:"playerScore0"`
+	PlayerScore1                   int                             `json:"playerScore1"`
+	PlayerScore10                  int                             `json:"playerScore10"`
+	PlayerScore11                  int                             `json:"playerScore11"`
+	PlayerScore2                   int                             `json:"playerScore2"`
+	PlayerScore3                   int                             `json:"playerScore3"`
+	PlayerScore4                   int                             `json:"playerScore4"`
+	PlayerScore5                   int                             `json:"playerScore5"`
+	PlayerScore6                   int                             `json:"playerScore6"`
+	PlayerScore7                   int                             `json:"playerScore7"`
+	PlayerScore8                   int                             `json:"playerScore8"`
+	PlayerScore9                   int                             `json:"playerScore9"`
+	PlayerSubteamID                int                             `json:"playerSubteamId"`
 	PlayedChampSelectPosition      int                             `json:"playedChampSelectPosition"`
 	ProfileIcon                    int                             `json:"profileIcon"`
 	PushPings                      int                             `json:"pushPings"`
@@ -181,6 +199,7 @@ type MatchInfoParticipant struct {
 	Spell2Casts                    int                             `json:"spell2Casts"`
 	Spell3Casts                    int                             `json:"spell3Casts"`
 	Spell4Casts                    int                             `json:"spell4Casts"`
+	SubteamPlacement               int                             `json:"subteamPlacement"`
 	Summoner1Casts                 int                             `json:"summoner1Casts"`
 	Summoner1ID                    int                             `json:"summoner1Id"`
 	Summoner2Casts                 int                             `json:"summoner2Casts"`
@@ -194,10 +213,12 @@ type MatchInfoParticipant struct {
 	TeamPosition                   string                          `json:"teamPosition"`
 	TimeCCingOthers                int                             `json:"timeCCingOthers"`
 	TimePlayed                     int                             `json:"timePlayed"`
+	TotalAllyJungleMinionsKilled   int                             `json:"totalAllyJungleMinionsKilled"`
 	TotalDamageDealt               int                             `json:"totalDamageDealt"`
 	TotalDamageDealtToChampions    int                             `json:"totalDamageDealtToChampions"`
 	TotalDamageShieldedOnTeammates int                             `json:"totalDamageShieldedOnTeammates"`
 	TotalDamageTaken               int                             `json:"totalDamageTaken"`
+	TotalEnemyJungleMinionsKilled  int                             `json:"totalEnemyJungleMinionsKilled"`
 	TotalHeal                      int                             `json:"totalHeal"`
 	TotalHealsOnTeammates          int                             `json:"totalHealsOnTeammates"`
 	TotalMinionsKilled             int                             `json:"totalMinionsKilled"`
@@ -221,116 +242,126 @@ type MatchInfoParticipant struct {
 }
 
 type MatchInfoParticipantChallenges struct {
-	Assist12StreakCount                      int     `json:"12AssistStreakCount"`
-	AbilityUses                              int     `json:"abilityUses"`
-	AcesBefore15Minutes                      int     `json:"acesBefore15Minutes"`
-	AlliedJungleMonsterKills                 float64 `json:"alliedJungleMonsterKills"`
-	BaronTakedowns                           int     `json:"baronTakedowns"`
-	BlastConeOppositeOpponentCount           int     `json:"blastConeOppositeOpponentCount"`
-	BountyGold                               int     `json:"bountyGold"`
-	BuffsStolen                              int     `json:"buffsStolen"`
-	CompleteSupportQuestInTime               int     `json:"completeSupportQuestInTime"`
-	ControlWardsPlaced                       int     `json:"controlWardsPlaced"`
-	DamagePerMinute                          float64 `json:"damagePerMinute"`
-	DamageTakenOnTeamPercentage              float64 `json:"damageTakenOnTeamPercentage"`
-	DancedWithRiftHerald                     int     `json:"dancedWithRiftHerald"`
-	DeathsByEnemyChamps                      int     `json:"deathsByEnemyChamps"`
-	DodgeSkillShotsSmallWindow               int     `json:"dodgeSkillShotsSmallWindow"`
-	DoubleAces                               int     `json:"doubleAces"`
-	DragonTakedowns                          int     `json:"dragonTakedowns"`
-	EarlyLaningPhaseGoldExpAdvantage         float64 `json:"earlyLaningPhaseGoldExpAdvantage"`
-	EffectiveHealAndShielding                float64 `json:"effectiveHealAndShielding"`
-	ElderDragonKillsWithOpposingSoul         int     `json:"elderDragonKillsWithOpposingSoul"`
-	ElderDragonMultikills                    int     `json:"elderDragonMultikills"`
-	EnemyChampionImmobilizations             int     `json:"enemyChampionImmobilizations"`
-	EnemyJungleMonsterKills                  float64 `json:"enemyJungleMonsterKills"`
-	EpicMonsterKillsNearEnemyJungler         int     `json:"epicMonsterKillsNearEnemyJungler"`
-	EpicMonsterKillsWithin30SecondsOfSpawn   int     `json:"epicMonsterKillsWithin30SecondsOfSpawn"`
-	EpicMonsterSteals                        int     `json:"epicMonsterSteals"`
-	EpicMonsterStolenWithoutSmite            int     `json:"epicMonsterStolenWithoutSmite"`
-	FirstTurretKilledTime                    float64 `json:"firstTurretKilledTime"`
-	FlawlessAces                             int     `json:"flawlessAces"`
-	FullTeamTakedown                         int     `json:"fullTeamTakedown"`
-	GameLength                               float64 `json:"gameLength"`
-	GetTakedownsInAllLanesEarlyJungleAsLaner int     `json:"getTakedownsInAllLanesEarlyJungleAsLaner"`
-	GoldPerMinute                            float64 `json:"goldPerMinute"`
-	HadOpenNexus                             int     `json:"hadOpenNexus"`
-	ImmobilizeAndKillWithAlly                int     `json:"immobilizeAndKillWithAlly"`
-	InitialBuffCount                         int     `json:"initialBuffCount"`
-	InitialCrabCount                         int     `json:"initialCrabCount"`
-	JungleCsBefore10Minutes                  float64 `json:"jungleCsBefore10Minutes"`
-	JunglerTakedownsNearDamagedEpicMonster   int     `json:"junglerTakedownsNearDamagedEpicMonster"`
-	KTurretsDestroyedBeforePlatesFall        int     `json:"kTurretsDestroyedBeforePlatesFall"`
-	Kda                                      float64 `json:"kda"`
-	KillAfterHiddenWithAlly                  int     `json:"killAfterHiddenWithAlly"`
-	KillParticipation                        float64 `json:"killParticipation"`
-	KilledChampTookFullTeamDamageSurvived    int     `json:"killedChampTookFullTeamDamageSurvived"`
-	KillingSprees                            int     `json:"killingSprees"`
-	KillsNearEnemyTurret                     int     `json:"killsNearEnemyTurret"`
-	KillsOnOtherLanesEarlyJungleAsLaner      int     `json:"killsOnOtherLanesEarlyJungleAsLaner"`
-	KillsOnRecentlyHealedByAramPack          int     `json:"killsOnRecentlyHealedByAramPack"`
-	KillsUnderOwnTurret                      int     `json:"killsUnderOwnTurret"`
-	KillsWithHelpFromEpicMonster             int     `json:"killsWithHelpFromEpicMonster"`
-	KnockEnemyIntoTeamAndKill                int     `json:"knockEnemyIntoTeamAndKill"`
-	LandSkillShotsEarlyGame                  int     `json:"landSkillShotsEarlyGame"`
-	LaneMinionsFirst10Minutes                int     `json:"laneMinionsFirst10Minutes"`
-	LaningPhaseGoldExpAdvantage              float64 `json:"laningPhaseGoldExpAdvantage"`
-	LegendaryCount                           int     `json:"legendaryCount"`
-	LostAnInhibitor                          int     `json:"lostAnInhibitor"`
-	MaxCsAdvantageOnLaneOpponent             float64 `json:"maxCsAdvantageOnLaneOpponent"`
-	MaxKillDeficit                           int     `json:"maxKillDeficit"`
-	MaxLevelLeadLaneOpponent                 int     `json:"maxLevelLeadLaneOpponent"`
-	MoreEnemyJungleThanOpponent              float64 `json:"moreEnemyJungleThanOpponent"`
-	MultiKillOneSpell                        int     `json:"multiKillOneSpell"`
-	MultiTurretRiftHeraldCount               int     `json:"multiTurretRiftHeraldCount"`
-	Multikills                               int     `json:"multikills"`
-	MultikillsAfterAggressiveFlash           int     `json:"multikillsAfterAggressiveFlash"`
-	MythicItemUsed                           int     `json:"mythicItemUsed"`
-	OuterTurretExecutesBefore10Minutes       int     `json:"outerTurretExecutesBefore10Minutes"`
-	OutnumberedKills                         int     `json:"outnumberedKills"`
-	OutnumberedNexusKill                     int     `json:"outnumberedNexusKill"`
-	PerfectDragonSoulsTaken                  int     `json:"perfectDragonSoulsTaken"`
-	PerfectGame                              int     `json:"perfectGame"`
-	PickKillWithAlly                         int     `json:"pickKillWithAlly"`
-	PoroExplosions                           int     `json:"poroExplosions"`
-	QuickCleanse                             int     `json:"quickCleanse"`
-	QuickFirstTurret                         int     `json:"quickFirstTurret"`
-	QuickSoloKills                           int     `json:"quickSoloKills"`
-	RiftHeraldTakedowns                      int     `json:"riftHeraldTakedowns"`
-	SaveAllyFromDeath                        int     `json:"saveAllyFromDeath"`
-	ScuttleCrabKills                         int     `json:"scuttleCrabKills"`
-	SkillshotsDodged                         int     `json:"skillshotsDodged"`
-	SkillshotsHit                            int     `json:"skillshotsHit"`
-	SnowballsHit                             int     `json:"snowballsHit"`
-	SoloBaronKills                           int     `json:"soloBaronKills"`
-	SoloKills                                int     `json:"soloKills"`
-	SoloTurretsLategame                      int     `json:"soloTurretsLategame"`
-	StealthWardsPlaced                       int     `json:"stealthWardsPlaced"`
-	SurvivedSingleDigitHpCount               int     `json:"survivedSingleDigitHpCount"`
-	SurvivedThreeImmobilizesInFight          int     `json:"survivedThreeImmobilizesInFight"`
-	TakedownOnFirstTurret                    int     `json:"takedownOnFirstTurret"`
-	Takedowns                                int     `json:"takedowns"`
-	TakedownsAfterGainingLevelAdvantage      int     `json:"takedownsAfterGainingLevelAdvantage"`
-	TakedownsBeforeJungleMinionSpawn         int     `json:"takedownsBeforeJungleMinionSpawn"`
-	TakedownsFirstXMinutes                   int     `json:"takedownsFirstXMinutes"`
-	TakedownsInAlcove                        int     `json:"takedownsInAlcove"`
-	TakedownsInEnemyFountain                 int     `json:"takedownsInEnemyFountain"`
-	TeamBaronKills                           int     `json:"teamBaronKills"`
-	TeamDamagePercentage                     float64 `json:"teamDamagePercentage"`
-	TeamElderDragonKills                     int     `json:"teamElderDragonKills"`
-	TeamRiftHeraldKills                      int     `json:"teamRiftHeraldKills"`
-	ThreeWardsOneSweeperCount                int     `json:"threeWardsOneSweeperCount"`
-	TookLargeDamageSurvived                  int     `json:"tookLargeDamageSurvived"`
-	TurretPlatesTaken                        int     `json:"turretPlatesTaken"`
-	TurretTakedowns                          int     `json:"turretTakedowns"`
-	TurretsTakenWithRiftHerald               int     `json:"turretsTakenWithRiftHerald"`
-	TwentyMinionsIn3SecondsCount             int     `json:"twentyMinionsIn3SecondsCount"`
-	UnseenRecalls                            int     `json:"unseenRecalls"`
-	VisionScoreAdvantageLaneOpponent         float64 `json:"visionScoreAdvantageLaneOpponent"`
-	VisionScorePerMinute                     float64 `json:"visionScorePerMinute"`
-	WardTakedowns                            int     `json:"wardTakedowns"`
-	WardTakedownsBefore20M                   int     `json:"wardTakedownsBefore20M"`
-	WardsGuarded                             int     `json:"wardsGuarded"`
+	Assist12StreakCount                       int     `json:"12AssistStreakCount"`
+	AbilityUses                               int     `json:"abilityUses"`
+	AcesBefore15Minutes                       int     `json:"acesBefore15Minutes"`
+	AlliedJungleMonsterKills                  int     `json:"alliedJungleMonsterKills"`
+	BaronBuffGoldAdvantageOverThreshold       int     `json:"baronBuffGoldAdvantageOverThreshold"`
+	BaronTakedowns                            int     `json:"baronTakedowns"`
+	BlastConeOppositeOpponentCount            int     `json:"blastConeOppositeOpponentCount"`
+	BountyGold                                int     `json:"bountyGold"`
+	BuffsStolen                               int     `json:"buffsStolen"`
+	CompleteSupportQuestInTime                int     `json:"completeSupportQuestInTime"`
+	ControlWardTimeCoverageInRiverOrEnemyHalf float64 `json:"controlWardTimeCoverageInRiverOrEnemyHalf"`
+	ControlWardsPlaced                        int     `json:"controlWardsPlaced"`
+	DamagePerMinute                           float64 `json:"damagePerMinute"`
+	DamageTakenOnTeamPercentage               float64 `json:"damageTakenOnTeamPercentage"`
+	DancedWithRiftHerald                      int     `json:"dancedWithRiftHerald"`
+	DeathsByEnemyChamps                       int     `json:"deathsByEnemyChamps"`
+	DodgeSkillShotsSmallWindow                int     `json:"dodgeSkillShotsSmallWindow"`
+	DoubleAces                                int     `json:"doubleAces"`
+	DragonTakedowns                           int     `json:"dragonTakedowns"`
+	EarliestBaron                             float64 `json:"earliestBaron"`
+	EarliestDragonTakedown                    float64 `json:"earliestDragonTakedown"`
+	EarlyLaningPhaseGoldExpAdvantage          float64 `json:"earlyLaningPhaseGoldExpAdvantage"`
+	EffectiveHealAndShielding                 float64 `json:"effectiveHealAndShielding"`
+	ElderDragonKillsWithOpposingSoul          int     `json:"elderDragonKillsWithOpposingSoul"`
+	ElderDragonMultikills                     int     `json:"elderDragonMultikills"`
+	EnemyChampionImmobilizations              int     `json:"enemyChampionImmobilizations"`
+	EnemyJungleMonsterKills                   int     `json:"enemyJungleMonsterKills"`
+	EpicMonsterKillsNearEnemyJungler          int     `json:"epicMonsterKillsNearEnemyJungler"`
+	EpicMonsterKillsWithin30SecondsOfSpawn    int     `json:"epicMonsterKillsWithin30SecondsOfSpawn"`
+	EpicMonsterSteals                         int     `json:"epicMonsterSteals"`
+	FastestLegendary                          float64 `json:"fastestLegendary"`
+	EpicMonsterStolenWithoutSmite             int     `json:"epicMonsterStolenWithoutSmite"`
+	FirstTurretKilled                         int     `json:"firstTurretKilled"`
+	FirstTurretKilledTime                     float64 `json:"firstTurretKilledTime"`
+	FlawlessAces                              int     `json:"flawlessAces"`
+	FullTeamTakedown                          int     `json:"fullTeamTakedown"`
+	GameLength                                float64 `json:"gameLength"`
+	GetTakedownsInAllLanesEarlyJungleAsLaner  int     `json:"getTakedownsInAllLanesEarlyJungleAsLaner"`
+	GoldPerMinute                             float64 `json:"goldPerMinute"`
+	HadOpenNexus                              int     `json:"hadOpenNexus"`
+	ImmobilizeAndKillWithAlly                 int     `json:"immobilizeAndKillWithAlly"`
+	InitialBuffCount                          int     `json:"initialBuffCount"`
+	InitialCrabCount                          int     `json:"initialCrabCount"`
+	JungleCsBefore10Minutes                   float64 `json:"jungleCsBefore10Minutes"`
+	JunglerTakedownsNearDamagedEpicMonster    int     `json:"junglerTakedownsNearDamagedEpicMonster"`
+	KTurretsDestroyedBeforePlatesFall         int     `json:"kTurretsDestroyedBeforePlatesFall"`
+	Kda                                       float64 `json:"kda"`
+	KillAfterHiddenWithAlly                   int     `json:"killAfterHiddenWithAlly"`
+	KillParticipation                         float64 `json:"killParticipation"`
+	KilledChampTookFullTeamDamageSurvived     int     `json:"killedChampTookFullTeamDamageSurvived"`
+	KillingSprees                             int     `json:"killingSprees"`
+	KillsNearEnemyTurret                      int     `json:"killsNearEnemyTurret"`
+	KillsOnOtherLanesEarlyJungleAsLaner       int     `json:"killsOnOtherLanesEarlyJungleAsLaner"`
+	KillsOnRecentlyHealedByAramPack           int     `json:"killsOnRecentlyHealedByAramPack"`
+	KillsUnderOwnTurret                       int     `json:"killsUnderOwnTurret"`
+	KillsWithHelpFromEpicMonster              int     `json:"killsWithHelpFromEpicMonster"`
+	KnockEnemyIntoTeamAndKill                 int     `json:"knockEnemyIntoTeamAndKill"`
+	LandSkillShotsEarlyGame                   int     `json:"landSkillShotsEarlyGame"`
+	LaneMinionsFirst10Minutes                 int     `json:"laneMinionsFirst10Minutes"`
+	LaningPhaseGoldExpAdvantage               float64 `json:"laningPhaseGoldExpAdvantage"`
+	LegendaryCount                            int     `json:"legendaryCount"`
+	LostAnInhibitor                           int     `json:"lostAnInhibitor"`
+	MaxCsAdvantageOnLaneOpponent              float64 `json:"maxCsAdvantageOnLaneOpponent"`
+	MaxKillDeficit                            int     `json:"maxKillDeficit"`
+	MaxLevelLeadLaneOpponent                  int     `json:"maxLevelLeadLaneOpponent"`
+	MejaisFullStackInTime                     int     `json:"mejaisFullStackInTime"`
+	MoreEnemyJungleThanOpponent               float64 `json:"moreEnemyJungleThanOpponent"`
+	MultiKillOneSpell                         int     `json:"multiKillOneSpell"`
+	MultiTurretRiftHeraldCount                int     `json:"multiTurretRiftHeraldCount"`
+	Multikills                                int     `json:"multikills"`
+	MultikillsAfterAggressiveFlash            int     `json:"multikillsAfterAggressiveFlash"`
+	MythicItemUsed                            int     `json:"mythicItemUsed"`
+	OuterTurretExecutesBefore10Minutes        int     `json:"outerTurretExecutesBefore10Minutes"`
+	OutnumberedKills                          int     `json:"outnumberedKills"`
+	OutnumberedNexusKill                      int     `json:"outnumberedNexusKill"`
+	PerfectDragonSoulsTaken                   int     `json:"perfectDragonSoulsTaken"`
+	PerfectGame                               int     `json:"perfectGame"`
+	PickKillWithAlly                          int     `json:"pickKillWithAlly"`
+	PlayedChampSelectPosition                 int     `json:"playedChampSelectPosition"`
+	PoroExplosions                            int     `json:"poroExplosions"`
+	QuickCleanse                              int     `json:"quickCleanse"`
+	QuickFirstTurret                          int     `json:"quickFirstTurret"`
+	QuickSoloKills                            int     `json:"quickSoloKills"`
+	RiftHeraldTakedowns                       int     `json:"riftHeraldTakedowns"`
+	SaveAllyFromDeath                         int     `json:"saveAllyFromDeath"`
+	ScuttleCrabKills                          int     `json:"scuttleCrabKills"`
+	ShortestTimeToAceFromFirstTakedown        float64 `json:"shortestTimeToAceFromFirstTakedown"`
+	SkillshotsDodged                          int     `json:"skillshotsDodged"`
+	SkillshotsHit                             int     `json:"skillshotsHit"`
+	SnowballsHit                              int     `json:"snowballsHit"`
+	SoloBaronKills                            int     `json:"soloBaronKills"`
+	SoloKills                                 int     `json:"soloKills"`
+	SoloTurretsLategame                       int     `json:"soloTurretsLategame"`
+	StealthWardsPlaced                        int     `json:"stealthWardsPlaced"`
+	SurvivedSingleDigitHpCount                int     `json:"survivedSingleDigitHpCount"`
+	SurvivedThreeImmobilizesInFight           int     `json:"survivedThreeImmobilizesInFight"`
+	TakedownOnFirstTurret                     int     `json:"takedownOnFirstTurret"`
+	Takedowns                                 int     `json:"takedowns"`
+	TakedownsAfterGainingLevelAdvantage       int     `json:"takedownsAfterGainingLevelAdvantage"`
+	TakedownsBeforeJungleMinionSpawn          int     `json:"takedownsBeforeJungleMinionSpawn"`
+	TakedownsFirstXMinutes                    int     `json:"takedownsFirstXMinutes"`
+	TakedownsInAlcove                         int     `json:"takedownsInAlcove"`
+	TakedownsInEnemyFountain                  int     `json:"takedownsInEnemyFountain"`
+	TeamBaronKills                            int     `json:"teamBaronKills"`
+	TeamDamagePercentage                      float64 `json:"teamDamagePercentage"`
+	TeamElderDragonKills                      int     `json:"teamElderDragonKills"`
+	TeamRiftHeraldKills                       int     `json:"teamRiftHeraldKills"`
+	ThreeWardsOneSweeperCount                 int     `json:"threeWardsOneSweeperCount"`
+	TookLargeDamageSurvived                   int     `json:"tookLargeDamageSurvived"`
+	TurretPlatesTaken                         int     `json:"turretPlatesTaken"`
+	TurretTakedowns                           int     `json:"turretTakedowns"`
+	TurretsTakenWithRiftHerald                int     `json:"turretsTakenWithRiftHerald"`
+	TwentyMinionsIn3SecondsCount              int     `json:"twentyMinionsIn3SecondsCount"`
+	TwoWardsOneSweeperCount                   int     `json:"twoWardsOneSweeperCount"`
+	UnseenRecalls                             int     `json:"unseenRecalls"`
+	VisionScoreAdvantageLaneOpponent          float64 `json:"visionScoreAdvantageLaneOpponent"`
+	VisionScorePerMinute                      float64 `json:"visionScorePerMinute"`
+	WardTakedowns                             int     `json:"wardTakedowns"`
+	WardTakedownsBefore20M                    int     `json:"wardTakedownsBefore20M"`
+	WardsGuarded                              int     `json:"wardsGuarded"`
 }
 
 type MatchInfoParticipantPerks struct {
@@ -365,8 +396,8 @@ type MatchInfoTeam struct {
 }
 
 type MatchInfoTeamBan struct {
-	PickTurn   int   `json:"pickTurn"`
-	ChampionID int64 `json:"championId"`
+	PickTurn   int `json:"pickTurn"`
+	ChampionID int `json:"championId"`
 }
 
 type MatchInfoTeamObjectives struct {
@@ -409,9 +440,9 @@ type MatchTimelineMetadata struct {
 }
 
 type MatchTimelineInfo struct {
-	FrameInterval int64                      `json:"frameInterval"`
+	FrameInterval int                        `json:"frameInterval"`
 	Frames        []MatchTimelineFrame       `json:"frames"`
-	GameID        int64                      `json:"gameId"`
+	GameID        int                        `json:"gameId"`
 	Participants  []MatchTimelineParticipant `json:"participants"`
 }
 
@@ -421,7 +452,7 @@ type MatchTimelineParticipant struct {
 }
 
 type MatchTimelineFrame struct {
-	Timestamp         int64                          `json:"timestamp"`
+	Timestamp         int                            `json:"timestamp"`
 	ParticipantFrames MatchTimelineParticipantFrames `json:"participantFrames"`
 	Events            []MatchTimelineEvent           `json:"events"`
 }
@@ -542,7 +573,7 @@ type MatchTimelineEvent struct {
 	TransformType           string                 `json:"transformType"`
 	SkillSlot               int                    `json:"skillSlot"`
 	VictimID                int                    `json:"victimId"`
-	Timestamp               int64                  `json:"timestamp"`
+	Timestamp               int                    `json:"timestamp"`
 	AfterID                 int                    `json:"afterId"`
 	MonsterSubType          string                 `json:"monsterSubType"`
 	LaneType                string                 `json:"laneType"`
