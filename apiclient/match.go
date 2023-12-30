@@ -404,6 +404,7 @@ type MatchInfoTeamObjectives struct {
 	Baron      MatchInfoTeamObjectiveType `json:"baron"`
 	Champion   MatchInfoTeamObjectiveType `json:"champion"`
 	Dragon     MatchInfoTeamObjectiveType `json:"dragon"`
+	Horde      MatchInfoTeamObjectiveType `json:"horde"`
 	Inhibitor  MatchInfoTeamObjectiveType `json:"inhibitor"`
 	RiftHerald MatchInfoTeamObjectiveType `json:"riftHerald"`
 	Tower      MatchInfoTeamObjectiveType `json:"tower"`
