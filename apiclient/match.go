@@ -494,7 +494,7 @@ type MatchTimelineParticipantFrame struct {
 }
 
 type MatchTimelineChampionStats struct {
-	AblityHaste          int `json:"abilityHaste"`
+	AbilityHaste         int `json:"abilityHaste"`
 	AbilityPower         int `json:"abilityPower"`
 	Armor                int `json:"armor"`
 	ArmorPen             int `json:"armorPen"`
