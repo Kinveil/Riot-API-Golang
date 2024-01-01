@@ -448,7 +448,7 @@ type MatchTimelineInfo struct {
 }
 
 type MatchTimelineParticipant struct {
-	ParticipantId int    `json:"participantId"`
+	ParticipantID int    `json:"participantId"`
 	Puuid         string `json:"puuid"`
 }
 
