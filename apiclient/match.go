@@ -453,30 +453,9 @@ type MatchTimelineParticipant struct {
 }
 
 type MatchTimelineFrame struct {
-	Timestamp         int                            `json:"timestamp"`
-	ParticipantFrames MatchTimelineParticipantFrames `json:"participantFrames"`
-	Events            []MatchTimelineEvent           `json:"events"`
-}
-
-// ParticipantFrames stores frames corresponding to each participant. The order
-// is not defined (i.e. do not assume the order is ascending by participant ID).
-type MatchTimelineParticipantFrames struct {
-	Frames []MatchTimelineParticipantFrame `json:"frames"`
-}
-
-func (p *MatchTimelineParticipantFrames) UnmarshalJSON(b []byte) error {
-	var obj map[int]MatchTimelineParticipantFrame
-	err := json.Unmarshal(b, &obj)
-	if err != nil {
-		return err
-	}
-	var vals []MatchTimelineParticipantFrame
-
-	for _, v := range obj {
-		vals = append(vals, v)
-	}
-	p.Frames = vals
-	return nil
+	Events            []MatchTimelineEvent            `json:"events"`
+	ParticipantFrames []MatchTimelineParticipantFrame `json:"participantFrames"`
+	Timestamp         int                             `json:"timestamp"`
 }
 
 type MatchTimelineParticipantFrame struct {
