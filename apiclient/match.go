@@ -453,9 +453,29 @@ type MatchTimelineParticipant struct {
 }
 
 type MatchTimelineFrame struct {
-	Events            []MatchTimelineEvent            `json:"events"`
-	ParticipantFrames []MatchTimelineParticipantFrame `json:"participantFrames"`
 	Timestamp         int                             `json:"timestamp"`
+	ParticipantFrames []MatchTimelineParticipantFrame `json:"participantFrames"`
+	Events            []MatchTimelineEvent            `json:"events"`
+}
+
+// Need to unmarshal MatchTimelineFrame because ParticipantFrames comes as an object with keys as participant IDs.
+func (m *MatchTimelineFrame) UnmarshalJSON(data []byte) error {
+	obj := &struct {
+		ParticipantFrames map[string]MatchTimelineParticipantFrame `json:"participantFrames"`
+		*MatchTimelineFrame
+	}{
+		MatchTimelineFrame: (*MatchTimelineFrame)(m),
+	}
+
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return err
+	}
+
+	for _, v := range obj.ParticipantFrames {
+		m.ParticipantFrames = append(m.ParticipantFrames, v)
+	}
+
+	return nil
 }
 
 type MatchTimelineParticipantFrame struct {
@@ -474,7 +494,7 @@ type MatchTimelineParticipantFrame struct {
 }
 
 type MatchTimelineChampionStats struct {
-	AbilityHaste         int `json:"abilityHaste"`
+	AblityHaste          int `json:"abilityHaste"`
 	AbilityPower         int `json:"abilityPower"`
 	Armor                int `json:"armor"`
 	ArmorPen             int `json:"armorPen"`
