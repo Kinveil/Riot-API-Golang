@@ -430,8 +430,8 @@ func (c *client) GetMatch(continent continent.Continent, matchID string) (*Match
 }
 
 type MatchTimeline struct {
-	MatchTimelineMetadata MatchTimelineMetadata `json:"metadata"`
-	Info                  MatchTimelineInfo     `json:"info"`
+	Metadata MatchTimelineMetadata `json:"metadata"`
+	Info     MatchTimelineInfo     `json:"info"`
 }
 
 type MatchTimelineMetadata struct {
@@ -491,7 +491,6 @@ type MatchTimelineParticipantFrame struct {
 	Position                 MatchTimelinePosition      `json:"position"`
 	TimeEnemySpentControlled int                        `json:"timeEnemySpentControlled"`
 	TotalGold                int                        `json:"totalGold"`
-	TeamScore                int                        `json:"teamScore"`
 	XP                       int                        `json:"xp"`
 }
 
@@ -533,30 +532,34 @@ type MatchTimelineDamageStats struct {
 	TotalDamageDone               int `json:"totalDamageDone"`
 	TotalDamageDoneToChampions    int `json:"totalDamageDoneToChampions"`
 	TotalDamageTaken              int `json:"totalDamageTaken"`
+	TrueDamageDone                int `json:"trueDamageDone"`
+	TrueDamageDoneToChampions     int `json:"trueDamageDoneToChampions"`
+	TrueDamageTaken               int `json:"trueDamageTaken"`
 }
 
 type MatchTimelinePosition struct {
-	Y int `json:"y"`
 	X int `json:"x"`
+	Y int `json:"y"`
 }
 
 type MatchTimelineEventType string
 
 const (
-	ChampionKill      MatchTimelineEventType = "CHAMPION_KILL"
-	WardPlaced        MatchTimelineEventType = "WARD_PLACED"
-	WardKill          MatchTimelineEventType = "WARD_KILL"
-	BuildingKill      MatchTimelineEventType = "BUILDING_KILL"
-	EliteMonsterKill  MatchTimelineEventType = "ELITE_MONSTER_KILL"
-	ItemPurchased     MatchTimelineEventType = "ITEM_PURCHASED"
-	ItemSold          MatchTimelineEventType = "ITEM_SOLD"
-	ItemDestroyed     MatchTimelineEventType = "ITEM_DESTROYED"
-	ItemUndo          MatchTimelineEventType = "ITEM_UNDO"
-	SkillLevelUp      MatchTimelineEventType = "SKILL_LEVEL_UP"
-	AscendedEvent     MatchTimelineEventType = "ASCENDED_EVENT"
-	CapturePoint      MatchTimelineEventType = "CAPTURE_POINT"
-	PoroKingSummon    MatchTimelineEventType = "PORO_KING_SUMMON"
-	ChampionTransform MatchTimelineEventType = "CHAMPION_TRANSFORM"
+	ChampionKill            MatchTimelineEventType = "CHAMPION_KILL"
+	WardPlaced              MatchTimelineEventType = "WARD_PLACED"
+	WardKill                MatchTimelineEventType = "WARD_KILL"
+	BuildingKill            MatchTimelineEventType = "BUILDING_KILL"
+	EliteMonsterKill        MatchTimelineEventType = "ELITE_MONSTER_KILL"
+	ItemPurchased           MatchTimelineEventType = "ITEM_PURCHASED"
+	ItemSold                MatchTimelineEventType = "ITEM_SOLD"
+	ItemDestroyed           MatchTimelineEventType = "ITEM_DESTROYED"
+	ItemUndo                MatchTimelineEventType = "ITEM_UNDO"
+	SkillLevelUp            MatchTimelineEventType = "SKILL_LEVEL_UP"
+	AscendedEvent           MatchTimelineEventType = "ASCENDED_EVENT"
+	CapturePoint            MatchTimelineEventType = "CAPTURE_POINT"
+	PoroKingSummon          MatchTimelineEventType = "PORO_KING_SUMMON"
+	ChampionTransform       MatchTimelineEventType = "CHAMPION_TRANSFORM"
+	ObjectiveBountyPreStart MatchTimelineEventType = "OBJECTIVE_BOUNTY_PRESTART"
 )
 
 type MatchTimelineEvent struct {
@@ -584,6 +587,7 @@ type MatchTimelineEvent struct {
 	CreatorID               int                    `json:"creatorId"`
 	Position                MatchTimelinePosition  `json:"position"`
 	BeforeID                int                    `json:"beforeId"`
+	ActualStartTime         int                    `json:"actualStartTime"`
 }
 
 func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
