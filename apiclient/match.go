@@ -460,19 +460,26 @@ type MatchTimelineFrame struct {
 
 // Need to unmarshal MatchTimelineFrame because ParticipantFrames comes as an object with keys as participant IDs.
 func (m *MatchTimelineFrame) UnmarshalJSON(data []byte) error {
-	obj := &struct {
+	// Define a temporary struct with the same fields as MatchTimelineFrame
+	temp := &struct {
+		Timestamp         int                                      `json:"timestamp"`
 		ParticipantFrames map[string]MatchTimelineParticipantFrame `json:"participantFrames"`
-		*MatchTimelineFrame
-	}{
-		MatchTimelineFrame: (*MatchTimelineFrame)(m),
-	}
+		Events            []MatchTimelineEvent                     `json:"events"`
+	}{}
 
-	if err := json.Unmarshal(data, &obj); err != nil {
+	// Unmarshal data into the temporary struct
+	if err := json.Unmarshal(data, temp); err != nil {
 		return err
 	}
 
-	for _, v := range obj.ParticipantFrames {
-		m.ParticipantFrames = append(m.ParticipantFrames, v)
+	// Manually assign the values to the MatchTimelineFrame
+	m.Timestamp = temp.Timestamp
+	m.Events = temp.Events
+	m.ParticipantFrames = make([]MatchTimelineParticipantFrame, 0, len(temp.ParticipantFrames))
+
+	// Convert map to slice
+	for _, pf := range temp.ParticipantFrames {
+		m.ParticipantFrames = append(m.ParticipantFrames, pf)
 	}
 
 	return nil
