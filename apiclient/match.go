@@ -10,6 +10,7 @@ import (
 	"github.com/junioryono/Riot-API-Golang/constants/continent"
 	"github.com/junioryono/Riot-API-Golang/constants/patch"
 	"github.com/junioryono/Riot-API-Golang/constants/queue"
+	"github.com/junioryono/Riot-API-Golang/constants/region"
 )
 
 // Matchlist is an array of strings that represent the match IDs.
@@ -89,7 +90,7 @@ type MatchInfo struct {
 	GameVersion        patch.Patch            `json:"gameVersion"`        // ex: 6.24.204.6436
 	MapID              int                    `json:"mapId"`              // ex: 11
 	Participants       []MatchInfoParticipant `json:"participants"`
-	PlatformID         string                 `json:"platformId"` // ex: NA1
+	PlatformID         region.Region          `json:"platformId"` // ex: NA1
 	QueueID            int                    `json:"queueId"`    // ex: 420
 	Teams              []MatchInfoTeam        `json:"teams"`
 	TournamentCode     string                 `json:"tournamentCode"`
