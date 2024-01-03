@@ -493,15 +493,16 @@ type MatchTimelineEvent_AscendedEvent struct {
 }
 
 type MatchTimelineEvent_BuildingKill struct {
-	Bounty       int                             `json:"bounty"`
-	BuildingType MatchTimelineEvent_BuildingType `json:"buildingType"`
-	KillerID     int                             `json:"killerId"`
-	LaneType     MatchTimelineEvent_LaneType     `json:"laneType"`
-	Position     MatchTimelinePosition           `json:"position"`
-	TeamID       int                             `json:"teamId"`
-	Timestamp    int                             `json:"timestamp"`
-	TowerType    *MatchTimelineEvent_TowerType   `json:"towerType"`
-	Type         MatchTimelineFrameEventType     `json:"type"`
+	AssistingParticipantIDs []int                           `json:"assistingParticipantIds"`
+	Bounty                  int                             `json:"bounty"`
+	BuildingType            MatchTimelineEvent_BuildingType `json:"buildingType"`
+	KillerID                int                             `json:"killerId"`
+	LaneType                MatchTimelineEvent_LaneType     `json:"laneType"`
+	Position                MatchTimelinePosition           `json:"position"`
+	TeamID                  int                             `json:"teamId"`
+	Timestamp               int                             `json:"timestamp"`
+	TowerType               *MatchTimelineEvent_TowerType   `json:"towerType"`
+	Type                    MatchTimelineFrameEventType     `json:"type"`
 }
 
 type MatchTimelineEvent_CapturePoint struct {
