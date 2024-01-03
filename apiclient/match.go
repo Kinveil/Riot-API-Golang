@@ -456,8 +456,288 @@ type MatchTimelineParticipant struct {
 type MatchTimelineFrame struct {
 	Timestamp         int                             `json:"timestamp"`
 	ParticipantFrames []MatchTimelineParticipantFrame `json:"participantFrames"`
-	Events            []MatchTimelineEvent            `json:"events"`
+	Events            []interface{}                   `json:"events"`
 }
+
+type MatchTimelineFrameEventType string
+
+const (
+	AscendedEvent           MatchTimelineFrameEventType = "ASCENDED_EVENT"
+	BuildingKill            MatchTimelineFrameEventType = "BUILDING_KILL"
+	CapturePoint            MatchTimelineFrameEventType = "CAPTURE_POINT"
+	ChampionKill            MatchTimelineFrameEventType = "CHAMPION_KILL"
+	ChampionSpecialKill     MatchTimelineFrameEventType = "CHAMPION_SPECIAL_KILL"
+	ChampionTransform       MatchTimelineFrameEventType = "CHAMPION_TRANSFORM"
+	DragonSoulGiven         MatchTimelineFrameEventType = "DRAGON_SOUL_GIVEN"
+	EliteMonsterKill        MatchTimelineFrameEventType = "ELITE_MONSTER_KILL"
+	GameEnd                 MatchTimelineFrameEventType = "GAME_END"
+	ItemDestroyed           MatchTimelineFrameEventType = "ITEM_DESTROYED"
+	ItemPurchased           MatchTimelineFrameEventType = "ITEM_PURCHASED"
+	ItemSold                MatchTimelineFrameEventType = "ITEM_SOLD"
+	ItemUndo                MatchTimelineFrameEventType = "ITEM_UNDO"
+	LevelUp                 MatchTimelineFrameEventType = "LEVEL_UP"
+	ObjectiveBountyFinish   MatchTimelineFrameEventType = "OBJECTIVE_BOUNTY_FINISH"
+	ObjectiveBountyPreStart MatchTimelineFrameEventType = "OBJECTIVE_BOUNTY_PRESTART"
+	PauseEnd                MatchTimelineFrameEventType = "PAUSE_END"
+	PoroKingSummon          MatchTimelineFrameEventType = "PORO_KING_SUMMON"
+	SkillLevelUp            MatchTimelineFrameEventType = "SKILL_LEVEL_UP"
+	TurretPlateDestroyed    MatchTimelineFrameEventType = "TURRET_PLATE_DESTROYED"
+	WardKill                MatchTimelineFrameEventType = "WARD_KILL"
+	WardPlaced              MatchTimelineFrameEventType = "WARD_PLACED"
+)
+
+type MatchTimelineEvent_AscendedEvent struct {
+	Timestamp int                         `json:"timestamp"`
+	Type      MatchTimelineFrameEventType `json:"type"`
+	// TODO
+}
+
+type MatchTimelineEvent_BuildingKill struct {
+	Bounty       int                             `json:"bounty"`
+	BuildingType MatchTimelineEvent_BuildingType `json:"buildingType"`
+	KillerID     int                             `json:"killerId"`
+	LaneType     MatchTimelineEvent_LaneType     `json:"laneType"`
+	Position     MatchTimelinePosition           `json:"position"`
+	TeamID       int                             `json:"teamId"`
+	Timestamp    int                             `json:"timestamp"`
+	TowerType    *MatchTimelineEvent_TowerType   `json:"towerType"`
+	Type         MatchTimelineFrameEventType     `json:"type"`
+}
+
+type MatchTimelineEvent_CapturePoint struct {
+	Timestamp int                         `json:"timestamp"`
+	Type      MatchTimelineFrameEventType `json:"type"`
+	// TODO
+}
+
+type MatchTimelineEvent_ChampionKill struct {
+	AssistingParticipantIDs []int                       `json:"assistingParticipantIds"`
+	Bounty                  int                         `json:"bounty"`
+	KillStreakLength        int                         `json:"killStreakLength"`
+	KillerID                int                         `json:"killerId"`
+	Position                MatchTimelinePosition       `json:"position"`
+	ShutdownBounty          int                         `json:"shutdownBounty"`
+	Timestamp               int                         `json:"timestamp"`
+	Type                    MatchTimelineFrameEventType `json:"type"`
+	VictimDamageDealt       []MatchTimelineDamage       `json:"victimDamageDealt"`
+	VictimDamageReceived    []MatchTimelineDamage       `json:"victimDamageReceived"`
+	VictimID                int                         `json:"victimId"`
+}
+
+type MatchTimelineEvent_ChampionSpecialKill struct {
+	KillerType      MatchTimelineEvent_KillerType `json:"killerType"`
+	KillerID        int                           `json:"killerId"`
+	MultiKillLength *int                          `json:"multiKillLength"`
+	Position        MatchTimelinePosition         `json:"position"`
+	Timestamp       int                           `json:"timestamp"`
+	Type            MatchTimelineFrameEventType   `json:"type"`
+}
+
+type MatchTimelineEvent_ChampionTransform struct {
+	ParticipantID int                         `json:"participantId"`
+	Timestamp     int                         `json:"timestamp"`
+	TransformType string                      `json:"transformType"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_DragonSoulGiven struct {
+	Name      MatchTimelineEvent_DragonSoul `json:"name"`
+	TeamID    int                           `json:"teamId"`
+	Timestamp int                           `json:"timestamp"`
+	Type      MatchTimelineFrameEventType   `json:"type"`
+}
+
+type MatchTimelineEvent_EliteMonsterKill struct {
+	AssistingParticipantIDs []int                             `json:"assistingParticipantIds"`
+	Bounty                  int                               `json:"bounty"`
+	KillerID                int                               `json:"killerId"`
+	KillerTeamID            int                               `json:"killerTeamId"`
+	MonsterSubType          MatchTimelineEvent_MonsterSubType `json:"monsterSubType"`
+	MonsterType             MatchTimelineEvent_MonsterType    `json:"monsterType"`
+	Position                MatchTimelinePosition             `json:"position"`
+	Timestamp               int                               `json:"timestamp"`
+	Type                    MatchTimelineFrameEventType       `json:"type"`
+}
+
+type MatchTimelineEvent_GameEnd struct {
+	GameID        int                         `json:"gameId"`
+	RealTimestamp int                         `json:"realTimestamp"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+	WinningTeam   int                         `json:"winningTeam"`
+}
+
+type MatchTimelineEvent_ItemDestroyed struct {
+	ItemID        int                         `json:"itemId"`
+	ParticipantID int                         `json:"participantId"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_ItemPurchased struct {
+	ItemID        int                         `json:"itemId"`
+	ParticipantID int                         `json:"participantId"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_ItemSold struct {
+	ItemID        int                         `json:"itemId"`
+	ParticipantID int                         `json:"participantId"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_ItemUndo struct {
+	AfterID       int                         `json:"afterId"`
+	BeforeID      int                         `json:"beforeId"`
+	GoldGain      int                         `json:"goldGain"`
+	ParticipantID int                         `json:"participantId"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_LevelUp struct {
+	Level         int                         `json:"level"`
+	ParticipantID int                         `json:"participantId"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_ObjectiveBountyFinish struct {
+	TeamID    int                         `json:"teamId"`
+	Timestamp int                         `json:"timestamp"`
+	Type      MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_ObjectiveBountyPreStart struct {
+	ActualStartTime int                         `json:"actualStartTime"`
+	TeamID          int                         `json:"teamId"`
+	Timestamp       int                         `json:"timestamp"`
+	Type            MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_PauseEnd struct {
+	RealTimestamp int                         `json:"realTimestamp"`
+	Timestamp     int                         `json:"timestamp"`
+	Type          MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_PoroKingSummon struct {
+	TeamID    int `json:"teamId"`
+	Timestamp int `json:"timestamp"`
+	// TODO
+}
+
+type MatchTimelineEvent_SkillLevelUp struct {
+	LevelUpType   MatchTimelineEvent_LevelUpType `json:"levelUpType"`
+	ParticipantID int                            `json:"participantId"`
+	SkillSlot     int                            `json:"skillSlot"`
+	Timestamp     int                            `json:"timestamp"`
+	Type          MatchTimelineFrameEventType    `json:"type"`
+}
+
+type MatchTimelineEvent_TurretPlateDestroyed struct {
+	KillerID  int                         `json:"killerId"`
+	LaneType  MatchTimelineEvent_LaneType `json:"laneType"`
+	Position  MatchTimelinePosition       `json:"position"`
+	TeamID    int                         `json:"teamId"`
+	Timestamp int                         `json:"timestamp"`
+	Type      MatchTimelineFrameEventType `json:"type"`
+}
+
+type MatchTimelineEvent_WardKill struct {
+	KillerID  int                         `json:"killerId"`
+	Timestamp int                         `json:"timestamp"`
+	Type      MatchTimelineFrameEventType `json:"type"`
+	WardType  MatchTimelineEvent_WardType `json:"wardType"`
+}
+
+type MatchTimelineEvent_WardPlaced struct {
+	CreatorID int                         `json:"creatorId"`
+	Timestamp int                         `json:"timestamp"`
+	Type      MatchTimelineFrameEventType `json:"type"`
+	WardType  MatchTimelineEvent_WardType `json:"wardType"`
+}
+
+type MatchTimelineEvent_BuildingType string
+
+const (
+	MatchTimelineEvent_BuildingType_InhibitorBuilding MatchTimelineEvent_BuildingType = "INHIBITOR_BUILDING"
+	MatchTimelineEvent_BuildingType_TowerBuilding     MatchTimelineEvent_BuildingType = "TOWER_BUILDING"
+)
+
+type MatchTimelineEvent_DragonSoul string
+
+const (
+	MatchTimelineEvent_DragonSoul_Chemtech MatchTimelineEvent_DragonSoul = "Chemtech"
+	MatchTimelineEvent_DragonSoul_Cloud    MatchTimelineEvent_DragonSoul = "Cloud"
+	MatchTimelineEvent_DragonSoul_Hextech  MatchTimelineEvent_DragonSoul = "Hextech"
+	MatchTimelineEvent_DragonSoul_Infernal MatchTimelineEvent_DragonSoul = "Infernal"
+	MatchTimelineEvent_DragonSoul_Mountain MatchTimelineEvent_DragonSoul = "Mountain"
+	MatchTimelineEvent_DragonSoul_Ocean    MatchTimelineEvent_DragonSoul = "Ocean"
+)
+
+type MatchTimelineEvent_KillerType string
+
+const (
+	MatchTimelineEvent_KillerType_Ace             MatchTimelineEvent_KillerType = "ACE"
+	MatchTimelineEvent_KillerType_KillMulti       MatchTimelineEvent_KillerType = "KILL_MULTI"
+	MatchTimelineEvent_KillerType_KillFirst_Blood MatchTimelineEvent_KillerType = "KILL_FIRST_BLOOD"
+)
+
+type MatchTimelineEvent_LaneType string
+
+const (
+	MatchTimelineEvent_LaneType_BotLane MatchTimelineEvent_LaneType = "BOT_LANE"
+	MatchTimelineEvent_LaneType_MidLane MatchTimelineEvent_LaneType = "MID_LANE"
+	MatchTimelineEvent_LaneType_TopLane MatchTimelineEvent_LaneType = "TOP_LANE"
+)
+
+type MatchTimelineEvent_LevelUpType string
+
+const (
+	MatchTimelineEvent_LevelUpType_Evolve MatchTimelineEvent_LevelUpType = "EVOLVE"
+	MatchTimelineEvent_LevelUpType_Normal MatchTimelineEvent_LevelUpType = "NORMAL"
+)
+
+type MatchTimelineEvent_MonsterSubType string
+
+const (
+	MatchTimelineEvent_MonsterSubType_AirDragon      MatchTimelineEvent_MonsterSubType = "AIR_DRAGON"
+	MatchTimelineEvent_MonsterSubType_ChemtechDragon MatchTimelineEvent_MonsterSubType = "CHEMTECH_DRAGON"
+	MatchTimelineEvent_MonsterSubType_EarthDragon    MatchTimelineEvent_MonsterSubType = "EARTH_DRAGON"
+	MatchTimelineEvent_MonsterSubType_ElderDragon    MatchTimelineEvent_MonsterSubType = "ELDER_DRAGON"
+	MatchTimelineEvent_MonsterSubType_FireDragon     MatchTimelineEvent_MonsterSubType = "FIRE_DRAGON"
+	MatchTimelineEvent_MonsterSubType_WaterDragon    MatchTimelineEvent_MonsterSubType = "WATER_DRAGON"
+	MatchTimelineEvent_MonsterSubType_HextechDragon  MatchTimelineEvent_MonsterSubType = "HEXTECH_DRAGON"
+)
+
+type MatchTimelineEvent_MonsterType string
+
+const (
+	MatchTimelineEvent_MonsterType_Baron      MatchTimelineEvent_MonsterType = "BARON_NASHOR"
+	MatchTimelineEvent_MonsterType_Dragon     MatchTimelineEvent_MonsterType = "DRAGON"
+	MatchTimelineEvent_MonsterType_RiftHerald MatchTimelineEvent_MonsterType = "RIFTHERALD"
+)
+
+type MatchTimelineEvent_TowerType string
+
+const (
+	MatchTimelineEvent_TowerType_BaseTurret  MatchTimelineEvent_TowerType = "BASE_TURRET"
+	MatchTimelineEvent_TowerType_InnerTurret MatchTimelineEvent_TowerType = "INNER_TURRET"
+	MatchTimelineEvent_TowerType_NexusTurret MatchTimelineEvent_TowerType = "NEXUS_TURRET"
+	MatchTimelineEvent_TowerType_OuterTurret MatchTimelineEvent_TowerType = "OUTER_TURRET"
+)
+
+type MatchTimelineEvent_WardType string
+
+const (
+	MatchTimelineEvent_WardType_ControlWard MatchTimelineEvent_WardType = "CONTROL_WARD"
+	MatchTimelineEvent_WardType_SightWard   MatchTimelineEvent_WardType = "SIGHT_WARD"
+	MatchTimelineEvent_WardType_TeemoMush   MatchTimelineEvent_WardType = "TEEMO_MUSHROOM"
+	MatchTimelineEvent_WardType_YellowTrink MatchTimelineEvent_WardType = "YELLOW_TRINKET"
+)
 
 // Need to unmarshal MatchTimelineFrame because ParticipantFrames comes as an object with keys as participant IDs.
 func (m *MatchTimelineFrame) UnmarshalJSON(data []byte) error {
@@ -465,7 +745,7 @@ func (m *MatchTimelineFrame) UnmarshalJSON(data []byte) error {
 	temp := &struct {
 		Timestamp         int                                      `json:"timestamp"`
 		ParticipantFrames map[string]MatchTimelineParticipantFrame `json:"participantFrames"`
-		Events            []MatchTimelineEvent                     `json:"events"`
+		Events            []json.RawMessage                        `json:"events"`
 	}{}
 
 	// Unmarshal data into the temporary struct
@@ -475,10 +755,74 @@ func (m *MatchTimelineFrame) UnmarshalJSON(data []byte) error {
 
 	// Manually assign the values to the MatchTimelineFrame
 	m.Timestamp = temp.Timestamp
-	m.Events = temp.Events
-	m.ParticipantFrames = make([]MatchTimelineParticipantFrame, 0, len(temp.ParticipantFrames))
+
+	for _, rawMsg := range temp.Events {
+		// Unmarshal the type field to determine the event type
+		var typeHolder struct {
+			Type MatchTimelineFrameEventType `json:"type"`
+		}
+		if err := json.Unmarshal(rawMsg, &typeHolder); err != nil {
+			return err
+		}
+
+		var event interface{}
+		switch typeHolder.Type {
+		case AscendedEvent:
+			event = new(MatchTimelineEvent_AscendedEvent)
+		case BuildingKill:
+			event = new(MatchTimelineEvent_BuildingKill)
+		case ChampionKill:
+			event = new(MatchTimelineEvent_ChampionKill)
+		case ChampionSpecialKill:
+			event = new(MatchTimelineEvent_ChampionSpecialKill)
+		case ChampionTransform:
+			event = new(MatchTimelineEvent_ChampionTransform)
+		case DragonSoulGiven:
+			event = new(MatchTimelineEvent_DragonSoulGiven)
+		case EliteMonsterKill:
+			event = new(MatchTimelineEvent_EliteMonsterKill)
+		case GameEnd:
+			event = new(MatchTimelineEvent_GameEnd)
+		case ItemDestroyed:
+			event = new(MatchTimelineEvent_ItemDestroyed)
+		case ItemPurchased:
+			event = new(MatchTimelineEvent_ItemPurchased)
+		case ItemSold:
+			event = new(MatchTimelineEvent_ItemSold)
+		case ItemUndo:
+			event = new(MatchTimelineEvent_ItemUndo)
+		case LevelUp:
+			event = new(MatchTimelineEvent_LevelUp)
+		case ObjectiveBountyFinish:
+			event = new(MatchTimelineEvent_ObjectiveBountyFinish)
+		case ObjectiveBountyPreStart:
+			event = new(MatchTimelineEvent_ObjectiveBountyPreStart)
+		case PauseEnd:
+			event = new(MatchTimelineEvent_PauseEnd)
+		case PoroKingSummon:
+			event = new(MatchTimelineEvent_PoroKingSummon)
+		case SkillLevelUp:
+			event = new(MatchTimelineEvent_SkillLevelUp)
+		case TurretPlateDestroyed:
+			event = new(MatchTimelineEvent_TurretPlateDestroyed)
+		case WardKill:
+			event = new(MatchTimelineEvent_WardKill)
+		case WardPlaced:
+			event = new(MatchTimelineEvent_WardPlaced)
+		default:
+			continue // Skip unknown event types
+		}
+
+		// Unmarshal the event
+		if err := json.Unmarshal(rawMsg, event); err != nil {
+			return err
+		}
+
+		m.Events = append(m.Events, event)
+	}
 
 	// Convert map to slice
+	m.ParticipantFrames = make([]MatchTimelineParticipantFrame, 0, len(temp.ParticipantFrames))
 	for _, pf := range temp.ParticipantFrames {
 		m.ParticipantFrames = append(m.ParticipantFrames, pf)
 	}
@@ -549,52 +893,16 @@ type MatchTimelinePosition struct {
 	Y int `json:"y"`
 }
 
-type MatchTimelineEventType string
-
-const (
-	ChampionKill            MatchTimelineEventType = "CHAMPION_KILL"
-	WardPlaced              MatchTimelineEventType = "WARD_PLACED"
-	WardKill                MatchTimelineEventType = "WARD_KILL"
-	BuildingKill            MatchTimelineEventType = "BUILDING_KILL"
-	EliteMonsterKill        MatchTimelineEventType = "ELITE_MONSTER_KILL"
-	ItemPurchased           MatchTimelineEventType = "ITEM_PURCHASED"
-	ItemSold                MatchTimelineEventType = "ITEM_SOLD"
-	ItemDestroyed           MatchTimelineEventType = "ITEM_DESTROYED"
-	ItemUndo                MatchTimelineEventType = "ITEM_UNDO"
-	SkillLevelUp            MatchTimelineEventType = "SKILL_LEVEL_UP"
-	AscendedEvent           MatchTimelineEventType = "ASCENDED_EVENT"
-	CapturePoint            MatchTimelineEventType = "CAPTURE_POINT"
-	PoroKingSummon          MatchTimelineEventType = "PORO_KING_SUMMON"
-	ChampionTransform       MatchTimelineEventType = "CHAMPION_TRANSFORM"
-	ObjectiveBountyPreStart MatchTimelineEventType = "OBJECTIVE_BOUNTY_PRESTART"
-)
-
-type MatchTimelineEvent struct {
-	EventType               string                 `json:"eventType"`
-	TowerType               string                 `json:"towerType"`
-	TeamID                  int                    `json:"teamId"`
-	AscendedType            string                 `json:"ascendedType"`
-	KillerID                int                    `json:"killerId"`
-	LevelUpType             string                 `json:"levelUpType"`
-	PointCaptured           string                 `json:"pointCaptured"`
-	AssistingParticipantIDs []int                  `json:"assistingParticipantIds"`
-	WardType                string                 `json:"wardType"`
-	MonsterType             string                 `json:"monsterType"`
-	Type                    MatchTimelineEventType `json:"type"`
-	TransformType           string                 `json:"transformType"`
-	SkillSlot               int                    `json:"skillSlot"`
-	VictimID                int                    `json:"victimId"`
-	Timestamp               int                    `json:"timestamp"`
-	AfterID                 int                    `json:"afterId"`
-	MonsterSubType          string                 `json:"monsterSubType"`
-	LaneType                string                 `json:"laneType"`
-	ItemID                  int                    `json:"itemId"`
-	ParticipantID           int                    `json:"participantId"`
-	BuildingType            string                 `json:"buildingType"`
-	CreatorID               int                    `json:"creatorId"`
-	Position                MatchTimelinePosition  `json:"position"`
-	BeforeID                int                    `json:"beforeId"`
-	ActualStartTime         int                    `json:"actualStartTime"`
+type MatchTimelineDamage struct {
+	Basic          bool   `json:"basic"`
+	MagicDamage    int    `json:"magicDamage"`
+	Name           string `json:"name"`
+	ParticipantID  int    `json:"participantId"`
+	PhysicalDamage int    `json:"physicalDamage"`
+	SpellName      string `json:"spellName"`
+	SpellSlot      int    `json:"spellSlot"`
+	TrueDamage     int    `json:"trueDamage"`
+	Type           string `json:"type"`
 }
 
 func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
