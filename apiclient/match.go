@@ -625,8 +625,8 @@ type MatchTimelineEvent_PauseEnd struct {
 }
 
 type MatchTimelineEvent_PoroKingSummon struct {
-	TeamID    int `json:"teamId"`
 	Timestamp int `json:"timestamp"`
+	Type      MatchTimelineFrameEventType
 	// TODO
 }
 
@@ -772,6 +772,8 @@ func (m *MatchTimelineFrame) UnmarshalJSON(data []byte) error {
 			event = new(MatchTimelineEvent_AscendedEvent)
 		case BuildingKill:
 			event = new(MatchTimelineEvent_BuildingKill)
+		case CapturePoint:
+			event = new(MatchTimelineEvent_CapturePoint)
 		case ChampionKill:
 			event = new(MatchTimelineEvent_ChampionKill)
 		case ChampionSpecialKill:
