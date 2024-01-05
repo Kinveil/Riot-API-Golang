@@ -25,12 +25,12 @@ func (m *Matchlist) UnmarshalBinary(data []byte) error {
 }
 
 type GetMatchlistOptions struct {
-	StartTime *time.Time   `json:"startTime"`
-	EndTime   *time.Time   `json:"endTime"`
-	Queue     *queue.Queue `json:"queue"`
-	Type      *string      `json:"type"`
-	Start     *int         `json:"start"`
-	Count     *int         `json:"count"`
+	StartTime *time.Time `json:"startTime"`
+	EndTime   *time.Time `json:"endTime"`
+	Queue     *queue.ID  `json:"queue"`
+	Type      *string    `json:"type"`
+	Start     *int       `json:"start"`
+	Count     *int       `json:"count"`
 }
 
 func (c *client) GetMatchlist(continent continent.Continent, puuid string, opts *GetMatchlistOptions) (*Matchlist, error) {

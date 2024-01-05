@@ -11,7 +11,7 @@ import (
 
 	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
 	"github.com/junioryono/Riot-API-Golang/constants/continent"
-	"github.com/junioryono/Riot-API-Golang/constants/queue"
+	"github.com/junioryono/Riot-API-Golang/constants/queue_ranked"
 	"github.com/junioryono/Riot-API-Golang/constants/region"
 )
 
@@ -50,14 +50,14 @@ type Client interface {
 
 	// League Exp API
 
-	GetLeagueExpEntries(region region.Region, q queue.Queue, tier, division string, page int) ([]LeaguePosition, error)
+	GetLeagueExpEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeaguePosition, error)
 
 	// League API
 
-	GetLeagueEntriesChallenger(region region.Region, q queue.Queue) (*LeagueList, error)
-	GetLeagueEntriesGrandmaster(region region.Region, q queue.Queue) (*LeagueList, error)
-	GetLeagueEntriesMaster(region region.Region, q queue.Queue) (*LeagueList, error)
-	GetLeagueEntries(region region.Region, q queue.Queue, tier, division string, page int) ([]LeaguePosition, error)
+	GetLeagueEntriesChallenger(region region.Region, q queue_ranked.String) (*LeagueList, error)
+	GetLeagueEntriesGrandmaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
+	GetLeagueEntriesMaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
+	GetLeagueEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeaguePosition, error)
 	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
 	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeaguePosition, error)
 

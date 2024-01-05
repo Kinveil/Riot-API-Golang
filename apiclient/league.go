@@ -5,16 +5,16 @@ import (
 	"strings"
 
 	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
-	"github.com/junioryono/Riot-API-Golang/constants/queue"
+	"github.com/junioryono/Riot-API-Golang/constants/queue_ranked"
 	"github.com/junioryono/Riot-API-Golang/constants/region"
 )
 
 type LeagueList struct {
-	LeagueID string           `json:"leagueId"`
-	Tier     string           `json:"tier"`
-	Entries  []LeaguePosition `json:"entries"`
-	Queue    queue.Queue      `json:"queue"`
-	Name     string           `json:"name"`
+	LeagueID string              `json:"leagueId"`
+	Tier     string              `json:"tier"`
+	Entries  []LeaguePosition    `json:"entries"`
+	Queue    queue_ranked.String `json:"queue"`
+	Name     string              `json:"name"`
 }
 
 type LeaguePosition struct {
@@ -41,27 +41,27 @@ type MiniSeries struct {
 	Progress string `json:"progress"`
 }
 
-func (c *client) GetLeagueEntriesChallenger(r region.Region, q queue.Queue) (*LeagueList, error) {
+func (c *client) GetLeagueEntriesChallenger(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/challengerleagues/by-queue", fmt.Sprintf("/%s", q.String()), nil, ratelimiter.GetLeagueEntriesChallenger, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/challengerleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesChallenger, &res)
 	return &res, err
 }
 
-func (c *client) GetLeagueEntriesGrandmaster(r region.Region, q queue.Queue) (*LeagueList, error) {
+func (c *client) GetLeagueEntriesGrandmaster(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/grandmasterleagues/by-queue", fmt.Sprintf("/%s", q.String()), nil, ratelimiter.GetLeagueEntriesGrandmaster, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/grandmasterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesGrandmaster, &res)
 	return &res, err
 }
 
-func (c *client) GetLeagueEntriesMaster(r region.Region, q queue.Queue) (*LeagueList, error) {
+func (c *client) GetLeagueEntriesMaster(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/masterleagues/by-queue", fmt.Sprintf("/%s", q.String()), nil, ratelimiter.GetLeagueEntriesMaster, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/masterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesMaster, &res)
 	return &res, err
 }
 
-func (c *client) GetLeagueEntries(r region.Region, q queue.Queue, tier, division string, page int) ([]LeaguePosition, error) {
+func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeaguePosition, error) {
 	var res []LeaguePosition
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", q.String(), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
+	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
 	return res, err
 }
 
