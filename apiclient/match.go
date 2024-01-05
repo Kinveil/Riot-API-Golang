@@ -535,11 +535,18 @@ type MatchTimelineEvent_ChampionSpecialKill struct {
 }
 
 type MatchTimelineEvent_ChampionTransform struct {
-	ParticipantID int                         `json:"participantId"`
-	Timestamp     int                         `json:"timestamp"`
-	TransformType string                      `json:"transformType"`
-	Type          MatchTimelineFrameEventType `json:"type"`
+	ParticipantID int                                      `json:"participantId"`
+	Timestamp     int                                      `json:"timestamp"`
+	TransformType MatchTimelineEvent_ChampionTransformType `json:"transformType"`
+	Type          MatchTimelineFrameEventType              `json:"type"`
 }
+
+type MatchTimelineEvent_ChampionTransformType string
+
+const (
+	MatchTimelineEvent_ChampionTransformType_Assassin MatchTimelineEvent_ChampionTransformType = "Assassin"
+	MatchTimelineEvent_ChampionTransformType_Slayer   MatchTimelineEvent_ChampionTransformType = "Slayer"
+)
 
 type MatchTimelineEvent_DragonSoulGiven struct {
 	Name      MatchTimelineEvent_DragonSoul `json:"name"`
@@ -897,16 +904,25 @@ type MatchTimelinePosition struct {
 }
 
 type MatchTimelineDamage struct {
-	Basic          bool   `json:"basic"`
-	MagicDamage    int    `json:"magicDamage"`
-	Name           string `json:"name"`
-	ParticipantID  int    `json:"participantId"`
-	PhysicalDamage int    `json:"physicalDamage"`
-	SpellName      string `json:"spellName"`
-	SpellSlot      int    `json:"spellSlot"`
-	TrueDamage     int    `json:"trueDamage"`
-	Type           string `json:"type"`
+	Basic          bool                    `json:"basic"`
+	MagicDamage    int                     `json:"magicDamage"`
+	Name           string                  `json:"name"`
+	ParticipantID  int                     `json:"participantId"`
+	PhysicalDamage int                     `json:"physicalDamage"`
+	SpellName      string                  `json:"spellName"`
+	SpellSlot      int                     `json:"spellSlot"`
+	TrueDamage     int                     `json:"trueDamage"`
+	Type           MatchTimelineDamageType `json:"type"`
 }
+
+type MatchTimelineDamageType string
+
+const (
+	MatchTimelineDamageType_Minion  MatchTimelineDamageType = "MINION"
+	MatchTimelineDamageType_Monster MatchTimelineDamageType = "MONSTER"
+	MatchTimelineDamageType_Tower   MatchTimelineDamageType = "TOWER"
+	MatchTimelineDamageType_Other   MatchTimelineDamageType = "OTHER"
+)
 
 func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
 	var res MatchTimeline
