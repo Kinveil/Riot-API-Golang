@@ -50,16 +50,16 @@ type Client interface {
 
 	// League Exp API
 
-	GetLeagueExpEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeaguePosition, error)
+	GetLeagueExpEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error)
 
 	// League API
 
 	GetLeagueEntriesChallenger(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesGrandmaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesMaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
-	GetLeagueEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeaguePosition, error)
+	GetLeagueEntries(region region.Region, q queue_ranked.String, tier, division string, page int) (*LeagueList, error)
 	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
-	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeaguePosition, error)
+	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeagueEntry, error)
 
 	// LOL Challenges API
 

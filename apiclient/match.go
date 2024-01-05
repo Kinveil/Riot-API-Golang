@@ -11,6 +11,7 @@ import (
 	"github.com/junioryono/Riot-API-Golang/constants/patch"
 	"github.com/junioryono/Riot-API-Golang/constants/queue"
 	"github.com/junioryono/Riot-API-Golang/constants/region"
+	"github.com/junioryono/Riot-API-Golang/constants/summoner_spell"
 )
 
 // Matchlist is an array of strings that represent the match IDs.
@@ -91,7 +92,7 @@ type MatchInfo struct {
 	MapID              int                    `json:"mapId"`              // ex: 11
 	Participants       []MatchInfoParticipant `json:"participants"`
 	PlatformID         region.Region          `json:"platformId"` // ex: NA1
-	QueueID            int                    `json:"queueId"`    // ex: 420
+	QueueID            queue.ID               `json:"queueId"`    // ex: 420
 	Teams              []MatchInfoTeam        `json:"teams"`
 	TournamentCode     string                 `json:"tournamentCode"`
 }
@@ -202,9 +203,9 @@ type MatchInfoParticipant struct {
 	Spell4Casts                    int                             `json:"spell4Casts"`
 	SubteamPlacement               int                             `json:"subteamPlacement"`
 	Summoner1Casts                 int                             `json:"summoner1Casts"`
-	Summoner1ID                    int                             `json:"summoner1Id"`
+	Summoner1ID                    summoner_spell.ID               `json:"summoner1Id"`
 	Summoner2Casts                 int                             `json:"summoner2Casts"`
-	Summoner2ID                    int                             `json:"summoner2Id"`
+	Summoner2ID                    summoner_spell.ID               `json:"summoner2Id"`
 	SummonerID                     string                          `json:"summonerId"`
 	SummonerLevel                  int                             `json:"summonerLevel"`
 	SummonerName                   string                          `json:"summonerName"`

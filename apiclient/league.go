@@ -5,40 +5,47 @@ import (
 	"strings"
 
 	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
+	"github.com/junioryono/Riot-API-Golang/constants/league/rank"
+	"github.com/junioryono/Riot-API-Golang/constants/league/tier"
 	"github.com/junioryono/Riot-API-Golang/constants/queue_ranked"
 	"github.com/junioryono/Riot-API-Golang/constants/region"
 )
 
 type LeagueList struct {
 	LeagueID string              `json:"leagueId"`
-	Tier     string              `json:"tier"`
-	Entries  []LeaguePosition    `json:"entries"`
+	Tier     tier.String         `json:"tier"`
+	Entries  []LeagueItem        `json:"entries"`
 	Queue    queue_ranked.String `json:"queue"`
 	Name     string              `json:"name"`
 }
 
-type LeaguePosition struct {
-	FreshBlood   bool        `json:"freshBlood"`
-	HotStreak    bool        `json:"hotStreak"`
-	Inactive     bool        `json:"inactive"`
-	LeagueID     string      `json:"leagueId"`
-	LeaguePoints int         `json:"leaguePoints"`
-	Losses       int         `json:"losses"`
-	QueueType    string      `json:"queueType"`
-	Rank         string      `json:"rank"`
+type LeagueItem struct {
 	SummonerID   string      `json:"summonerId"`
 	SummonerName string      `json:"summonerName"`
-	Tier         string      `json:"tier"`
-	Veteran      bool        `json:"veteran"`
+	LeaguePoints int         `json:"leaguePoints"`
+	Rank         rank.String `json:"rank"`
 	Wins         int         `json:"wins"`
-	MiniSeries   *MiniSeries `json:"miniSeries"`
+	Losses       int         `json:"losses"`
+	Veteran      bool        `json:"veteran"`
+	Inactive     bool        `json:"inactive"`
+	FreshBlood   bool        `json:"freshBlood"`
+	HotStreak    bool        `json:"hotStreak"`
 }
 
-type MiniSeries struct {
-	Wins     int    `json:"wins"`
-	Losses   int    `json:"losses"`
-	Target   int    `json:"target"`
-	Progress string `json:"progress"`
+type LeagueEntry struct {
+	FreshBlood   bool                `json:"freshBlood"`
+	HotStreak    bool                `json:"hotStreak"`
+	Inactive     bool                `json:"inactive"`
+	LeagueID     string              `json:"leagueId"`
+	LeaguePoints int                 `json:"leaguePoints"`
+	Losses       int                 `json:"losses"`
+	QueueType    queue_ranked.String `json:"queueType"`
+	Rank         rank.String         `json:"rank"`
+	SummonerID   string              `json:"summonerId"`
+	SummonerName string              `json:"summonerName"`
+	Tier         tier.String         `json:"tier"`
+	Veteran      bool                `json:"veteran"`
+	Wins         int                 `json:"wins"`
 }
 
 func (c *client) GetLeagueEntriesChallenger(r region.Region, q queue_ranked.String) (*LeagueList, error) {
@@ -59,10 +66,10 @@ func (c *client) GetLeagueEntriesMaster(r region.Region, q queue_ranked.String) 
 	return &res, err
 }
 
-func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeaguePosition, error) {
-	var res []LeaguePosition
+func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) (*LeagueList, error) {
+	var res LeagueList
 	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
-	return res, err
+	return &res, err
 }
 
 func (c *client) GetLeagueEntriesByID(r region.Region, leagueID string) (*LeagueList, error) {
@@ -71,8 +78,8 @@ func (c *client) GetLeagueEntriesByID(r region.Region, leagueID string) (*League
 	return &res, err
 }
 
-func (c *client) GetLeagueEntriesBySummonerID(r region.Region, summonerID string) ([]LeaguePosition, error) {
-	var res []LeaguePosition
+func (c *client) GetLeagueEntriesBySummonerID(r region.Region, summonerID string) ([]LeagueEntry, error) {
+	var res []LeagueEntry
 	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetLeagueEntriesBySummonerID, &res)
 	return res, err
 }

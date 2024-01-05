@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
+	"github.com/junioryono/Riot-API-Golang/constants/queue"
 	"github.com/junioryono/Riot-API-Golang/constants/region"
 )
 
@@ -13,7 +14,7 @@ type ChallengesConfig struct {
 		LevelID string `json:"levelId"`
 		Order   int    `json:"order"`
 	} `json:"levels"`
-	QueueID string `json:"queueId"`
+	QueueID queue.ID `json:"queueId"`
 }
 
 type ChallengesLeaderboards struct {
@@ -25,7 +26,7 @@ type ChallengesLeaderboards struct {
 		} `json:"entries"`
 		LevelID string `json:"levelId"`
 	} `json:"entries"`
-	QueueID string `json:"queueId"`
+	QueueID queue.ID `json:"queueId"`
 }
 
 type ChallengesPercentiles struct {
@@ -33,7 +34,7 @@ type ChallengesPercentiles struct {
 		Percentile float64 `json:"percentile"`
 		Total      int     `json:"total"`
 	} `json:"percentiles"`
-	QueueID string `json:"queueId"`
+	QueueID queue.ID `json:"queueId"`
 }
 
 type ChallengesPlayerData struct {
@@ -45,7 +46,7 @@ type ChallengesPlayerData struct {
 		} `json:"entries"`
 		LevelID string `json:"levelId"`
 	} `json:"entries"`
-	QueueID string `json:"queueId"`
+	QueueID queue.ID `json:"queueId"`
 }
 
 func (c *client) GetChallengesConfig(r region.Region) (*ChallengesConfig, error) {

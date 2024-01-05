@@ -5,15 +5,16 @@ import (
 
 	"github.com/junioryono/Riot-API-Golang/constants/language"
 	"github.com/junioryono/Riot-API-Golang/constants/patch"
+	"github.com/junioryono/Riot-API-Golang/constants/queue"
 )
 
 type Queues []Queue
 
 type Queue struct {
-	QueueID     int    `json:"queueId"`
-	Map         string `json:"map"`
-	Description string `json:"description"`
-	Notes       string `json:"notes"`
+	QueueID     queue.ID `json:"queueId"`
+	Map         string   `json:"map"`
+	Description string   `json:"description"`
+	Notes       string   `json:"notes"`
 }
 
 func GetQueues(v patch.Patch, lang language.Language) (Queues, error) {
@@ -23,9 +24,9 @@ func GetQueues(v patch.Patch, lang language.Language) (Queues, error) {
 }
 
 func (queues Queues) Queue(queueId int) (Queue, error) {
-	for _, queue := range queues {
-		if queue.QueueID == queueId {
-			return queue, nil
+	for _, q := range queues {
+		if q.QueueID == queue.ID(queueId) {
+			return q, nil
 		}
 	}
 
