@@ -66,10 +66,10 @@ func (c *client) GetLeagueEntriesMaster(r region.Region, q queue_ranked.String) 
 	return &res, err
 }
 
-func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) (*LeagueList, error) {
-	var res LeagueList
+func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error) {
+	var res []LeagueEntry
 	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
-	return &res, err
+	return res, err
 }
 
 func (c *client) GetLeagueEntriesByID(r region.Region, leagueID string) (*LeagueList, error) {

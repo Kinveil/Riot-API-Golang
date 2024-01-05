@@ -57,7 +57,7 @@ type Client interface {
 	GetLeagueEntriesChallenger(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesGrandmaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesMaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
-	GetLeagueEntries(region region.Region, q queue_ranked.String, tier, division string, page int) (*LeagueList, error)
+	GetLeagueEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error)
 	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
 	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeagueEntry, error)
 
