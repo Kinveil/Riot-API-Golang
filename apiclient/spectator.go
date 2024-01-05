@@ -5,6 +5,7 @@ import (
 
 	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
 	"github.com/junioryono/Riot-API-Golang/constants/region"
+	"github.com/junioryono/Riot-API-Golang/constants/summoner_spell"
 )
 
 type ActiveGame struct {
@@ -29,8 +30,8 @@ type ActiveGameParticipant struct {
 	Runes         []CurrentGameParticipantRuneDTO    `json:"runes"`         // The runes used by this participant
 	Bot           bool                               `json:"bot"`           // Flag indicating whether or not this participant is a bot
 	TeamID        int                                `json:"teamId"`        // The team ID of this participant, indicating the participant's team
-	Spell1ID      int                                `json:"spell1Id"`      // The ID of the first summoner spell used by this participant
-	Spell2ID      int                                `json:"spell2Id"`      // The ID of the second summoner spell used by this participant
+	Spell1ID      summoner_spell.ID                  `json:"spell1Id"`      // The ID of the first summoner spell used by this participant
+	Spell2ID      summoner_spell.ID                  `json:"spell2Id"`      // The ID of the second summoner spell used by this participant
 	Masteries     []CurrentGameParticipantMasteryDTO `json:"masteries"`     // The masteries used by this participant
 	SummonerID    string                             `json:"summonerId"`    // The encrypted summoner ID of this participant
 	Perks         Perks                              `json:"perks"`
