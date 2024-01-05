@@ -1,5 +1,10 @@
 package summoner_spell
 
+import (
+	"fmt"
+	"io"
+)
+
 type ID int
 type String string
 type PrettyString string
@@ -76,4 +81,20 @@ func (s ID) String() String {
 
 func (s String) ID() ID {
 	return stringToIDMap[s]
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (s *ID) UnmarshalGQL(v interface{}) error {
+	intValue, ok := v.(int)
+	if !ok {
+		return fmt.Errorf("rank must be an int")
+	}
+
+	*s = ID(intValue)
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface
+func (s ID) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, s)
 }

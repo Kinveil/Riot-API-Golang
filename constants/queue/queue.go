@@ -1,5 +1,10 @@
 package queue
 
+import (
+	"fmt"
+	"io"
+)
+
 type ID int
 type PrettyString string
 
@@ -126,4 +131,20 @@ func (q ID) PrettyString() PrettyString {
 
 func (q PrettyString) ID() ID {
 	return prettyStringToIDMap[string(q)]
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (q *ID) UnmarshalGQL(v interface{}) error {
+	intValue, ok := v.(int)
+	if !ok {
+		return fmt.Errorf("rank must be an int")
+	}
+
+	*q = ID(intValue)
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface
+func (q ID) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, q)
 }

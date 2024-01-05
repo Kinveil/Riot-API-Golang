@@ -1,6 +1,11 @@
 package queue_ranked
 
-import "github.com/junioryono/Riot-API-Golang/constants/queue"
+import (
+	"fmt"
+	"io"
+
+	"github.com/junioryono/Riot-API-Golang/constants/queue"
+)
 
 type ID queue.ID
 type String string
@@ -33,4 +38,20 @@ func (q String) ID() ID {
 
 func (q String) PrettyString() queue.PrettyString {
 	return queue.PrettyString(q)
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (q *ID) UnmarshalGQL(v interface{}) error {
+	intValue, ok := v.(int)
+	if !ok {
+		return fmt.Errorf("rank must be an int")
+	}
+
+	*q = ID(intValue)
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface
+func (q ID) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, q)
 }

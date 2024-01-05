@@ -1,5 +1,10 @@
 package rank
 
+import (
+	"fmt"
+	"io"
+)
+
 type Int int
 type String string
 
@@ -30,4 +35,20 @@ func (r String) Int() Int {
 
 func (r Int) String() String {
 	return intToStringMap[r]
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (r *Int) UnmarshalGQL(v interface{}) error {
+	intValue, ok := v.(int)
+	if !ok {
+		return fmt.Errorf("rank must be an int")
+	}
+
+	*r = Int(intValue)
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface
+func (r Int) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, r)
 }
