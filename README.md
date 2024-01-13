@@ -13,7 +13,7 @@ The Riot-API-Golang provides a simplified interface to access Riot Games and Dat
 ## Installation
 
 ```bash
-go get github.com/junioryono/Riot-API-Golang
+go get github.com/Kinveil-Engineering-Analysis/Riot-API-Golang
 ```
 
 ## Example Usage (Riot API)
