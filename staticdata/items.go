@@ -3,8 +3,8 @@ package staticdata
 import (
 	"fmt"
 
-	"github.com/junioryono/Riot-API-Golang/constants/language"
-	"github.com/junioryono/Riot-API-Golang/constants/patch"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/language"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/patch"
 )
 
 type Items struct {

@@ -147,4 +147,4 @@ Riot-API-Golang is licensed under the MIT license. See the [LICENSE](LICENSE) fi
 
 ## Support
 
-If you encounter any issues or have questions, please file an issue on the [GitHub issues page](https://github.com/junioryono/Riot-API-Golang/issues).
+If you encounter any issues or have questions, please file an issue on the [GitHub issues page](https://github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/issues).

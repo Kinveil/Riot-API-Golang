@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/junioryono/Riot-API-Golang/constants/queue"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/queue"
 )
 
 type ID queue.ID

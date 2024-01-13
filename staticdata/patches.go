@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/junioryono/Riot-API-Golang/constants/patch"
-	"github.com/junioryono/Riot-API-Golang/constants/region"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/patch"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
 )
 
 type Patches []patch.Patch

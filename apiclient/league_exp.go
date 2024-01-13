@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
-	"github.com/junioryono/Riot-API-Golang/constants/queue_ranked"
-	"github.com/junioryono/Riot-API-Golang/constants/region"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/apiclient/ratelimiter"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/queue_ranked"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
 )
 
 func (c *client) GetLeagueExpEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error) {

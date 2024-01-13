@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/junioryono/Riot-API-Golang/constants/region"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
 )
 
 type ShortPatch string

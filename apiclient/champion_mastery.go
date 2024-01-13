@@ -3,8 +3,8 @@ package apiclient
 import (
 	"fmt"
 
-	"github.com/junioryono/Riot-API-Golang/apiclient/ratelimiter"
-	"github.com/junioryono/Riot-API-Golang/constants/region"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/apiclient/ratelimiter"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
 )
 
 type ChampionMastery struct {

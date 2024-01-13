@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/junioryono/Riot-API-Golang/constants/continent"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/continent"
 )
 
 type Region string
