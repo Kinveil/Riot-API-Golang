@@ -9,24 +9,24 @@ type Int int
 type String string
 
 const (
-	I Int = iota + 1
-	II
-	III
-	IV
+	I   String = "I"
+	II  String = "II"
+	III String = "III"
+	IV  String = "IV"
 )
 
 var intToStringMap = map[Int]String{
-	I:   "I",
-	II:  "II",
-	III: "III",
-	IV:  "IV",
+	1: "I",
+	2: "II",
+	3: "III",
+	4: "IV",
 }
 
 var stringToIntMap = map[String]Int{
-	"I":   I,
-	"II":  II,
-	"III": III,
-	"IV":  IV,
+	"I":   1,
+	"II":  2,
+	"III": 3,
+	"IV":  4,
 }
 
 func (r String) Int() Int {
