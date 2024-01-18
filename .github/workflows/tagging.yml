@@ -40,5 +40,7 @@ jobs:
         if: steps.increment_type.outputs.type != 'none'
         run: |
           NEW_VERSION=v${{ steps.version.outputs.version }}
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git tag $NEW_VERSION
-          git push origin $NEW_VERSION
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Kinveil-Engineering-Analysis/Riot-API-Golang.git $NEW_VERSION
