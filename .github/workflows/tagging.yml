@@ -1,0 +1,44 @@
+name: Automated Version Tagging
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  tag-version:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine Version Increment Type
+        id: increment_type
+        run: |
+          PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
+          echo "PR_LABELS: $PR_LABELS"
+          if [[ "$PR_LABELS" == *"PR: Major"* ]]; then
+            echo "::set-output name=type::major"
+          elif [[ "$PR_LABELS" == *"PR: Minor"* ]]; then
+            echo "::set-output name=type::minor"
+          elif [[ "$PR_LABELS" == *"PR: Patch"* ]]; then
+            echo "::set-output name=type::patch"
+          else
+            echo "No relevant version label found"
+            echo "::set-output name=type::none"
+          fi
+
+      - name: Get next version
+        if: steps.increment_type.outputs.type != 'none'
+        uses: reecetech/version-increment@2023.10.2
+        id: version
+        with:
+          scheme: semver
+          increment: ${{ steps.increment_type.outputs.type }}
+
+      - name: Create Git Tag
+        if: steps.increment_type.outputs.type != 'none'
+        run: |
+          NEW_VERSION=v${{ steps.version.outputs.version }}
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION

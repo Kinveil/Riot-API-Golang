@@ -1,0 +1,25 @@
+name: Check PR Labels
+
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize, reopened]
+    branches:
+      - main
+
+jobs:
+  check-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking for required labels
+        id: label_check
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const requiredLabels = ['PR: Major', 'PR: Minor', 'PR: Patch'];
+            const prLabels = context.payload.pull_request.labels.map(label => label.name);
+
+            const hasRequiredLabel = requiredLabels.some(label => prLabels.includes(label));
+            if (!hasRequiredLabel) {
+              core.setFailed("Pull request must have one of the required labels: " + requiredLabels.join(", "));
+            }
