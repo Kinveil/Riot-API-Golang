@@ -1,3 +1,5 @@
+[![Automated Version Tagging](https://github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/actions/workflows/tagging.yml/badge.svg)](https://github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/actions/workflows/tagging.yml)
+
 # ⚡️ Riot-API-Golang
 
 > A sleek, easy-to-use wrapper for making API calls to Riot and DataDragon with built-in rate limiting
