@@ -191,7 +191,9 @@ func (rl *RateLimiter) Start() {
 				regionLimiter.longLimiter.Release()
 				methodLimiter.shortLimiter.Release()
 			} else if err != nil && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded)) {
-				req.Response <- nil
+				req.Response <- &http.Response{
+					StatusCode: http.StatusRequestTimeout,
+				}
 
 				// Remove the request from the limiter channels
 				regionLimiter.shortLimiter.Release()

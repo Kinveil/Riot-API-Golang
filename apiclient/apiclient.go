@@ -164,13 +164,17 @@ func (c *client) dispatchAndUnmarshal(ctx context.Context, regionOrContinent Hos
 	response := <-responseChan
 
 	if response == nil {
-		return nil, fmt.Errorf("response is nil")
+		return nil, ErrUnknown
 	}
 
 	defer response.Body.Close()
 
-	if response.StatusCode != 200 {
-		return response, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	if response.StatusCode != http.StatusOK {
+		if err, ok := StatusToError[response.StatusCode]; ok {
+			return nil, err
+		}
+
+		return nil, ErrUnknown
 	}
 
 	body, err := io.ReadAll(response.Body)
