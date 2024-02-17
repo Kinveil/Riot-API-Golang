@@ -17,13 +17,13 @@ const (
 )
 
 var stringToIDMap = map[String]ID{
-	"RANKED_SOLO_5X5": RankedSolo5x5,
+	"RANKED_SOLO_5x5": RankedSolo5x5,
 	"RANKED_FLEX_SR":  RankedFlexSR,
 	"RANKED_FLEX_TT":  RankedFlexTT,
 }
 
 var idToStringMap = map[ID]String{
-	RankedSolo5x5: "RANKED_SOLO_5X5",
+	RankedSolo5x5: "RANKED_SOLO_5x5",
 	RankedFlexSR:  "RANKED_FLEX_SR",
 	RankedFlexTT:  "RANKED_FLEX_TT",
 }
