@@ -2,7 +2,6 @@ package apiclient
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/apiclient/ratelimiter"
 	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/league/rank"
@@ -50,25 +49,25 @@ type LeagueEntry struct {
 
 func (c *client) GetLeagueEntriesChallenger(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/challengerleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesChallenger, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/challengerleagues/by-queue", fmt.Sprintf("/%s", q), nil, ratelimiter.GetLeagueEntriesChallenger, &res)
 	return &res, err
 }
 
 func (c *client) GetLeagueEntriesGrandmaster(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/grandmasterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesGrandmaster, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/grandmasterleagues/by-queue", fmt.Sprintf("/%s", q), nil, ratelimiter.GetLeagueEntriesGrandmaster, &res)
 	return &res, err
 }
 
 func (c *client) GetLeagueEntriesMaster(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/masterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesMaster, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/masterleagues/by-queue", fmt.Sprintf("/%s", q), nil, ratelimiter.GetLeagueEntriesMaster, &res)
 	return &res, err
 }
 
-func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error) {
+func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier tier.String, rank rank.String, page int) ([]LeagueEntry, error) {
 	var res []LeagueEntry
-	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", q, tier, rank, page), nil, ratelimiter.GetLeagueEntries, &res)
 	return res, err
 }
 

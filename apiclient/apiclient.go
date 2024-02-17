@@ -11,6 +11,8 @@ import (
 
 	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/apiclient/ratelimiter"
 	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/continent"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/league/rank"
+	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/league/tier"
 	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/queue_ranked"
 	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
 )
@@ -50,14 +52,14 @@ type Client interface {
 
 	// League Exp API
 
-	GetLeagueExpEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error)
+	GetLeagueExpEntries(region region.Region, q queue_ranked.String, tier tier.String, rank rank.String, page int) ([]LeagueEntry, error)
 
 	// League API
 
 	GetLeagueEntriesChallenger(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesGrandmaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesMaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
-	GetLeagueEntries(region region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error)
+	GetLeagueEntries(region region.Region, q queue_ranked.String, tier tier.String, rank rank.String, page int) ([]LeagueEntry, error)
 	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
 	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeagueEntry, error)
 
