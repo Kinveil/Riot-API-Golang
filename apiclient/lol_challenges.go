@@ -51,36 +51,36 @@ type ChallengesPlayerData struct {
 
 func (c *client) GetChallengesConfig(r region.Region) (*ChallengesConfig, error) {
 	var res ChallengesConfig
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/challenges/v1/config", "", nil, ratelimiter.GetChallengesConfig, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/challenges/v1/config", "", nil, ratelimiter.GetChallengesConfig, &res)
 	return &res, err
 }
 
 func (c *client) GetChallengesPercentiles(r region.Region) (*ChallengesPercentiles, error) {
 	var res ChallengesPercentiles
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/challenges/v1/percentiles", "", nil, ratelimiter.GetChallengesPercentiles, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/challenges/v1/percentiles", "", nil, ratelimiter.GetChallengesPercentiles, &res)
 	return &res, err
 }
 
 func (c *client) GetChallengesConfigByID(r region.Region, challengeID string) (*ChallengesConfig, error) {
 	var res ChallengesConfig
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/challenges/v1/config", fmt.Sprintf("/%s", challengeID), nil, ratelimiter.GetChallengesConfigByID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/challenges/v1/config", fmt.Sprintf("/%s", challengeID), nil, ratelimiter.GetChallengesConfigByID, &res)
 	return &res, err
 }
 
 func (c *client) GetChallengesLeaderboardsByLevel(r region.Region, challengeID, level string) (*ChallengesLeaderboards, error) {
 	var res ChallengesLeaderboards
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/challenges/v1/leaderboards", fmt.Sprintf("/%s/%s", challengeID, level), nil, ratelimiter.GetChallengesLeaderboardsByLevel, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/challenges/v1/leaderboards", fmt.Sprintf("/%s/%s", challengeID, level), nil, ratelimiter.GetChallengesLeaderboardsByLevel, &res)
 	return &res, err
 }
 
 func (c *client) GetChallengesPercentilesByID(r region.Region, challengeID string) (*ChallengesPercentiles, error) {
 	var res ChallengesPercentiles
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/challenges/v1/percentiles", fmt.Sprintf("/%s", challengeID), nil, ratelimiter.GetChallengesPercentilesByID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/challenges/v1/percentiles", fmt.Sprintf("/%s", challengeID), nil, ratelimiter.GetChallengesPercentilesByID, &res)
 	return &res, err
 }
 
 func (c *client) GetChallengesPlayerDataByPuuid(r region.Region, puuid string) (*ChallengesPlayerData, error) {
 	var res ChallengesPlayerData
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/challenges/v1/player-data", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetChallengesPlayerDataByPuuid, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/challenges/v1/player-data", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetChallengesPlayerDataByPuuid, &res)
 	return &res, err
 }

@@ -110,7 +110,6 @@ func New(apiKey string) Client {
 
 	return &client{
 		ratelimiter: ratelimiter,
-		ctx:         context.Background(),
 	}
 }
 
@@ -138,7 +137,7 @@ type HostProvider interface {
 	String() string
 }
 
-func (c *client) dispatchAndUnmarshal(ctx context.Context, regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) (*http.Response, error) {
+func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) (*http.Response, error) {
 	var suffix, separator string
 
 	if len(parameters) > 0 {
@@ -153,7 +152,7 @@ func (c *client) dispatchAndUnmarshal(ctx context.Context, regionOrContinent Hos
 
 	responseChan := make(chan *http.Response)
 	newRequest := ratelimiter.APIRequest{
-		Context:  ctx,
+		Context:  c.ctx,
 		Region:   strings.ToUpper(regionOrContinent.String()),
 		MethodID: methodID,
 		URL:      URL,

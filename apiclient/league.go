@@ -50,36 +50,36 @@ type LeagueEntry struct {
 
 func (c *client) GetLeagueEntriesChallenger(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/challengerleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesChallenger, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/challengerleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesChallenger, &res)
 	return &res, err
 }
 
 func (c *client) GetLeagueEntriesGrandmaster(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/grandmasterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesGrandmaster, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/grandmasterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesGrandmaster, &res)
 	return &res, err
 }
 
 func (c *client) GetLeagueEntriesMaster(r region.Region, q queue_ranked.String) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/masterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesMaster, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/masterleagues/by-queue", fmt.Sprintf("/%s", string(q)), nil, ratelimiter.GetLeagueEntriesMaster, &res)
 	return &res, err
 }
 
 func (c *client) GetLeagueEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error) {
 	var res []LeagueEntry
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueEntries, &res)
 	return res, err
 }
 
 func (c *client) GetLeagueEntriesByID(r region.Region, leagueID string) (*LeagueList, error) {
 	var res LeagueList
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/leagues", fmt.Sprintf("/%s", leagueID), nil, ratelimiter.GetLeagueEntriesByID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/leagues", fmt.Sprintf("/%s", leagueID), nil, ratelimiter.GetLeagueEntriesByID, &res)
 	return &res, err
 }
 
 func (c *client) GetLeagueEntriesBySummonerID(r region.Region, summonerID string) ([]LeagueEntry, error) {
 	var res []LeagueEntry
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league/v4/entries/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetLeagueEntriesBySummonerID, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetLeagueEntriesBySummonerID, &res)
 	return res, err
 }

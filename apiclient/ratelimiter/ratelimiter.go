@@ -161,11 +161,31 @@ func (rl *RateLimiter) Start() {
 			regionLimiter.longLimiter.Obtain()
 			methodLimiter.shortLimiter.Obtain()
 
-			// Create a new HTTP request and set the API key as a header
-			httpRequest, err := http.NewRequestWithContext(req.Context, "GET", req.URL, nil)
+			// Create a new HTTP request
+			var (
+				httpRequest *http.Request
+				err         error
+			)
+
+			if req.Context == nil {
+				httpRequest, err = http.NewRequest("GET", req.URL, nil)
+			} else {
+				httpRequest, err = http.NewRequestWithContext(req.Context, "GET", req.URL, nil)
+			}
+
 			if err != nil {
+				req.Response <- &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				}
+
+				// Remove the request from the limiter channels
+				regionLimiter.shortLimiter.Release()
+				regionLimiter.longLimiter.Release()
+				methodLimiter.shortLimiter.Release()
 				return
 			}
+
+			// Set the API key as a header
 			httpRequest.Header.Set("X-Riot-Token", rl.apiKey)
 
 			// Send the HTTP request

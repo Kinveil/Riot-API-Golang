@@ -64,7 +64,7 @@ func (c *client) GetMatchlist(continent continent.Continent, puuid string, opts 
 	}
 
 	var res Matchlist
-	_, err := c.dispatchAndUnmarshal(c.ctx, continent, "/lol/match/v5/matches/by-puuid", fmt.Sprintf("/%s/ids", puuid), params, ratelimiter.GetMatchlist, &res)
+	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches/by-puuid", fmt.Sprintf("/%s/ids", puuid), params, ratelimiter.GetMatchlist, &res)
 	return &res, err
 }
 
@@ -427,7 +427,7 @@ func (m *MatchInfo) UnmarshalBinary(data []byte) error {
 
 func (c *client) GetMatch(continent continent.Continent, matchID string) (*Match, error) {
 	var res Match
-	_, err := c.dispatchAndUnmarshal(c.ctx, continent, "/lol/match/v5/matches", fmt.Sprintf("/%s", matchID), nil, ratelimiter.GetMatch, &res)
+	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s", matchID), nil, ratelimiter.GetMatch, &res)
 	return &res, err
 }
 
@@ -927,6 +927,6 @@ const (
 
 func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
 	var res MatchTimeline
-	_, err := c.dispatchAndUnmarshal(c.ctx, continent, "/lol/match/v5/matches", fmt.Sprintf("/%s/timeline", matchID), nil, ratelimiter.GetMatchTimeline, &res)
+	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s/timeline", matchID), nil, ratelimiter.GetMatchTimeline, &res)
 	return &res, err
 }

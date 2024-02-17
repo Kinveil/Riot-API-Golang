@@ -11,6 +11,6 @@ import (
 
 func (c *client) GetLeagueExpEntries(r region.Region, q queue_ranked.String, tier, division string, page int) ([]LeagueEntry, error) {
 	var res []LeagueEntry
-	_, err := c.dispatchAndUnmarshal(c.ctx, r, "/lol/league-exp/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueExpEntries, &res)
+	_, err := c.dispatchAndUnmarshal(r, "/lol/league-exp/v4/entries", fmt.Sprintf("/%s/%s/%s?page=%d", string(q), strings.ToUpper(tier), strings.ToUpper(division), page), nil, ratelimiter.GetLeagueExpEntries, &res)
 	return res, err
 }
