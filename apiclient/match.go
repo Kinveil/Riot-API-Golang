@@ -527,12 +527,12 @@ type MatchTimelineEvent_ChampionKill struct {
 }
 
 type MatchTimelineEvent_ChampionSpecialKill struct {
-	KillerType      MatchTimelineEvent_KillerType `json:"killerType"`
-	KillerID        int                           `json:"killerId"`
-	MultiKillLength *int                          `json:"multiKillLength"`
-	Position        MatchTimelinePosition         `json:"position"`
-	Timestamp       int                           `json:"timestamp"`
-	Type            MatchTimelineFrameEventType   `json:"type"`
+	KillType        MatchTimelineEvent_KillType `json:"killType"`
+	KillerID        int                         `json:"killerId"`
+	MultiKillLength *int                        `json:"multiKillLength"`
+	Position        MatchTimelinePosition       `json:"position"`
+	Timestamp       int                         `json:"timestamp"`
+	Type            MatchTimelineFrameEventType `json:"type"`
 }
 
 type MatchTimelineEvent_ChampionTransform struct {
@@ -687,12 +687,12 @@ const (
 	MatchTimelineEvent_DragonSoul_Ocean    MatchTimelineEvent_DragonSoul = "Ocean"
 )
 
-type MatchTimelineEvent_KillerType string
+type MatchTimelineEvent_KillType string
 
 const (
-	MatchTimelineEvent_KillerType_Ace             MatchTimelineEvent_KillerType = "ACE"
-	MatchTimelineEvent_KillerType_KillMulti       MatchTimelineEvent_KillerType = "KILL_MULTI"
-	MatchTimelineEvent_KillerType_KillFirst_Blood MatchTimelineEvent_KillerType = "KILL_FIRST_BLOOD"
+	MatchTimelineEvent_KillType_Ace             MatchTimelineEvent_KillType = "ACE"
+	MatchTimelineEvent_KillType_KillMulti       MatchTimelineEvent_KillType = "KILL_MULTI"
+	MatchTimelineEvent_KillType_KillFirst_Blood MatchTimelineEvent_KillType = "KILL_FIRST_BLOOD"
 )
 
 type MatchTimelineEvent_LaneType string
