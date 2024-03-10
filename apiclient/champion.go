@@ -1,8 +1,8 @@
 package apiclient
 
 import (
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/apiclient/ratelimiter"
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
+	"github.com/Kinveil/Riot-API-Golang/apiclient/ratelimiter"
+	"github.com/Kinveil/Riot-API-Golang/constants/region"
 )
 
 type ChampionRotations struct {

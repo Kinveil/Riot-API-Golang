@@ -6,12 +6,12 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/apiclient/ratelimiter"
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/continent"
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/patch"
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/queue"
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/region"
-	"github.com/Kinveil-Engineering-Analysis/Riot-API-Golang/constants/summoner_spell"
+	"github.com/Kinveil/Riot-API-Golang/apiclient/ratelimiter"
+	"github.com/Kinveil/Riot-API-Golang/constants/continent"
+	"github.com/Kinveil/Riot-API-Golang/constants/patch"
+	"github.com/Kinveil/Riot-API-Golang/constants/queue"
+	"github.com/Kinveil/Riot-API-Golang/constants/region"
+	"github.com/Kinveil/Riot-API-Golang/constants/summoner_spell"
 )
 
 // Matchlist is an array of strings that represent the match IDs.
