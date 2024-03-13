@@ -42,7 +42,8 @@ func NewRateLimiter(requests chan *APIRequest, apiKey string) *RateLimiter {
 	}
 }
 
-// Both region and method percentages must be between 0 and 100
+// SetUsageConservation sets the usage conservation percentages for regions and methods.
+// Both region and method percentages must be between 0 and 100.
 func (rl *RateLimiter) SetUsageConservation(conserveUsage ConserveUsage) {
 	if conserveUsage.RegionPercent < 0 || conserveUsage.RegionPercent > 100 {
 		panic("regionPercent must be between 0 and 100")
@@ -59,7 +60,8 @@ func (rl *RateLimiter) SetAPIKey(apiKey string) {
 	rl.apiKey = apiKey
 }
 
-// Set the maximum number of retries for a request. If maxRetries is less than 0, then the request will be retried indefinitely
+// SetMaxRetries sets the maximum number of retries for a request.
+// If maxRetries is less than 0, then the request will be retried indefinitely.
 func (rl *RateLimiter) SetMaxRetries(maxRetries int) {
 	if maxRetries < -1 {
 		rl.maxRetries = -1
@@ -198,18 +200,13 @@ func (rl *RateLimiter) Start() {
 			} else if err == nil && resp.StatusCode == http.StatusTooManyRequests {
 				// Retry the request if Retries is less than maxRetries, or if maxRetries is -1. Otherwise, send the response to the channel
 				if req.Retries < rl.maxRetries || rl.maxRetries == -1 {
+					handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
 					req.Retries++
 					rl.Requests <- req
 				} else {
 					req.Response <- resp
+					handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
 				}
-
-				handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
-
-				// Remove the request from the limiter channels
-				regionLimiter.shortLimiter.Release()
-				regionLimiter.longLimiter.Release()
-				methodLimiter.shortLimiter.Release()
 			} else if err != nil && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded)) {
 				req.Response <- &http.Response{
 					StatusCode: http.StatusRequestTimeout,
@@ -221,18 +218,25 @@ func (rl *RateLimiter) Start() {
 				methodLimiter.shortLimiter.Release()
 			} else {
 				if !isBadRequest(resp) && (req.Retries < rl.maxRetries || rl.maxRetries == -1) {
+					time.Sleep(15 * time.Second)
+
+					// Remove the request from the limiter channels
+					regionLimiter.shortLimiter.Release()
+					regionLimiter.longLimiter.Release()
+					methodLimiter.shortLimiter.Release()
+
 					req.Retries++
 					rl.Requests <- req
 				} else {
 					req.Response <- resp
+
+					time.Sleep(15 * time.Second)
+
+					// Remove the request from the limiter channels
+					regionLimiter.shortLimiter.Release()
+					regionLimiter.longLimiter.Release()
+					methodLimiter.shortLimiter.Release()
 				}
-
-				time.Sleep(15 * time.Second)
-
-				// Remove the request from the limiter channels
-				regionLimiter.shortLimiter.Release()
-				regionLimiter.longLimiter.Release()
-				methodLimiter.shortLimiter.Release()
 			}
 		}(req)
 	}
@@ -248,29 +252,29 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodID MethodID, 
 		shortLimitInfo, longLimitInfo := getShortAndLongLimits(appRateLimitHeader)
 		shortCountInfo, longCountInfo := getShortAndLongLimits(appRateLimitCountHeader)
 
-		rl.updateRateLimit(methodID, shortLimitInfo, shortCountInfo, regionLimiter, regionLimiter.shortLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
-		rl.updateRateLimit(methodID, longLimitInfo, longCountInfo, regionLimiter, regionLimiter.longLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
+		rl.updateRateLimit(methodID, shortLimitInfo, shortCountInfo, regionLimiter.shortLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
+		rl.updateRateLimit(methodID, longLimitInfo, longCountInfo, regionLimiter.longLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
 	} else {
 		// Remove the request from the limiter channels
 		go func() {
-			time.Sleep(time.Duration(15) * time.Second)
+			time.Sleep(15 * time.Second)
 			regionLimiter.shortLimiter.Release()
 			regionLimiter.longLimiter.Release()
 		}()
 	}
 
 	if methodRateLimitHeader != "" && methodRateLimitCountHeader != "" {
-		rl.updateRateLimit(methodID, methodRateLimitHeader, methodRateLimitCountHeader, methodLimiter, methodLimiter.shortLimiter, &methodLimiter.blockedUntil, rl.conserveUsage.MethodPercent, false)
+		rl.updateRateLimit(methodID, methodRateLimitHeader, methodRateLimitCountHeader, methodLimiter.shortLimiter, &methodLimiter.blockedUntil, rl.conserveUsage.MethodPercent, false)
 	} else {
 		// Remove the request from the limiter channels
 		go func() {
-			time.Sleep(time.Duration(15) * time.Second)
+			time.Sleep(15 * time.Second)
 			methodLimiter.shortLimiter.Release()
 		}()
 	}
 }
 
-func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo string, limiter *RateLimit, limiterChannel *limiterMu, blockedUntil *time.Time, conservePercent int, isRegionHeader bool) {
+func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo string, limiterChannel *limiterMu, blockedUntil *time.Time, conservePercent int, isRegionHeader bool) {
 	limitSplit := strings.Split(limitInfo, ":")
 	countSplit := strings.Split(countInfo, ":")
 
@@ -340,4 +344,9 @@ func handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, me
 	}
 
 	time.Sleep(retryAfterDuration)
+
+	// Remove the request from the limiter channels
+	regionLimiter.shortLimiter.Release()
+	regionLimiter.longLimiter.Release()
+	methodLimiter.shortLimiter.Release()
 }
