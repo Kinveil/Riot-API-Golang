@@ -3,6 +3,7 @@ package summoner_spell
 import (
 	"fmt"
 	"io"
+	"encoding/json"
 )
 
 type ID int
@@ -81,6 +82,24 @@ func (s ID) String() String {
 
 func (s String) ID() ID {
 	return stringToIDMap[s]
+}
+
+func (s *ID) UnmarshalJSON(data []byte) error {
+	var v interface{}
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	switch id := v.(type) {
+	case float64:
+		*s = ID(id)
+	case string:
+		*s = String(id).ID()
+	default:
+		return fmt.Errorf("invalid spell id: %v", id)
+	}
+
+	return nil
 }
 
 // UnmarshalGQL implements the graphql.Unmarshaler interface
