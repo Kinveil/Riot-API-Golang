@@ -168,8 +168,6 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 		return nil, ErrUnknown
 	}
 
-	defer response.Body.Close()
-
 	if response.StatusCode != http.StatusOK {
 		if err, ok := StatusToError[response.StatusCode]; ok {
 			return nil, err
@@ -177,6 +175,8 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 
 		return nil, ErrUnknown
 	}
+
+	defer response.Body.Close()
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
