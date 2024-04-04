@@ -40,7 +40,7 @@ git push origin my-new-feature
 
 ### Submit a Pull Request
 
-Open a pull request from your branch to the junioryono/Riot-API-Golang main branch.
+Open a pull request from your branch to the Kinveil/Riot-API-Golang main branch.
 
 ## Code Guidelines
 
