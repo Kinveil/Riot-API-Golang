@@ -62,7 +62,6 @@ const (
 	// ----- Summoner API -----
 	GetSummonerByRsoPuuid   MethodID = "GetSummonerByRsoPuuid"
 	GetSummonerByAccountID  MethodID = "GetSummonerByAccountID"
-	GetSummonerByName       MethodID = "GetSummonerByName"
 	GetSummonerByPuuid      MethodID = "GetSummonerByPuuid"
 	GetSummonerBySummonerID MethodID = "GetSummonerBySummonerID"
 )
