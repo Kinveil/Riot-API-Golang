@@ -11,7 +11,6 @@ import (
 type Summoner struct {
 	AccountID     string `json:"accountId"`
 	ID            string `json:"id"`
-	Name          string `json:"name"`
 	ProfileIconID int    `json:"profileIconId"`
 	Puuid         string `json:"puuid"`
 	RevisionDate  int    `json:"revisionDate"`
