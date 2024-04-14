@@ -20,17 +20,19 @@ go get github.com/Kinveil/Riot-API-Golang
 
 ## Example Usage (Riot API)
 
+continent continent.Continent, gameName, tagLine string
+
 ```go
 func main() {
 	apiKey := "RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 	client := apiclient.New(apiKey)
 
-	summoner, err := client.GetSummonerByName(region.NA1, "Mighty Junior")
+	riotAccount, err := client.GetAccountByRiotID(continent.AMERICAS, "Mighty Junior", "NA1")
 	if err != nil {
 		panic(err)
 	}
 
-	matchlist, err := client.GetMatchlist(region.NA1.Continent(), summoner.Puuid, nil)
+	matchlist, err := client.GetMatchlist(region.NA1.Continent(), riotAccount.Puuid, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -53,12 +55,12 @@ func main() {
 	apiKey := "RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 	client := apiclient.New(apiKey)
 
-	summoner, err := client.WithContext(context.TODO()).GetSummonerByName(region.NA1, "Mighty Junior")
+	riotAccount, err := client.GetAccountByRiotID(continent.AMERICAS, "Mighty Junior", "NA1")
 	if err != nil {
 		panic(err)
 	}
 
-	matchlist, err := client.WithContext(context.TODO()).GetMatchlist(region.NA1.Continent(), summoner.Puuid, nil)
+	matchlist, err := client.WithContext(context.TODO()).GetMatchlist(region.NA1.Continent(), riotAccount.Puuid, nil)
 	if err != nil {
 		panic(err)
 	}
