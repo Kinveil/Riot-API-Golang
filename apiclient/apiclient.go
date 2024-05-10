@@ -84,7 +84,7 @@ type Client interface {
 
 	// Spectator API
 
-	GetSpectatorActiveGameBySummonerID(region region.Region, summonerID string) (*ActiveGame, error)
+	GetSpectatorActiveGameByByPuuid(region region.Region, summonerID string) (*ActiveGame, error)
 	GetSpectatorFeaturedGames(region region.Region) (*FeaturedGames, error)
 
 	// Summoner API
