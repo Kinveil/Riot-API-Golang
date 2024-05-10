@@ -56,8 +56,8 @@ const (
 	GetMatchTimeline MethodID = "GetMatchTimeline"
 
 	// ----- Spectator API -----
-	GetSpectatorActiveGameBySummonerID MethodID = "GetSpectatorActiveGameBySummonerID"
-	GetSpectatorFeaturedGames          MethodID = "GetSpectatorFeaturedGames"
+	GetSpectatorActiveGameByPuuid MethodID = "GetSpectatorActiveGameBySummonerPuuid"
+	GetSpectatorFeaturedGames     MethodID = "GetSpectatorFeaturedGames"
 
 	// ----- Summoner API -----
 	GetSummonerByRsoPuuid   MethodID = "GetSummonerByRsoPuuid"
