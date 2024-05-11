@@ -52,7 +52,7 @@ type BannedChampion struct {
 	PickTurn   int `json:"pickTurn"`   // The turn during which the champion was banned
 }
 
-func (c *client) GetSpectatorActiveGameByByPuuid(r region.Region, puuid string) (*ActiveGame, error) {
+func (c *client) GetSpectatorActiveGameByPuuid(r region.Region, puuid string) (*ActiveGame, error) {
 	var res ActiveGame
 	_, err := c.dispatchAndUnmarshal(r, "/lol/spectator/v5/active-games/by-summoner", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetSpectatorActiveGameByPuuid, &res)
 	return &res, err
