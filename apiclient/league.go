@@ -20,7 +20,6 @@ type LeagueList struct {
 
 type LeagueItem struct {
 	SummonerID   string      `json:"summonerId"`
-	SummonerName string      `json:"summonerName"`
 	LeaguePoints int         `json:"leaguePoints"`
 	Rank         rank.String `json:"rank"`
 	Wins         int         `json:"wins"`
@@ -41,7 +40,6 @@ type LeagueEntry struct {
 	QueueType    queue_ranked.String `json:"queueType"`
 	Rank         rank.String         `json:"rank"`
 	SummonerID   string              `json:"summonerId"`
-	SummonerName string              `json:"summonerName"`
 	Tier         tier.String         `json:"tier"`
 	Veteran      bool                `json:"veteran"`
 	Wins         int                 `json:"wins"`
