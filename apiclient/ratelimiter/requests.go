@@ -106,7 +106,6 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 
 		req.Retries++
 		rl.Requests <- req
-
 		return
 	}
 

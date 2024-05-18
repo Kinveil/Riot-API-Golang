@@ -25,39 +25,35 @@ func NewLimiter(capacity int) *Limiter {
 
 // Obtain blocks until a token is available or the context is cancelled
 func (l *Limiter) Obtain(ctx context.Context) error {
-	l.mu.Lock()
-	if atomic.LoadInt32(&l.current) < l.capacity {
-		atomic.AddInt32(&l.current, 1)
+	for {
+		l.mu.Lock()
+		if atomic.LoadInt32(&l.current) < l.capacity {
+			atomic.AddInt32(&l.current, 1)
+			l.mu.Unlock()
+			return nil
+		}
+		waiter := make(chan struct{})
+		l.waiters = append(l.waiters, waiter)
 		l.mu.Unlock()
-		return nil
-	}
 
-	waiter := make(chan struct{})
-	l.waiters = append(l.waiters, waiter)
-	l.mu.Unlock()
-
-	select {
-	case <-ctx.Done():
-		l.removeWaiter(waiter)
-		return ctx.Err()
-	case <-waiter:
-		atomic.AddInt32(&l.current, 1)
-		return nil
+		select {
+		case <-ctx.Done():
+			l.removeWaiter(waiter)
+			return ctx.Err()
+		case <-waiter:
+		}
 	}
 }
 
 // Release explicitly releases a token
 func (l *Limiter) Release() {
-	newCount := atomic.AddInt32(&l.current, -1)
-
-	if newCount < l.capacity {
-		l.mu.Lock()
-		if len(l.waiters) > 0 {
-			waiter := l.waiters[0]
-			l.waiters = l.waiters[1:]
-			close(waiter)
-		}
-		l.mu.Unlock()
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	atomic.AddInt32(&l.current, -1)
+	if len(l.waiters) > 0 {
+		waiter := l.waiters[0]
+		l.waiters = l.waiters[1:]
+		close(waiter)
 	}
 }
 

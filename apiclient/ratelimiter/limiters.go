@@ -49,12 +49,25 @@ func (rl *RateLimiter) waitForLimiters(regionLimiter, methodLimiter *RateLimit, 
 		lCtx = ctx
 	}
 
-	rl.waitForBlock(regionLimiter.blockedUntil, lCtx)
-	rl.waitForBlock(methodLimiter.blockedUntil, lCtx)
+	if err := rl.waitForBlock(regionLimiter.blockedUntil, lCtx); err != nil {
+		return err
+	}
 
-	regionLimiter.shortLimiter.Obtain(lCtx)
-	regionLimiter.longLimiter.Obtain(lCtx)
-	methodLimiter.shortLimiter.Obtain(lCtx)
+	if err := rl.waitForBlock(methodLimiter.blockedUntil, lCtx); err != nil {
+		return err
+	}
+
+	if err := regionLimiter.shortLimiter.Obtain(lCtx); err != nil {
+		return err
+	}
+
+	if err := regionLimiter.longLimiter.Obtain(lCtx); err != nil {
+		return err
+	}
+
+	if err := methodLimiter.shortLimiter.Obtain(lCtx); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -70,6 +83,7 @@ func (rl *RateLimiter) waitForBlock(blockedUntil time.Time, ctx context.Context)
 			return waitCtx.Err()
 		}
 	}
+
 	return nil
 }
 
