@@ -11,7 +11,7 @@ type Limiter struct {
 	capacity int32
 	current  int32
 	mu       sync.Mutex
-	waiters  []chan struct{}
+	waiters  map[chan struct{}]struct{}
 }
 
 // NewLimiter initializes a new limiter with the specified capacity
@@ -19,14 +19,13 @@ func NewLimiter(capacity int) *Limiter {
 	return &Limiter{
 		capacity: int32(capacity),
 		current:  0,
-		waiters:  make([]chan struct{}, 0),
+		waiters:  make(map[chan struct{}]struct{}),
 	}
 }
 
 // Obtain blocks until a token is available or the context is cancelled
 func (l *Limiter) Obtain(ctx context.Context) error {
 	waiter := make(chan struct{})
-	defer close(waiter)
 
 	l.mu.Lock()
 	if atomic.LoadInt32(&l.current) < l.capacity {
@@ -34,7 +33,7 @@ func (l *Limiter) Obtain(ctx context.Context) error {
 		l.mu.Unlock()
 		return nil
 	}
-	l.waiters = append(l.waiters, waiter)
+	l.waiters[waiter] = struct{}{}
 	l.mu.Unlock()
 
 	select {
@@ -53,15 +52,15 @@ func (l *Limiter) Release() {
 	if atomic.AddInt32(&l.current, -1) < 0 {
 		atomic.StoreInt32(&l.current, 0)
 	}
-	if len(l.waiters) > 0 {
-		waiter := l.waiters[0]
-		l.waiters = l.waiters[1:]
+	for waiter := range l.waiters {
+		delete(l.waiters, waiter)
 		close(waiter)
 		atomic.AddInt32(&l.current, 1)
+		break
 	}
 }
 
-// ReleaseAfterDelay releases the limiter after the specified delay, respecting the provided context.
+// ReleaseAfterDelay releases the limiter after the specified delay
 func (l *Limiter) ReleaseAfterDelay(delay time.Duration) {
 	time.AfterFunc(delay, l.Release)
 }
@@ -72,10 +71,12 @@ func (l *Limiter) SetCapacity(newCapacity int) {
 	defer l.mu.Unlock()
 	l.capacity = int32(newCapacity)
 	for atomic.LoadInt32(&l.current) < l.capacity && len(l.waiters) > 0 {
-		waiter := l.waiters[0]
-		l.waiters = l.waiters[1:]
-		close(waiter)
-		atomic.AddInt32(&l.current, 1)
+		for waiter := range l.waiters {
+			delete(l.waiters, waiter)
+			close(waiter)
+			atomic.AddInt32(&l.current, 1)
+			break
+		}
 	}
 }
 
@@ -88,10 +89,8 @@ func (l *Limiter) Capacity() int {
 func (l *Limiter) removeWaiter(waiter chan struct{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	for i, w := range l.waiters {
-		if w == waiter {
-			l.waiters = append(l.waiters[:i], l.waiters[i+1:]...)
-			break
-		}
+	if _, ok := l.waiters[waiter]; ok {
+		delete(l.waiters, waiter)
+		close(waiter)
 	}
 }
