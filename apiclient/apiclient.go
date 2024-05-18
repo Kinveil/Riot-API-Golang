@@ -111,6 +111,7 @@ func New(apiKey string) Client {
 
 	return &client{
 		ratelimiter: ratelimiter,
+		ctx:         context.Background(),
 	}
 }
 
@@ -160,8 +161,18 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 		Response: responseChan,
 	}
 
-	c.ratelimiter.Requests <- &newRequest
-	response := <-responseChan
+	select {
+	case c.ratelimiter.Requests <- &newRequest:
+	case <-c.ctx.Done():
+		return nil, c.ctx.Err()
+	}
+
+	var response *http.Response
+	select {
+	case response = <-responseChan:
+	case <-c.ctx.Done():
+		return nil, c.ctx.Err()
+	}
 
 	if response == nil {
 		return nil, ErrUnknown
