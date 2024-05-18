@@ -161,11 +161,8 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 		Response: responseChan,
 	}
 
-	select {
-	case c.ratelimiter.Requests <- &newRequest:
-	case <-c.ctx.Done():
-		return nil, c.ctx.Err()
-	}
+	// We don't need to 'select' here because the requests channel is unbuffered.
+	c.ratelimiter.Requests <- &newRequest
 
 	var response *http.Response
 	select {

@@ -3,6 +3,7 @@ package ratelimiter
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -70,18 +71,21 @@ func (rl *RateLimiter) createHTTPRequest(req *APIRequest) (*http.Request, error)
 
 func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, err error, regionLimiter, methodLimiter *RateLimit) {
 	if err == nil && resp.StatusCode == http.StatusOK {
+		fmt.Println("Request to URL: ", req.URL, " was successful")
 		rl.updateRateLimits(resp, req.MethodID, regionLimiter, methodLimiter)
 		req.Response <- resp
 		return
 	}
 
 	if err == nil && resp.StatusCode == http.StatusForbidden {
+		fmt.Println("Request to URL: ", req.URL, " was forbidden")
 		req.Response <- resp
 		rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 		return
 	}
 
 	if err == nil && resp.StatusCode == http.StatusTooManyRequests {
+		fmt.Println("Request to URL: ", req.URL, " was rate limited")
 		// Retry the request if Retries is less than maxRetries, or if maxRetries is -1. Otherwise, send the response to the channel
 		if req.Retries < rl.maxRetries || rl.maxRetries == -1 {
 			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
@@ -96,12 +100,14 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 	}
 
 	if err != nil && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded)) {
+		fmt.Println("Request to URL: ", req.URL, " was cancelled or timed out")
 		req.Response <- &http.Response{StatusCode: http.StatusRequestTimeout}
 		rl.releaseLimiters(regionLimiter, methodLimiter)
 		return
 	}
 
 	if !isBadResponse(resp) && (req.Retries < rl.maxRetries || rl.maxRetries == -1) {
+		fmt.Println("Request to URL: ", req.URL, " was unsuccessful, retrying")
 		rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 
 		req.Retries++
@@ -109,6 +115,7 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 		return
 	}
 
+	fmt.Println("Request to URL: ", req.URL, " was unsuccessful")
 	req.Response <- resp
 	rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 }
@@ -118,6 +125,8 @@ func (rl *RateLimiter) handleRateLimitedResponse(resp *http.Response, regionLimi
 	rateLimitTypeHeader := resp.Header.Get("X-Rate-Limit-Type")
 	retryAfter, _ := strconv.Atoi(retryAfterHeader)
 	retryAfterDuration := time.Duration(retryAfter) * time.Second
+
+	fmt.Println("Rate limited, retrying after: ", retryAfterDuration)
 
 	if rateLimitTypeHeader == "application" {
 		regionLimiter.blockedUntil = time.Now().Add(retryAfterDuration)
@@ -138,6 +147,8 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodID MethodID, 
 	appRateLimitCountHeader := resp.Header.Get("X-App-Rate-Limit-Count")
 	methodRateLimitHeader := resp.Header.Get("X-Method-Rate-Limit")
 	methodRateLimitCountHeader := resp.Header.Get("X-Method-Rate-Limit-Count")
+
+	fmt.Printf("Updating rate limits for method: %s", methodID.String())
 
 	if appRateLimitHeader != "" && appRateLimitCountHeader != "" {
 		shortLimitInfo, longLimitInfo := getShortAndLongLimits(appRateLimitHeader)
@@ -191,6 +202,8 @@ func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo s
 	} else {
 		limitWithConservation = limit - 1
 	}
+
+	fmt.Printf("Limit: %d, Limit with conservation: %d, Count: %d\n", limit, limitWithConservation, count)
 
 	// If the limit has been reached, block the limiter channel until the limit resets
 	if count >= limitWithConservation && time.Now().After(*blockedUntil) {
