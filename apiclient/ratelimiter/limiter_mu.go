@@ -1,57 +1,58 @@
 package ratelimiter
 
-import "sync"
+import (
+	"sync"
+	"sync/atomic"
+)
 
 type limiterMu struct {
-	mutex    sync.Mutex
+	capacity int32
+	current  int32
 	cond     *sync.Cond
-	capacity int
-	current  int
 }
 
+// newLimiterMu initializes a new limiter with the specified capacity
 func newLimiterMu(capacity int) *limiterMu {
-	l := &limiterMu{
-		capacity: capacity,
+	mu := &sync.Mutex{}
+	return &limiterMu{
+		capacity: int32(capacity),
 		current:  0,
+		cond:     sync.NewCond(mu),
 	}
-
-	l.cond = sync.NewCond(&l.mutex)
-
-	return l
 }
 
+// Obtain blocks until a token is available
 func (l *limiterMu) Obtain() {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
+	l.cond.L.Lock()
+	defer l.cond.L.Unlock()
 
-	for l.current >= l.capacity {
-		l.cond.Wait() // Wait until Release() is called
+	for atomic.LoadInt32(&l.current) >= l.capacity {
+		l.cond.Wait()
 	}
 
-	l.current++
+	atomic.AddInt32(&l.current, 1)
 }
 
+// Release explicitly releases a token
 func (l *limiterMu) Release() {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
+	l.cond.L.Lock()
+	defer l.cond.L.Unlock()
 
-	l.current--
-	l.cond.Signal() // Wake up one goroutine waiting in Obtain(), if any
+	if atomic.AddInt32(&l.current, -1) < l.capacity {
+		l.cond.Signal()
+	}
 }
 
+// SetCapacity updates the rate limiter's capacity
 func (l *limiterMu) SetCapacity(newCapacity int) {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
+	l.cond.L.Lock()
+	defer l.cond.L.Unlock()
 
-	l.capacity = newCapacity
-
-	// Wake up any goroutines that may be waiting in Obtain()
+	l.capacity = int32(newCapacity)
 	l.cond.Broadcast()
 }
 
+// Capacity returns the current capacity of the rate limiter
 func (l *limiterMu) Capacity() int {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
-
-	return l.capacity
+	return int(atomic.LoadInt32(&l.capacity))
 }
