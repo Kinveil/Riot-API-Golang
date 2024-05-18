@@ -189,11 +189,11 @@ func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo s
 	if useConservation {
 		limitWithConservation = limit - (limit * conservePercent / 100)
 	} else {
-		limitWithConservation = limit - 1
+		limitWithConservation = limit
 	}
 
 	// If the limit has been reached, block the limiter channel until the limit resets
-	if count >= limitWithConservation && time.Now().After(*blockedUntil) {
+	if count > limitWithConservation && time.Now().After(*blockedUntil) {
 		*blockedUntil = time.Now().Add(time.Duration(limitTimeout) * time.Second)
 	}
 

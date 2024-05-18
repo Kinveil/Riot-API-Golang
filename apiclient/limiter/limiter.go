@@ -49,9 +49,11 @@ func (l *Limiter) Obtain(ctx context.Context) error {
 func (l *Limiter) Release() {
 	l.mu.Lock()
 	defer l.mu.Unlock()
+
 	if atomic.AddInt32(&l.current, -1) < 0 {
 		atomic.StoreInt32(&l.current, 0)
 	}
+
 	for waiter := range l.waiters {
 		delete(l.waiters, waiter)
 		close(waiter)
@@ -69,6 +71,7 @@ func (l *Limiter) ReleaseAfterDelay(delay time.Duration) {
 func (l *Limiter) SetCapacity(newCapacity int) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
+
 	l.capacity = int32(newCapacity)
 	for atomic.LoadInt32(&l.current) < l.capacity && len(l.waiters) > 0 {
 		for waiter := range l.waiters {
@@ -89,6 +92,7 @@ func (l *Limiter) Capacity() int {
 func (l *Limiter) removeWaiter(waiter chan struct{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
+
 	if _, ok := l.waiters[waiter]; ok {
 		delete(l.waiters, waiter)
 		close(waiter)
