@@ -104,7 +104,7 @@ type client struct {
 // New returns a Client configured for the given API client and underlying HTTP
 // client. The returned Client is threadsafe.
 func New(apiKey string) Client {
-	requests := make(chan *ratelimiter.APIRequest, 1000)
+	requests := make(chan *ratelimiter.APIRequest)
 
 	ratelimiter := ratelimiter.NewRateLimiter(requests, apiKey)
 	go ratelimiter.Start()
@@ -161,11 +161,8 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 		Response: responseChan,
 	}
 
-	select {
-	case c.ratelimiter.Requests <- &newRequest:
-	case <-c.ctx.Done():
-		return nil, c.ctx.Err()
-	}
+	// We don't need to 'select' here because the requests channel is unbuffered.
+	c.ratelimiter.Requests <- &newRequest
 
 	var response *http.Response
 	select {
