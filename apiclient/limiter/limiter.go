@@ -25,23 +25,24 @@ func NewLimiter(capacity int) *Limiter {
 
 // Obtain blocks until a token is available or the context is cancelled
 func (l *Limiter) Obtain(ctx context.Context) error {
-	for {
-		l.mu.Lock()
-		if atomic.LoadInt32(&l.current) < l.capacity {
-			atomic.AddInt32(&l.current, 1)
-			l.mu.Unlock()
-			return nil
-		}
-		waiter := make(chan struct{})
-		l.waiters = append(l.waiters, waiter)
-		l.mu.Unlock()
+	waiter := make(chan struct{})
+	defer close(waiter)
 
-		select {
-		case <-ctx.Done():
-			l.removeWaiter(waiter)
-			return ctx.Err()
-		case <-waiter:
-		}
+	l.mu.Lock()
+	if atomic.LoadInt32(&l.current) < l.capacity {
+		atomic.AddInt32(&l.current, 1)
+		l.mu.Unlock()
+		return nil
+	}
+	l.waiters = append(l.waiters, waiter)
+	l.mu.Unlock()
+
+	select {
+	case <-ctx.Done():
+		l.removeWaiter(waiter)
+		return ctx.Err()
+	case <-waiter:
+		return nil
 	}
 }
 
@@ -49,23 +50,26 @@ func (l *Limiter) Obtain(ctx context.Context) error {
 func (l *Limiter) Release() {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	atomic.AddInt32(&l.current, -1)
+	if atomic.AddInt32(&l.current, -1) < 0 {
+		atomic.StoreInt32(&l.current, 0)
+	}
 	if len(l.waiters) > 0 {
 		waiter := l.waiters[0]
 		l.waiters = l.waiters[1:]
 		close(waiter)
+		atomic.AddInt32(&l.current, 1)
 	}
 }
 
 // ReleaseAfterDelay releases the limiter after the specified delay, respecting the provided context.
 func (l *Limiter) ReleaseAfterDelay(delay time.Duration) {
-	<-time.After(delay)
-	l.Release()
+	time.AfterFunc(delay, l.Release)
 }
 
 // SetCapacity updates the rate limiter's capacity
 func (l *Limiter) SetCapacity(newCapacity int) {
 	l.mu.Lock()
+	defer l.mu.Unlock()
 	l.capacity = int32(newCapacity)
 	for atomic.LoadInt32(&l.current) < l.capacity && len(l.waiters) > 0 {
 		waiter := l.waiters[0]
@@ -73,7 +77,6 @@ func (l *Limiter) SetCapacity(newCapacity int) {
 		close(waiter)
 		atomic.AddInt32(&l.current, 1)
 	}
-	l.mu.Unlock()
 }
 
 // Capacity returns the current capacity of the rate limiter
