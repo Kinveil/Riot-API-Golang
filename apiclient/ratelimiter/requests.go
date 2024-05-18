@@ -72,8 +72,8 @@ func (rl *RateLimiter) createHTTPRequest(req *APIRequest) (*http.Request, error)
 func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, err error, regionLimiter, methodLimiter *RateLimit) {
 	if err == nil && resp.StatusCode == http.StatusOK {
 		fmt.Println("Request to URL: ", req.URL, " was successful")
-		rl.updateRateLimits(resp, req.MethodID, regionLimiter, methodLimiter)
 		req.Response <- resp
+		rl.updateRateLimits(resp, req.MethodID, regionLimiter, methodLimiter)
 		return
 	}
 
