@@ -3,7 +3,6 @@ package ratelimiter
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -147,7 +146,6 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodID MethodID, 
 		rl.updateRateLimit(methodID, shortLimitInfo, shortCountInfo, regionLimiter.shortLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
 		rl.updateRateLimit(methodID, longLimitInfo, longCountInfo, regionLimiter.longLimiter, &regionLimiter.blockedUntil, rl.conserveUsage.RegionPercent, true)
 	} else {
-		fmt.Println("No rate limit headers found. Releasing limiters after 15 seconds.", appRateLimitHeader, appRateLimitCountHeader)
 		go regionLimiter.shortLimiter.ReleaseAfterDelay(15 * time.Second)
 		go regionLimiter.longLimiter.ReleaseAfterDelay(15 * time.Second)
 	}
@@ -155,7 +153,6 @@ func (rl *RateLimiter) updateRateLimits(resp *http.Response, methodID MethodID, 
 	if methodRateLimitHeader != "" && methodRateLimitCountHeader != "" {
 		rl.updateRateLimit(methodID, methodRateLimitHeader, methodRateLimitCountHeader, methodLimiter.shortLimiter, &methodLimiter.blockedUntil, rl.conserveUsage.MethodPercent, false)
 	} else {
-		fmt.Println("No rate limit headers found. Releasing limiters after 15 seconds.", methodRateLimitHeader, methodRateLimitCountHeader)
 		go methodLimiter.shortLimiter.ReleaseAfterDelay(15 * time.Second)
 	}
 }
@@ -202,10 +199,8 @@ func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo s
 
 	// Resize the limiter channel if needed
 	if limiterChannel.Capacity() != limitWithConservation {
-		fmt.Println("Resizing limiter channel for", methodID, "from", limiterChannel.Capacity(), "to", limitWithConservation)
 		limiterChannel.SetCapacity(limitWithConservation)
 	}
 
-	fmt.Println("Releasing limiter channel for", methodID, "after", limitTimeout, "seconds. IsRegionHeader:", isRegionHeader)
 	go limiterChannel.ReleaseAfterDelay(time.Duration(limitTimeout) * time.Second)
 }
