@@ -95,57 +95,34 @@ func (rl *RateLimiter) Start() {
 	regionLimiters := make(map[string]*RateLimit)
 	methodLimiters := make(map[string]*RateLimit)
 
-	regionMutex := sync.RWMutex{}
-	methodMutex := sync.RWMutex{}
+	regionMutex := sync.Mutex{}
+	methodMutex := sync.Mutex{}
 
 	for req := range rl.Requests {
 		go func(req *APIRequest) {
-			var regionLimiter *RateLimit
-			var methodLimiter *RateLimit
-
-			var wg sync.WaitGroup
-			wg.Add(2)
-			go func() {
-				defer wg.Done()
-
-				var ok bool
-				regionMutex.RLock()
-				regionLimiter, ok = regionLimiters[req.Region]
-				regionMutex.RUnlock()
-
-				if !ok {
-					regionMutex.Lock()
-					regionLimiters[req.Region] = &RateLimit{
-						shortLimiter: newLimiterMu(initialRegionLimit),
-						longLimiter:  newLimiterMu(initialRegionLimit),
-						blockedUntil: time.Time{},
-					}
-					regionLimiter = regionLimiters[req.Region]
-					regionMutex.Unlock()
+			regionMutex.Lock()
+			regionLimiter, ok := regionLimiters[req.Region]
+			if !ok {
+				regionLimiter = &RateLimit{
+					shortLimiter: newLimiterMu(initialRegionLimit),
+					longLimiter:  newLimiterMu(initialRegionLimit),
+					blockedUntil: time.Time{},
 				}
-			}()
+				regionLimiters[req.Region] = regionLimiter
+			}
+			regionMutex.Unlock()
 
-			go func() {
-				defer wg.Done()
-
-				var ok bool
-				methodMutex.RLock()
-				methodLimiter, ok = methodLimiters[req.Region+req.MethodID.String()]
-				methodMutex.RUnlock()
-
-				if !ok {
-					methodMutex.Lock()
-					methodLimiters[req.Region+req.MethodID.String()] = &RateLimit{
-						shortLimiter: newLimiterMu(initialMethodLimit),
-						longLimiter:  newLimiterMu(initialMethodLimit),
-						blockedUntil: time.Time{},
-					}
-					methodLimiter = methodLimiters[req.Region+req.MethodID.String()]
-					methodMutex.Unlock()
+			methodMutex.Lock()
+			methodLimiter, ok := methodLimiters[req.Region+req.MethodID.String()]
+			if !ok {
+				methodLimiter = &RateLimit{
+					shortLimiter: newLimiterMu(initialMethodLimit),
+					longLimiter:  newLimiterMu(initialMethodLimit),
+					blockedUntil: time.Time{},
 				}
-			}()
-
-			wg.Wait()
+				methodLimiters[req.Region+req.MethodID.String()] = methodLimiter
+			}
+			methodMutex.Unlock()
 
 			// Check if the region is blocked
 			if time.Now().Before(regionLimiter.blockedUntil) {
@@ -195,8 +172,6 @@ func (rl *RateLimiter) Start() {
 			if err == nil && resp.StatusCode == http.StatusOK {
 				rl.updateRateLimits(resp, req.MethodID, regionLimiter, methodLimiter)
 				req.Response <- resp
-			} else if err == nil && resp.StatusCode == http.StatusForbidden {
-				req.Response <- resp
 			} else if err == nil && resp.StatusCode == http.StatusTooManyRequests {
 				// Retry the request if Retries is less than maxRetries, or if maxRetries is -1. Otherwise, send the response to the channel
 				if req.Retries < rl.maxRetries || rl.maxRetries == -1 {
@@ -218,15 +193,15 @@ func (rl *RateLimiter) Start() {
 				methodLimiter.shortLimiter.Release()
 			} else {
 				if !isBadRequest(resp) && (req.Retries < rl.maxRetries || rl.maxRetries == -1) {
+					req.Retries++
+					rl.Requests <- req
+
 					time.Sleep(15 * time.Second)
 
 					// Remove the request from the limiter channels
 					regionLimiter.shortLimiter.Release()
 					regionLimiter.longLimiter.Release()
 					methodLimiter.shortLimiter.Release()
-
-					req.Retries++
-					rl.Requests <- req
 				} else {
 					req.Response <- resp
 
