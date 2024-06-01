@@ -157,6 +157,7 @@ type MatchInfoParticipant struct {
 	MagicDamageDealt               int                             `json:"magicDamageDealt"`
 	MagicDamageDealtToChampions    int                             `json:"magicDamageDealtToChampions"`
 	MagicDamageTaken               int                             `json:"magicDamageTaken"`
+	Missions                       *MatchInfoParticipantMissions   `json:"missions"`
 	NeedVisionPings                int                             `json:"needVisionPings"`
 	NeutralMinionsKilled           int                             `json:"neutralMinionsKilled"`
 	NexusKills                     int                             `json:"nexusKills"`
@@ -176,18 +177,6 @@ type MatchInfoParticipant struct {
 	PlayerAugment2                 int                             `json:"playerAugment2"`
 	PlayerAugment3                 int                             `json:"playerAugment3"`
 	PlayerAugment4                 int                             `json:"playerAugment4"`
-	PlayerScore0                   int                             `json:"playerScore0"`
-	PlayerScore1                   int                             `json:"playerScore1"`
-	PlayerScore10                  int                             `json:"playerScore10"`
-	PlayerScore11                  int                             `json:"playerScore11"`
-	PlayerScore2                   int                             `json:"playerScore2"`
-	PlayerScore3                   int                             `json:"playerScore3"`
-	PlayerScore4                   int                             `json:"playerScore4"`
-	PlayerScore5                   int                             `json:"playerScore5"`
-	PlayerScore6                   int                             `json:"playerScore6"`
-	PlayerScore7                   int                             `json:"playerScore7"`
-	PlayerScore8                   int                             `json:"playerScore8"`
-	PlayerScore9                   int                             `json:"playerScore9"`
 	PlayerSubteamID                int                             `json:"playerSubteamId"`
 	PlayedChampSelectPosition      int                             `json:"playedChampSelectPosition"`
 	ProfileIcon                    int                             `json:"profileIcon"`
@@ -364,6 +353,21 @@ type MatchInfoParticipantChallenges struct {
 	WardTakedowns                             int     `json:"wardTakedowns"`
 	WardTakedownsBefore20M                    int     `json:"wardTakedownsBefore20M"`
 	WardsGuarded                              int     `json:"wardsGuarded"`
+}
+
+type MatchInfoParticipantMissions struct {
+	PlayerScore0  int `json:"playerScore0"`
+	PlayerScore1  int `json:"playerScore1"`
+	PlayerScore2  int `json:"playerScore2"`
+	PlayerScore3  int `json:"playerScore3"`
+	PlayerScore4  int `json:"playerScore4"`
+	PlayerScore5  int `json:"playerScore5"`
+	PlayerScore6  int `json:"playerScore6"`
+	PlayerScore7  int `json:"playerScore7"`
+	PlayerScore8  int `json:"playerScore8"`
+	PlayerScore9  int `json:"playerScore9"`
+	PlayerScore10 int `json:"playerScore10"`
+	PlayerScore11 int `json:"playerScore11"`
 }
 
 type MatchInfoParticipantPerks struct {
