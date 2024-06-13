@@ -549,8 +549,8 @@ type MatchTimelineEvent_ChampionTransform struct {
 type MatchTimelineEvent_ChampionTransformType string
 
 const (
-	MatchTimelineEvent_ChampionTransformType_Assassin MatchTimelineEvent_ChampionTransformType = "Assassin"
-	MatchTimelineEvent_ChampionTransformType_Slayer   MatchTimelineEvent_ChampionTransformType = "Slayer"
+	MatchTimelineEvent_ChampionTransformType_Assassin MatchTimelineEvent_ChampionTransformType = "ASSASSIN"
+	MatchTimelineEvent_ChampionTransformType_Slayer   MatchTimelineEvent_ChampionTransformType = "SLAYER"
 )
 
 type MatchTimelineEvent_DragonSoulGiven struct {
