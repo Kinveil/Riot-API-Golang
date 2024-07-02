@@ -70,7 +70,9 @@ var stringToRegion = map[string]Region{
 	"EUW": EUW1,
 	"JP":  JP1,
 	"KR":  KR,
+	"LA1": LA1,
 	"LAN": LA1,
+	"LA2": LA2,
 	"LAS": LA2,
 	"NA":  NA1,
 	"OC":  OC1,
@@ -84,17 +86,23 @@ var stringToRegion = map[string]Region{
 }
 
 func FromString(rgn string) Region {
-	// Remove all numbers from the string
-	rgn = strings.Map(func(r rune) rune {
-		if unicode.IsNumber(r) {
-			return -1
-		}
-
-		return r
-	}, rgn)
-
 	// Capitalize the string
 	rgn = strings.ToUpper(rgn)
+
+	// Special handling for Latin America regions
+	if strings.HasPrefix(rgn, "LA") {
+		if region, ok := stringToRegion[rgn]; ok {
+			return region
+		}
+	} else {
+		// Remove all numbers from the string for other regions
+		rgn = strings.Map(func(r rune) rune {
+			if unicode.IsNumber(r) {
+				return -1
+			}
+			return r
+		}, rgn)
+	}
 
 	if region, ok := stringToRegion[rgn]; ok {
 		return region
