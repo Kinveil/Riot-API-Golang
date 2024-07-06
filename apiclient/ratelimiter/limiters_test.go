@@ -92,7 +92,7 @@ func TestConcurrentRegionAndMethodLimiters(t *testing.T) {
 					regionLimiter := rl.getRegionLimiter(region)
 					methodLimiter := rl.getMethodLimiter(region + method)
 
-					rl.waitForLimiters(regionLimiter, methodLimiter, context.Background())
+					rl.waitForLimiters(context.Background(), regionLimiter, methodLimiter, false)
 					rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, time.Millisecond*1)
 				}
 			}(region, method)
@@ -134,7 +134,7 @@ func TestConcurrentOneRegionAndTwoMethodsLimiters(t *testing.T) {
 				regionLimiter := rl.getRegionLimiter(region)
 				methodLimiter := rl.getMethodLimiter(region + method)
 
-				rl.waitForLimiters(regionLimiter, methodLimiter, context.Background())
+				rl.waitForLimiters(context.Background(), regionLimiter, methodLimiter, false)
 				rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, time.Second*2)
 			}(region, method)
 		}
@@ -179,7 +179,7 @@ func TestConcurrentTwoRegionsAndOneMethodLimiters(t *testing.T) {
 				regionLimiter := rl.getRegionLimiter(region)
 				methodLimiter := rl.getMethodLimiter(region + method)
 
-				rl.waitForLimiters(regionLimiter, methodLimiter, context.Background())
+				rl.waitForLimiters(context.Background(), regionLimiter, methodLimiter, false)
 				rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, time.Second*2)
 			}(region, method)
 		}
@@ -206,7 +206,7 @@ func TestConcurrentWaitForLimiters(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*50)
 			defer cancel()
 
-			err := rl.waitForLimiters(regionLimiter, methodLimiter, ctx)
+			err := rl.waitForLimiters(ctx, regionLimiter, methodLimiter, false)
 			assert.NoError(t, err)
 		}()
 	}

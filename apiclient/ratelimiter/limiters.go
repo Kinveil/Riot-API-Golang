@@ -41,7 +41,7 @@ func (rl *RateLimiter) getMethodLimiter(method string) *RateLimit {
 	return limiter
 }
 
-func (rl *RateLimiter) waitForLimiters(regionLimiter, methodLimiter *RateLimit, ctx context.Context) error {
+func (rl *RateLimiter) waitForLimiters(ctx context.Context, regionLimiter, methodLimiter *RateLimit, isRetryRequest bool) error {
 	var lCtx context.Context
 	if ctx == nil {
 		lCtx = context.Background()
@@ -49,30 +49,34 @@ func (rl *RateLimiter) waitForLimiters(regionLimiter, methodLimiter *RateLimit, 
 		lCtx = ctx
 	}
 
-	if err := rl.waitForBlock(regionLimiter.blockedUntil, lCtx); err != nil {
+	if err := rl.waitForBlock(lCtx, regionLimiter.blockedUntil); err != nil {
 		return err
 	}
 
-	if err := rl.waitForBlock(methodLimiter.blockedUntil, lCtx); err != nil {
+	if err := rl.waitForBlock(lCtx, methodLimiter.blockedUntil); err != nil {
 		return err
 	}
 
-	if err := regionLimiter.shortLimiter.Obtain(lCtx); err != nil {
-		return err
-	}
+	// If this is a not a retry request, obtain tokens from all limiters
+	// We do this because retry requests do not release tokens
+	if !isRetryRequest {
+		if err := regionLimiter.shortLimiter.Obtain(lCtx); err != nil {
+			return err
+		}
 
-	if err := regionLimiter.longLimiter.Obtain(lCtx); err != nil {
-		return err
-	}
+		if err := regionLimiter.longLimiter.Obtain(lCtx); err != nil {
+			return err
+		}
 
-	if err := methodLimiter.shortLimiter.Obtain(lCtx); err != nil {
-		return err
+		if err := methodLimiter.shortLimiter.Obtain(lCtx); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (rl *RateLimiter) waitForBlock(blockedUntil time.Time, ctx context.Context) error {
+func (rl *RateLimiter) waitForBlock(ctx context.Context, blockedUntil time.Time) error {
 	if time.Now().Before(blockedUntil) {
 		timeout := time.Until(blockedUntil)
 		waitCtx, cancel := context.WithTimeout(ctx, timeout)

@@ -85,7 +85,7 @@ func TestLimiter_SetCapacity(t *testing.T) {
 	limiter := NewLimiter(1)
 
 	var wg sync.WaitGroup
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 10000; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -99,6 +99,10 @@ func TestLimiter_SetCapacity(t *testing.T) {
 
 	time.Sleep(5 * time.Millisecond)
 	limiter.SetCapacity(10)
+
+	time.Sleep(5 * time.Millisecond)
+	limiter.SetCapacity(1000)
+
 	wg.Wait()
 }
 
@@ -145,4 +149,121 @@ func TestLimiter_MultipleLimiters(t *testing.T) {
 	}
 
 	wg.Wait()
+}
+
+func TestLimiter_FIFO_Order(t *testing.T) {
+	limiter := NewLimiter(200)
+
+	// Obtain the only available token
+	if err := limiter.Obtain(context.Background()); err != nil {
+		t.Fatalf("Failed to obtain initial token: %v", err)
+	}
+
+	const waiters = 500
+	orders := make(chan int, waiters)
+	starts := make([]chan struct{}, waiters)
+	for i := range starts {
+		starts[i] = make(chan struct{})
+	}
+
+	var wg sync.WaitGroup
+	for i := 0; i < waiters; i++ {
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+			<-starts[index] // Wait for signal to start
+			if err := limiter.Obtain(context.Background()); err != nil {
+				t.Errorf("Waiter %d failed to obtain token: %v", index, err)
+				return
+			}
+			orders <- index
+			time.Sleep(time.Millisecond) // Hold the token briefly
+			limiter.Release()
+		}(i)
+	}
+
+	// Start goroutines in a specific order
+	for i := 0; i < waiters; i++ {
+		close(starts[i])
+		time.Sleep(time.Millisecond) // Ensure previous goroutine has time to call Obtain()
+	}
+
+	// Release the initial token and let the waiters proceed
+	limiter.Release()
+
+	wg.Wait()
+	close(orders)
+
+	// Check if the orders are in FIFO sequence
+	expected := 0
+	for order := range orders {
+		if order != expected {
+			t.Errorf("Expected order %d, but got %d", expected, order)
+		}
+		expected++
+	}
+}
+
+func TestLimiter_FIFO_WithCancellation(t *testing.T) {
+	limiter := NewLimiter(200)
+
+	// Obtain the only available token
+	if err := limiter.Obtain(context.Background()); err != nil {
+		t.Fatalf("Failed to obtain initial token: %v", err)
+	}
+
+	const waiters = 500
+	orders := make(chan int, waiters)
+	starts := make([]chan struct{}, waiters)
+	for i := range starts {
+		starts[i] = make(chan struct{})
+	}
+	contexts := make([]context.Context, waiters)
+	cancels := make([]context.CancelFunc, waiters)
+
+	var wg sync.WaitGroup
+	for i := 0; i < waiters; i++ {
+		contexts[i], cancels[i] = context.WithCancel(context.Background())
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+			<-starts[index] // Wait for signal to start
+			if err := limiter.Obtain(contexts[index]); err != nil {
+				if err != context.Canceled {
+					t.Errorf("Waiter %d failed with unexpected error: %v", index, err)
+				}
+				return
+			}
+			orders <- index
+			time.Sleep(time.Millisecond) // Hold the token briefly
+			limiter.Release()
+		}(i)
+	}
+
+	// Start goroutines in a specific order
+	for i := 0; i < waiters; i++ {
+		close(starts[i])
+		time.Sleep(time.Millisecond) // Ensure previous goroutine has time to call Obtain()
+	}
+
+	// Cancel the middle waiter
+	cancels[2]()
+
+	time.Sleep(10 * time.Millisecond) // Give time for cancellation to take effect
+
+	// Release the initial token and let the waiters proceed
+	limiter.Release()
+
+	wg.Wait()
+	close(orders)
+
+	// Check if the orders are in FIFO sequence, skipping the cancelled waiter
+	expected := 0
+	for order := range orders {
+		if order != expected {
+			t.Errorf("Expected order %d, but got %d", expected, order)
+		}
+
+		expected++
+	}
 }

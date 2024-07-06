@@ -35,7 +35,8 @@ func (rl *RateLimiter) handleRequest(req *APIRequest) {
 	regionLimiter := rl.getRegionLimiter(req.Region)
 	methodLimiter := rl.getMethodLimiter(req.Region + req.MethodID.String())
 
-	rl.waitForLimiters(regionLimiter, methodLimiter, req.Context)
+	isRetryRequest := req.Retries > 0
+	rl.waitForLimiters(req.Context, regionLimiter, methodLimiter, isRetryRequest)
 
 	httpRequest, err := rl.createHTTPRequest(req)
 	if err != nil {
@@ -84,12 +85,12 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 	if err == nil && resp.StatusCode == http.StatusTooManyRequests {
 		// Retry the request if Retries is less than maxRetries, or if maxRetries is -1. Otherwise, send the response to the channel
 		if req.Retries < rl.maxRetries || rl.maxRetries == -1 {
-			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
+			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter, true)
 			req.Retries++
 			rl.Requests <- req
 		} else {
 			req.Response <- resp
-			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter)
+			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter, false)
 		}
 
 		return
@@ -113,7 +114,7 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 	rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 }
 
-func (rl *RateLimiter) handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, methodLimiter *RateLimit) {
+func (rl *RateLimiter) handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, methodLimiter *RateLimit, retryRequest bool) {
 	retryAfterHeader := resp.Header.Get("Retry-After")
 	rateLimitTypeHeader := resp.Header.Get("X-Rate-Limit-Type")
 	retryAfter, _ := strconv.Atoi(retryAfterHeader)
@@ -125,7 +126,11 @@ func (rl *RateLimiter) handleRateLimitedResponse(resp *http.Response, regionLimi
 		methodLimiter.blockedUntil = time.Now().Add(retryAfterDuration)
 	}
 
-	rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, retryAfterDuration)
+	// If we are not going to retry the request, release the limiters
+	// We do this to maintain this retry request's place in the queue
+	if !retryRequest {
+		rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, retryAfterDuration)
+	}
 }
 
 func isBadResponse(resp *http.Response) bool {
@@ -197,10 +202,8 @@ func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo s
 		*blockedUntil = time.Now().Add(time.Duration(limitTimeout) * time.Second)
 	}
 
-	// Resize the limiter channel if needed
-	if limiterChannel.Capacity() != limitWithConservation {
-		limiterChannel.SetCapacity(limitWithConservation)
-	}
+	// Resize the limiter channel (if necessary) to the new limit
+	limiterChannel.SetCapacity(limitWithConservation)
 
 	go limiterChannel.ReleaseAfterDelay(time.Duration(limitTimeout) * time.Second)
 }
