@@ -21,9 +21,10 @@ type APIRequest struct {
 }
 
 type RateLimit struct {
-	shortLimiter *limiter.Limiter
-	longLimiter  *limiter.Limiter
-	blockedUntil time.Time
+	shortLimiter      *limiter.Limiter
+	longLimiter       *limiter.Limiter
+	blockedUntil      time.Time
+	blockedUntilQueue chan struct{}
 }
 
 const (
@@ -36,7 +37,10 @@ func (rl *RateLimiter) handleRequest(req *APIRequest) {
 	methodLimiter := rl.getMethodLimiter(req.Region + req.MethodID.String())
 
 	isRetryRequest := req.Retries > 0
-	rl.waitForLimiters(req.Context, regionLimiter, methodLimiter, isRetryRequest)
+	if err := rl.waitForLimiters(req.Context, regionLimiter, methodLimiter, isRetryRequest); err != nil {
+		req.Response <- &http.Response{StatusCode: http.StatusInternalServerError}
+		return
+	}
 
 	httpRequest, err := rl.createHTTPRequest(req)
 	if err != nil {

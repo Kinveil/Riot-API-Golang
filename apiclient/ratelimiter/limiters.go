@@ -9,9 +9,10 @@ import (
 
 func newRateLimit() *RateLimit {
 	return &RateLimit{
-		shortLimiter: limiter.NewLimiter(initialRegionLimit),
-		longLimiter:  limiter.NewLimiter(initialRegionLimit),
-		blockedUntil: time.Time{},
+		shortLimiter:      limiter.NewLimiter(initialRegionLimit),
+		longLimiter:       limiter.NewLimiter(initialRegionLimit),
+		blockedUntil:      time.Time{},
+		blockedUntilQueue: make(chan struct{}, 1),
 	}
 }
 
@@ -49,11 +50,11 @@ func (rl *RateLimiter) waitForLimiters(ctx context.Context, regionLimiter, metho
 		lCtx = ctx
 	}
 
-	if err := rl.waitForBlock(lCtx, regionLimiter.blockedUntil); err != nil {
+	if err := rl.waitForBlock(lCtx, regionLimiter); err != nil {
 		return err
 	}
 
-	if err := rl.waitForBlock(lCtx, methodLimiter.blockedUntil); err != nil {
+	if err := rl.waitForBlock(lCtx, methodLimiter); err != nil {
 		return err
 	}
 
@@ -65,10 +66,13 @@ func (rl *RateLimiter) waitForLimiters(ctx context.Context, regionLimiter, metho
 		}
 
 		if err := regionLimiter.longLimiter.Obtain(lCtx); err != nil {
+			regionLimiter.shortLimiter.Release()
 			return err
 		}
 
 		if err := methodLimiter.shortLimiter.Obtain(lCtx); err != nil {
+			regionLimiter.shortLimiter.Release()
+			regionLimiter.longLimiter.Release()
 			return err
 		}
 	}
@@ -76,15 +80,27 @@ func (rl *RateLimiter) waitForLimiters(ctx context.Context, regionLimiter, metho
 	return nil
 }
 
-func (rl *RateLimiter) waitForBlock(ctx context.Context, blockedUntil time.Time) error {
-	if time.Now().Before(blockedUntil) {
-		timeout := time.Until(blockedUntil)
-		waitCtx, cancel := context.WithTimeout(ctx, timeout)
-		defer cancel()
+func (rl *RateLimiter) waitForBlock(ctx context.Context, limiter *RateLimit) error {
+	// Wait for our turn in the queue
+	select {
+	case limiter.blockedUntilQueue <- struct{}{}:
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 
-		<-waitCtx.Done()
-		if waitCtx.Err() != nil && waitCtx.Err() != context.DeadlineExceeded {
-			return waitCtx.Err()
+	defer func() { <-limiter.blockedUntilQueue }() // Leave the queue
+
+	now := time.Now()
+	if now.Before(limiter.blockedUntil) {
+		blockedUntil := limiter.blockedUntil
+		delay := blockedUntil.Sub(now)
+		timer := time.NewTimer(delay)
+		defer timer.Stop()
+
+		select {
+		case <-timer.C:
+		case <-ctx.Done():
+			return ctx.Err()
 		}
 	}
 
