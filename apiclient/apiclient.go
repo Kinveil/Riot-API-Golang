@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -185,11 +184,11 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 
 	defer response.Body.Close()
 
-	body, err := io.ReadAll(response.Body)
+	decoder := json.NewDecoder(response.Body)
+	err := decoder.Decode(dest)
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(body, dest)
 	return response, err
 }
