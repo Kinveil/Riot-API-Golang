@@ -151,44 +151,50 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 
 	URL := regionOrContinent.Host() + method + separator + relativePath + suffix
 
-	responseChan := make(chan *http.Response)
+	responseChan := make(chan *http.Response, 1)
+	errorChan := make(chan error, 1)
 	newRequest := ratelimiter.APIRequest{
 		Context:  c.ctx,
 		Region:   strings.ToUpper(regionOrContinent.String()),
 		MethodID: methodID,
 		URL:      URL,
 		Response: responseChan,
+		Error:    errorChan,
 	}
 
-	// We don't need to 'select' here because the requests channel is unbuffered.
-	c.ratelimiter.Requests <- &newRequest
-
-	var response *http.Response
+	// Insert the request into the rate limiter
 	select {
-	case response = <-responseChan:
 	case <-c.ctx.Done():
 		return nil, c.ctx.Err()
+	case c.ratelimiter.Requests <- &newRequest:
 	}
 
-	if response == nil {
-		return nil, ErrUnknown
-	}
-
-	if response.StatusCode != http.StatusOK {
-		if err, ok := StatusToError[response.StatusCode]; ok {
-			return nil, err
+	// Wait for the response
+	select {
+	case <-c.ctx.Done():
+		return nil, c.ctx.Err()
+	case err := <-errorChan:
+		return nil, err
+	case response := <-responseChan:
+		if response == nil {
+			return nil, fmt.Errorf("received nil response (%s)", URL)
 		}
 
-		return nil, ErrUnknown
+		if response.StatusCode != http.StatusOK {
+			if err, ok := StatusToError[response.StatusCode]; ok {
+				return nil, fmt.Errorf("status code %d: %s (%s)", response.StatusCode, err, URL)
+			}
+
+			return nil, fmt.Errorf("status code %d: unknown error (%s)", response.StatusCode, URL)
+		}
+
+		defer response.Body.Close()
+
+		decoder := json.NewDecoder(response.Body)
+		if err := decoder.Decode(dest); err != nil {
+			return nil, fmt.Errorf("failed to decode response: %w (%s)", err, URL)
+		}
+
+		return response, nil
 	}
-
-	defer response.Body.Close()
-
-	decoder := json.NewDecoder(response.Body)
-	err := decoder.Decode(dest)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, err
 }

@@ -17,6 +17,7 @@ type APIRequest struct {
 	MethodID MethodID
 	URL      string
 	Response chan<- *http.Response
+	Error    chan<- error
 	Retries  int
 }
 
@@ -38,13 +39,13 @@ func (rl *RateLimiter) handleRequest(req *APIRequest) {
 
 	isRetryRequest := req.Retries > 0
 	if err := rl.waitForLimiters(req.Context, regionLimiter, methodLimiter, isRetryRequest); err != nil {
-		req.Response <- &http.Response{StatusCode: http.StatusInternalServerError}
+		req.Error <- err
 		return
 	}
 
 	httpRequest, err := rl.createHTTPRequest(req)
 	if err != nil {
-		req.Response <- &http.Response{StatusCode: http.StatusInternalServerError}
+		req.Error <- err
 		rl.releaseLimiters(regionLimiter, methodLimiter)
 		return
 	}
@@ -114,7 +115,7 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 		return
 	}
 
-	req.Response <- resp
+	req.Error <- err
 	rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 }
 
