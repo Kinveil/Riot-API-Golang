@@ -180,6 +180,8 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 			return nil, fmt.Errorf("received nil response (%s)", URL)
 		}
 
+		defer response.Body.Close()
+
 		if response.StatusCode != http.StatusOK {
 			if err, ok := StatusToError[response.StatusCode]; ok {
 				return nil, fmt.Errorf("status code %d: %s (%s)", response.StatusCode, err, URL)
@@ -187,8 +189,6 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 
 			return nil, fmt.Errorf("status code %d: unknown error (%s)", response.StatusCode, URL)
 		}
-
-		defer response.Body.Close()
 
 		decoder := json.NewDecoder(response.Body)
 		if err := decoder.Decode(dest); err != nil {
