@@ -115,7 +115,7 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 		return
 	}
 
-	req.Error <- err
+	req.Response <- resp
 	rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 }
 
