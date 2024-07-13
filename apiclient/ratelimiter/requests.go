@@ -54,6 +54,7 @@ func (rl *RateLimiter) handleRequest(req *APIRequest) {
 	if err != nil {
 		req.Error <- err
 		rl.releaseLimiters(regionLimiter, methodLimiter)
+		return
 	}
 
 	rl.handleHTTPResponse(req, resp, regionLimiter, methodLimiter)
