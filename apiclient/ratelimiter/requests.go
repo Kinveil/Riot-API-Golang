@@ -100,7 +100,7 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter, true)
 
 			req.Retries++
-			rl.Requests <- req
+			go rl.handleRequest(req)
 		} else {
 			req.Response <- resp
 			rl.handleRateLimitedResponse(resp, regionLimiter, methodLimiter, false)
@@ -114,7 +114,7 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 		rl.releaseLimitersAfterDelay(regionLimiter, methodLimiter, 15*time.Second)
 
 		req.Retries++
-		rl.Requests <- req
+		go rl.handleRequest(req)
 		return
 	}
 
