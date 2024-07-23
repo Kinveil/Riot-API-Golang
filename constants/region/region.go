@@ -32,6 +32,9 @@ const (
 	// Latin America South
 	LA2 Region = "LA2"
 
+	// Middle East
+	ME1 Region = "ME1"
+
 	// North America
 	NA1 Region = "NA1"
 
@@ -74,6 +77,7 @@ var stringToRegion = map[string]Region{
 	"LAN": LA1,
 	"LA2": LA2,
 	"LAS": LA2,
+	"ME":  ME1,
 	"NA":  NA1,
 	"OC":  OC1,
 	"PH":  PH2,
@@ -119,6 +123,7 @@ var regionToHost = map[Region]string{
 	KR:   "https://kr.api.riotgames.com",
 	LA1:  "https://la1.api.riotgames.com",
 	LA2:  "https://la2.api.riotgames.com",
+	ME1:  "https://me1.api.riotgames.com",
 	NA1:  "https://na1.api.riotgames.com",
 	OC1:  "https://oc1.api.riotgames.com",
 	PH2:  "https://ph2.api.riotgames.com",
@@ -147,6 +152,7 @@ var regionToContinentMatchV5 = map[Region]continent.Continent{
 	KR:   continent.ASIA,
 	LA1:  continent.AMERICAS,
 	LA2:  continent.AMERICAS,
+	ME1:  continent.EUROPE,
 	NA1:  continent.AMERICAS,
 	OC1:  continent.SEA,
 	PH2:  continent.SEA,
@@ -154,7 +160,7 @@ var regionToContinentMatchV5 = map[Region]continent.Continent{
 	SG2:  continent.SEA,
 	TH2:  continent.SEA,
 	TR1:  continent.EUROPE,
-	TW2:  continent.ASIA,
+	TW2:  continent.SEA,
 	VN2:  continent.SEA,
 }
 
