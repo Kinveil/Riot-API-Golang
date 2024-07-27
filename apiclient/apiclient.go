@@ -23,6 +23,7 @@ type Client interface {
 	SetAPIKey(apiKey string)
 	SetMaxRetries(maxRetries int)
 	WithContext(ctx context.Context) Client
+	WithPriority(priority int) Client
 
 	// Account API
 
