@@ -17,32 +17,32 @@ import (
 )
 
 type Client interface {
-	// Helper methods to set the API key, usage conservation, and max retries.
-
+	// WithContext and WithPriority are used to set the context and priority of the request.
 	WithContext(ctx context.Context) Client
 	WithPriority(priority int) Client
 
+	// Helper methods to set the API key, usage conservation, and max retries.
 	SetUsageConservation(conserveUsage ratelimiter.ConserveUsage)
 	SetAPIKey(apiKey string)
 	SetMaxRetries(maxRetries int)
 
-	// Account API
+	/* Account API */
 
 	GetAccountByPuuid(continent continent.Continent, puuid string) (*Account, error)
 	GetAccountByRiotID(continent continent.Continent, gameName, tagLine string) (*Account, error)
 
-	// Champion Mastery API
+	/* Champion Mastery API */
 
 	GetChampionMasteriesBySummonerID(region region.Region, summonerID string) ([]ChampionMastery, error)
 	GetChampionMasteryBySummonerIDAndChampionID(region region.Region, summonerID string, championID int) (*ChampionMastery, error)
 	GetChampionMasteriesTopBySummonerID(region region.Region, summonerID string) ([]ChampionMastery, error)
 	GetChampionMasteryScoreTotalBySummonerID(region region.Region, summonerID string) (int, error)
 
-	// Champion API
+	/* Champion API */
 
 	GetChampionRotations(region region.Region) (*ChampionRotations, error)
 
-	// Clash API
+	/* Clash API */
 
 	GetClashPlayersByPuuid(region region.Region, puuid string) (*ClashPlayers, error)
 	GetClashPlayersBySummonerID(region region.Region, summonerID string) (*ClashPlayers, error)
@@ -51,11 +51,11 @@ type Client interface {
 	GetClashTournamentByTeamID(region region.Region, teamID string) (*ClashTournament, error)
 	GetClashTournamentByID(region region.Region, tournamentID string) (*ClashTournament, error)
 
-	// League Exp API
+	/* League Exp API */
 
 	GetLeagueExpEntries(region region.Region, q queue_ranked.String, tier tier.String, rank rank.String, page int) ([]LeagueEntry, error)
 
-	// League API
+	/* League API */
 
 	GetLeagueEntriesChallenger(region region.Region, q queue_ranked.String) (*LeagueList, error)
 	GetLeagueEntriesGrandmaster(region region.Region, q queue_ranked.String) (*LeagueList, error)
@@ -64,7 +64,7 @@ type Client interface {
 	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
 	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeagueEntry, error)
 
-	// LOL Challenges API
+	/* LOL Challenges API */
 
 	GetChallengesConfig(region region.Region) (*ChallengesConfig, error)
 	GetChallengesPercentiles(region region.Region) (*ChallengesPercentiles, error)
@@ -73,22 +73,22 @@ type Client interface {
 	GetChallengesPercentilesByID(region region.Region, challengeID string) (*ChallengesPercentiles, error)
 	GetChallengesPlayerDataByPuuid(region region.Region, puuid string) (*ChallengesPlayerData, error)
 
-	// LOL Status API
+	/* LOL Status API */
 
 	GetStatusPlatformData(region region.Region) (*StatusPlatformData, error)
 
-	// Match API
+	/* Match API */
 
 	GetMatchlist(continent continent.Continent, puuid string, opts *GetMatchlistOptions) (*Matchlist, error)
 	GetMatch(continent continent.Continent, matchID string) (*Match, error)
 	GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error)
 
-	// Spectator API
+	/* Spectator API */
 
 	GetSpectatorActiveGameByPuuid(region region.Region, summonerID string) (*ActiveGame, error)
 	GetSpectatorFeaturedGames(region region.Region) (*FeaturedGames, error)
 
-	// Summoner API
+	/* Summoner API */
 
 	GetSummonerByRsoPuuid(region region.Region, rsoPuuid string) (*Summoner, error)
 	GetSummonerByAccountID(region region.Region, accountID string) (*Summoner, error)
