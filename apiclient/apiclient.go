@@ -19,11 +19,12 @@ import (
 type Client interface {
 	// Helper methods to set the API key, usage conservation, and max retries.
 
+	WithContext(ctx context.Context) Client
+	WithPriority(priority int) Client
+
 	SetUsageConservation(conserveUsage ratelimiter.ConserveUsage)
 	SetAPIKey(apiKey string)
 	SetMaxRetries(maxRetries int)
-	WithContext(ctx context.Context) Client
-	WithPriority(priority int) Client
 
 	// Account API
 
