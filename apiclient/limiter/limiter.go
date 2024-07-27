@@ -3,6 +3,7 @@ package limiter
 import (
 	"container/heap"
 	"context"
+	"math"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -110,6 +111,14 @@ func (l *Limiter) ReleaseAfterDelay(delay time.Duration) {
 
 // SetCapacity updates the rate limiter's capacity
 func (l *Limiter) SetCapacity(newCapacity int) {
+	if newCapacity < 0 {
+		return
+	}
+
+	if newCapacity > math.MaxInt32 {
+		return
+	}
+
 	newCapacityInt32 := int32(newCapacity)
 	oldCapacity := atomic.LoadInt32(&l.capacity)
 
