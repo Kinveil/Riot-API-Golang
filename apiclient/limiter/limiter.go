@@ -1,6 +1,7 @@
 package limiter
 
 import (
+	"container/heap"
 	"context"
 	"sync"
 	"sync/atomic"
@@ -11,7 +12,44 @@ type Limiter struct {
 	capacity int32
 	current  int32
 	mu       sync.Mutex
-	waiters  []chan struct{}
+	waiters  priorityQueue
+}
+
+type waiter struct {
+	ch       chan struct{}
+	priority int
+	index    int
+}
+
+type priorityQueue []*waiter
+
+func (pq priorityQueue) Len() int { return len(pq) }
+
+func (pq priorityQueue) Less(i, j int) bool {
+	return pq[i].priority > pq[j].priority
+}
+
+func (pq priorityQueue) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
+	pq[i].index = i
+	pq[j].index = j
+}
+
+func (pq *priorityQueue) Push(x interface{}) {
+	n := len(*pq)
+	item := x.(*waiter)
+	item.index = n
+	*pq = append(*pq, item)
+}
+
+func (pq *priorityQueue) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	old[n-1] = nil
+	item.index = -1
+	*pq = old[0 : n-1]
+	return item
 }
 
 // NewLimiter initializes a new limiter with the specified capacity
@@ -19,32 +57,34 @@ func NewLimiter(capacity int) *Limiter {
 	return &Limiter{
 		capacity: int32(capacity),
 		current:  0,
-		waiters:  make([]chan struct{}, 0),
+		waiters:  make(priorityQueue, 0),
 	}
 }
 
 // Obtain blocks until a token is available or the context is cancelled
-func (l *Limiter) Obtain(ctx context.Context) error {
+func (l *Limiter) Obtain(ctx context.Context, priority int) error {
 	for {
 		if atomic.LoadInt32(&l.current) < atomic.LoadInt32(&l.capacity) {
 			if atomic.CompareAndSwapInt32(&l.current, atomic.LoadInt32(&l.current), atomic.LoadInt32(&l.current)+1) {
 				return nil
 			}
-
 			continue
 		}
 
-		w := make(chan struct{})
+		w := &waiter{
+			ch:       make(chan struct{}),
+			priority: priority,
+		}
 
 		l.mu.Lock()
-		l.waiters = append(l.waiters, w)
+		heap.Push(&l.waiters, w)
 		l.mu.Unlock()
 
 		select {
 		case <-ctx.Done():
 			l.removeWaiter(w)
 			return ctx.Err()
-		case <-w:
+		case <-w.ch:
 			return nil
 		}
 	}
@@ -52,21 +92,14 @@ func (l *Limiter) Obtain(ctx context.Context) error {
 
 // Release explicitly releases a token
 func (l *Limiter) Release() {
-	var w chan struct{}
-
 	l.mu.Lock()
+	defer l.mu.Unlock()
 
-	if len(l.waiters) > 0 {
-		w = l.waiters[0]
-		l.waiters = l.waiters[1:]
+	if l.waiters.Len() > 0 {
+		w := heap.Pop(&l.waiters).(*waiter)
+		close(w.ch)
 	} else {
 		atomic.AddInt32(&l.current, -1)
-	}
-
-	l.mu.Unlock()
-
-	if w != nil {
-		close(w)
 	}
 }
 
@@ -81,35 +114,28 @@ func (l *Limiter) SetCapacity(newCapacity int) {
 	oldCapacity := atomic.LoadInt32(&l.capacity)
 
 	if newCapacityInt32 == oldCapacity {
-		// Capacity unchanged, no action needed
 		return
 	}
 
 	if newCapacityInt32 < oldCapacity {
-		// If capacity decreased, we can handle this without locking
 		atomic.StoreInt32(&l.capacity, newCapacityInt32)
-
 		for {
 			current := atomic.LoadInt32(&l.current)
 			if current <= newCapacityInt32 {
 				break
 			}
-
 			if atomic.CompareAndSwapInt32(&l.current, current, newCapacityInt32) {
 				break
 			}
 		}
-
 		return
 	}
 
-	// If capacity increased, we need to lock to handle waiters
 	l.mu.Lock()
+	defer l.mu.Unlock()
 
-	// Check again in case capacity changed while waiting for lock
 	oldCapacity = atomic.LoadInt32(&l.capacity)
 	if newCapacityInt32 <= oldCapacity {
-		l.mu.Unlock()
 		return
 	}
 
@@ -118,21 +144,13 @@ func (l *Limiter) SetCapacity(newCapacity int) {
 	additionalCapacity := int(newCapacityInt32 - oldCapacity)
 	current := int(atomic.LoadInt32(&l.current))
 
-	toRelease := min(additionalCapacity, len(l.waiters))
+	toRelease := min(additionalCapacity, l.waiters.Len())
 	toRelease = min(toRelease, int(newCapacityInt32)-current)
 
-	var waitersToRelease []chan struct{}
 	for i := 0; i < toRelease; i++ {
-		w := l.waiters[0]
-		l.waiters = l.waiters[1:]
-		waitersToRelease = append(waitersToRelease, w)
+		w := heap.Pop(&l.waiters).(*waiter)
+		close(w.ch)
 		atomic.AddInt32(&l.current, 1)
-	}
-
-	l.mu.Unlock()
-
-	for _, w := range waitersToRelease {
-		close(w)
 	}
 }
 
@@ -142,21 +160,16 @@ func (l *Limiter) Capacity() int {
 }
 
 // removeWaiter removes a specific waiter from the waiters list
-func (l *Limiter) removeWaiter(ch chan struct{}) {
-	var waiterToRelease chan struct{}
-
+func (l *Limiter) removeWaiter(w *waiter) {
 	l.mu.Lock()
-	for i, w := range l.waiters {
-		if w == ch {
-			l.waiters = append(l.waiters[:i], l.waiters[i+1:]...)
-			waiterToRelease = w
+	defer l.mu.Unlock()
+
+	for i := 0; i < l.waiters.Len(); i++ {
+		if l.waiters[i] == w {
+			heap.Remove(&l.waiters, i)
+			close(w.ch)
 			break
 		}
-	}
-	l.mu.Unlock()
-
-	if waiterToRelease != nil {
-		close(waiterToRelease)
 	}
 }
 
@@ -164,6 +177,5 @@ func min(a, b int) int {
 	if a < b {
 		return a
 	}
-
 	return b
 }

@@ -13,6 +13,7 @@ import (
 
 type APIRequest struct {
 	Context  context.Context
+	Priority int
 	Region   string
 	MethodID MethodID
 	URL      string
@@ -38,7 +39,7 @@ func (rl *RateLimiter) handleRequest(req *APIRequest) {
 	methodLimiter := rl.getMethodLimiter(req.Region + req.MethodID.String())
 
 	isRetryRequest := req.Retries > 0
-	if err := rl.waitForLimiters(req.Context, regionLimiter, methodLimiter, isRetryRequest); err != nil {
+	if err := rl.waitForLimiters(req.Context, req.Priority, regionLimiter, methodLimiter, isRetryRequest); err != nil {
 		req.Error <- err
 		return
 	}

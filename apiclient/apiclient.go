@@ -98,6 +98,7 @@ type Client interface {
 type client struct {
 	ratelimiter *ratelimiter.RateLimiter
 	ctx         context.Context
+	priority    int
 }
 
 // New returns a Client configured for the given API client and underlying HTTP
@@ -115,10 +116,13 @@ func New(apiKey string) Client {
 }
 
 func (c *client) WithContext(ctx context.Context) Client {
-	return &client{
-		ratelimiter: c.ratelimiter,
-		ctx:         ctx,
-	}
+	c.ctx = ctx
+	return c
+}
+
+func (c *client) WithPriority(priority int) Client {
+	c.priority = priority
+	return c
 }
 
 func (c *client) SetUsageConservation(conserveUsage ratelimiter.ConserveUsage) {
@@ -155,6 +159,7 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 	errorChan := make(chan error, 1)
 	newRequest := ratelimiter.APIRequest{
 		Context:  c.ctx,
+		Priority: c.priority,
 		Region:   strings.ToUpper(regionOrContinent.String()),
 		MethodID: methodID,
 		URL:      URL,

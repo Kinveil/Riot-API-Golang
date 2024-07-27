@@ -42,7 +42,7 @@ func (rl *RateLimiter) getMethodLimiter(method string) *RateLimit {
 	return limiter
 }
 
-func (rl *RateLimiter) waitForLimiters(ctx context.Context, regionLimiter, methodLimiter *RateLimit, isRetryRequest bool) error {
+func (rl *RateLimiter) waitForLimiters(ctx context.Context, priority int, regionLimiter, methodLimiter *RateLimit, isRetryRequest bool) error {
 	var lCtx context.Context
 	if ctx == nil {
 		lCtx = context.Background()
@@ -61,16 +61,16 @@ func (rl *RateLimiter) waitForLimiters(ctx context.Context, regionLimiter, metho
 	// If this is a not a retry request, obtain tokens from all limiters
 	// We do this because retry requests do not release tokens
 	if !isRetryRequest {
-		if err := regionLimiter.shortLimiter.Obtain(lCtx); err != nil {
+		if err := regionLimiter.shortLimiter.Obtain(lCtx, priority); err != nil {
 			return err
 		}
 
-		if err := regionLimiter.longLimiter.Obtain(lCtx); err != nil {
+		if err := regionLimiter.longLimiter.Obtain(lCtx, priority); err != nil {
 			regionLimiter.shortLimiter.Release()
 			return err
 		}
 
-		if err := methodLimiter.shortLimiter.Obtain(lCtx); err != nil {
+		if err := methodLimiter.shortLimiter.Obtain(lCtx, priority); err != nil {
 			regionLimiter.shortLimiter.Release()
 			regionLimiter.longLimiter.Release()
 			return err
