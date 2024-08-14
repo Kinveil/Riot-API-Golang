@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/Kinveil/Riot-API-Golang/apiclient/ratelimiter"
 	"github.com/Kinveil/Riot-API-Golang/constants/continent"
@@ -20,11 +22,13 @@ type Client interface {
 	// WithContext and WithPriority are used to set the context and priority of the request.
 	WithContext(ctx context.Context) Client
 	WithPriority(priority int) Client
+	WithCache(duration time.Duration) Client
 
 	// Helper methods to set the API key, usage conservation, and max retries.
 	SetUsageConservation(conserveUsage ratelimiter.ConserveUsage)
 	SetAPIKey(apiKey string)
 	SetMaxRetries(maxRetries int)
+	SetCacheCleanupDuration(duration time.Duration)
 
 	/* Account API */
 
@@ -96,47 +100,88 @@ type Client interface {
 	GetSummonerBySummonerID(region region.Region, summonerID string) (*Summoner, error)
 }
 
-// client is the internal implementation of Client.
-type client struct {
-	ratelimiter *ratelimiter.RateLimiter
-	ctx         context.Context
-	priority    int
+type cacheEntry struct {
+	response *http.Response
+	expiry   time.Time
 }
 
-// New returns a Client configured for the given API client and underlying HTTP
-// client. The returned Client is threadsafe.
+type sharedClient struct {
+	ratelimiter          *ratelimiter.RateLimiter
+	cache                map[string]*cacheEntry
+	cacheMutex           sync.RWMutex
+	cacheCleanupDuration time.Duration
+}
+
+type uniqueClient struct {
+	*sharedClient
+	ctx           context.Context
+	priority      int
+	cacheDuration time.Duration
+}
+
 func New(apiKey string) Client {
 	requests := make(chan *ratelimiter.APIRequest)
-
 	ratelimiter := ratelimiter.NewRateLimiter(requests, apiKey)
 	go ratelimiter.Start()
 
-	return &client{
-		ratelimiter: ratelimiter,
-		ctx:         context.Background(),
+	u := &sharedClient{
+		ratelimiter:          ratelimiter,
+		cache:                make(map[string]*cacheEntry),
+		cacheCleanupDuration: 5 * time.Minute,
+	}
+
+	c := &uniqueClient{
+		sharedClient: u,
+		ctx:          context.Background(),
+	}
+
+	go c.cleanupCache()
+
+	return c
+}
+
+func (c *uniqueClient) WithContext(ctx context.Context) Client {
+	return &uniqueClient{
+		sharedClient:  c.sharedClient,
+		ctx:           ctx,
+		priority:      c.priority,
+		cacheDuration: c.cacheDuration,
 	}
 }
 
-func (c *client) WithContext(ctx context.Context) Client {
-	c.ctx = ctx
-	return c
+func (c *uniqueClient) WithPriority(priority int) Client {
+	return &uniqueClient{
+		sharedClient:  c.sharedClient,
+		ctx:           c.ctx,
+		priority:      priority,
+		cacheDuration: c.cacheDuration,
+	}
 }
 
-func (c *client) WithPriority(priority int) Client {
-	c.priority = priority
-	return c
+func (c *uniqueClient) WithCache(duration time.Duration) Client {
+	newClient := &uniqueClient{
+		sharedClient:  c.sharedClient,
+		ctx:           c.ctx,
+		priority:      c.priority,
+		cacheDuration: c.cacheDuration,
+	}
+	return newClient
 }
 
-func (c *client) SetUsageConservation(conserveUsage ratelimiter.ConserveUsage) {
+func (c *uniqueClient) SetUsageConservation(conserveUsage ratelimiter.ConserveUsage) {
 	c.ratelimiter.SetUsageConservation(conserveUsage)
 }
 
-func (c *client) SetAPIKey(apiKey string) {
+func (c *uniqueClient) SetAPIKey(apiKey string) {
 	c.ratelimiter.SetAPIKey(apiKey)
 }
 
-func (c *client) SetMaxRetries(maxRetries int) {
+func (c *uniqueClient) SetMaxRetries(maxRetries int) {
 	c.ratelimiter.SetMaxRetries(maxRetries)
+}
+
+func (c *uniqueClient) SetCacheCleanupDuration(duration time.Duration) {
+	c.cacheCleanupDuration = duration
 }
 
 type HostProvider interface {
@@ -144,7 +189,7 @@ type HostProvider interface {
 	String() string
 }
 
-func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) (*http.Response, error) {
+func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) (*http.Response, error) {
 	var suffix, separator string
 
 	if len(parameters) > 0 {
@@ -156,6 +201,11 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 	}
 
 	URL := regionOrContinent.Host() + method + separator + relativePath + suffix
+
+	// Check if in cache
+	if response, ok := c.getFromCache(URL); ok {
+		return response, nil
+	}
 
 	responseChan := make(chan *http.Response, 1)
 	errorChan := make(chan error, 1)
@@ -202,6 +252,58 @@ func (c *client) dispatchAndUnmarshal(regionOrContinent HostProvider, method str
 			return nil, fmt.Errorf("failed to decode response: %w (%s)", err, URL)
 		}
 
+		// Cache the response if necessary
+		if c.cacheDuration > 0 {
+			c.addToCache(URL, response)
+		}
+
 		return response, nil
+	}
+}
+
+func (c *uniqueClient) getFromCache(URL string) (*http.Response, bool) {
+	c.cacheMutex.RLock()
+	defer c.cacheMutex.RUnlock()
+
+	if entry, ok := c.cache[URL]; ok {
+		if time.Now().Before(entry.expiry) {
+			return entry.response, true
+		}
+
+		delete(c.cache, URL)
+	}
+
+	return nil, false
+}
+
+func (c *uniqueClient) addToCache(URL string, response *http.Response) {
+	c.cacheMutex.Lock()
+	defer c.cacheMutex.Unlock()
+
+	c.cache[URL] = &cacheEntry{
+		response: response,
+		expiry:   time.Now().Add(c.cacheDuration),
+	}
+}
+
+func (c *uniqueClient) cleanupCache() {
+	ticker := time.NewTicker(c.cacheCleanupDuration)
+	defer ticker.Stop()
+
+	for {
+		<-ticker.C
+		c.removeExpiredEntries()
+	}
+}
+
+func (c *uniqueClient) removeExpiredEntries() {
+	c.cacheMutex.Lock()
+	defer c.cacheMutex.Unlock()
+
+	now := time.Now()
+	for URL, entry := range c.cache {
+		if now.After(entry.expiry) {
+			delete(c.cache, URL)
+		}
 	}
 }

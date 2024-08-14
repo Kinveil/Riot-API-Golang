@@ -11,7 +11,7 @@ type ChampionRotations struct {
 	MaxNewPlayerLevel            int   `json:"maxNewPlayerLevel"`
 }
 
-func (c *client) GetChampionRotations(r region.Region) (*ChampionRotations, error) {
+func (c *uniqueClient) GetChampionRotations(r region.Region) (*ChampionRotations, error) {
 	var championRotation ChampionRotations
 	_, err := c.dispatchAndUnmarshal(r, "/lol/platform/v3/champion-rotations", "", nil, ratelimiter.GetChampionRotations, &championRotation)
 	return &championRotation, err

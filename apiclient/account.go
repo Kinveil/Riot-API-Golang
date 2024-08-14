@@ -13,13 +13,13 @@ type Account struct {
 	TagLine  string `json:"tagLine"`
 }
 
-func (c *client) GetAccountByPuuid(continent continent.Continent, puuid string) (*Account, error) {
+func (c *uniqueClient) GetAccountByPuuid(continent continent.Continent, puuid string) (*Account, error) {
 	var account Account
 	_, err := c.dispatchAndUnmarshal(continent, "/riot/account/v1/accounts/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetAccountByPuuid, &account)
 	return &account, err
 }
 
-func (c *client) GetAccountByRiotID(continent continent.Continent, gameName, tagLine string) (*Account, error) {
+func (c *uniqueClient) GetAccountByRiotID(continent continent.Continent, gameName, tagLine string) (*Account, error) {
 	var account Account
 	_, err := c.dispatchAndUnmarshal(continent, "/riot/account/v1/accounts/by-riot-id", fmt.Sprintf("/%s/%s", gameName, tagLine), nil, ratelimiter.GetAccountByRiotID, &account)
 	return &account, err

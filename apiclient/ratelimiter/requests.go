@@ -29,11 +29,6 @@ type RateLimit struct {
 	blockedUntilQueue chan struct{}
 }
 
-const (
-	initialRegionLimit = 20
-	initialMethodLimit = 5
-)
-
 func (rl *RateLimiter) handleRequest(req *APIRequest) {
 	regionLimiter := rl.getRegionLimiter(req.Region)
 	methodLimiter := rl.getMethodLimiter(req.Region + req.MethodID.String())

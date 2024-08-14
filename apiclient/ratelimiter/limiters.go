@@ -7,10 +7,12 @@ import (
 	"github.com/Kinveil/Riot-API-Golang/apiclient/limiter"
 )
 
+const initialLimit = 20
+
 func newRateLimit() *RateLimit {
 	return &RateLimit{
-		shortLimiter:      limiter.NewLimiter(initialRegionLimit),
-		longLimiter:       limiter.NewLimiter(initialRegionLimit),
+		shortLimiter:      limiter.NewLimiter(initialLimit),
+		longLimiter:       limiter.NewLimiter(initialLimit),
 		blockedUntil:      time.Time{},
 		blockedUntilQueue: make(chan struct{}, 1),
 	}

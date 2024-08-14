@@ -54,7 +54,7 @@ type Update struct {
 	CreatedAt        string   `json:"created_at"` // Note: time format is not clear from example
 }
 
-func (c *client) GetStatusPlatformData(r region.Region) (*StatusPlatformData, error) {
+func (c *uniqueClient) GetStatusPlatformData(r region.Region) (*StatusPlatformData, error) {
 	var res StatusPlatformData
 	_, err := c.dispatchAndUnmarshal(r, "/lol/status/v4/platform-data", "", nil, ratelimiter.GetStatusPlatformData, &res)
 	return &res, err

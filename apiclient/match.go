@@ -34,7 +34,7 @@ type GetMatchlistOptions struct {
 	Count     *int       `json:"count"`
 }
 
-func (c *client) GetMatchlist(continent continent.Continent, puuid string, opts *GetMatchlistOptions) (*Matchlist, error) {
+func (c *uniqueClient) GetMatchlist(continent continent.Continent, puuid string, opts *GetMatchlistOptions) (*Matchlist, error) {
 	var params url.Values = make(map[string][]string)
 
 	if opts != nil {
@@ -429,7 +429,7 @@ func (m *MatchInfo) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, m)
 }
 
-func (c *client) GetMatch(continent continent.Continent, matchID string) (*Match, error) {
+func (c *uniqueClient) GetMatch(continent continent.Continent, matchID string) (*Match, error) {
 	var res Match
 	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s", matchID), nil, ratelimiter.GetMatch, &res)
 	return &res, err
@@ -929,7 +929,7 @@ const (
 	MatchTimelineDamageType_Other   MatchTimelineDamageType = "OTHER"
 )
 
-func (c *client) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
+func (c *uniqueClient) GetMatchTimeline(continent continent.Continent, matchID string) (*MatchTimeline, error) {
 	var res MatchTimeline
 	_, err := c.dispatchAndUnmarshal(continent, "/lol/match/v5/matches", fmt.Sprintf("/%s/timeline", matchID), nil, ratelimiter.GetMatchTimeline, &res)
 	return &res, err
