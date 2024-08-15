@@ -17,6 +17,7 @@ import (
 	"github.com/Kinveil/Riot-API-Golang/constants/league/tier"
 	"github.com/Kinveil/Riot-API-Golang/constants/queue_ranked"
 	"github.com/Kinveil/Riot-API-Golang/constants/region"
+	"github.com/barkimedes/go-deepcopy"
 )
 
 type Client interface {
@@ -204,7 +205,28 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 
 	// Check if in cache
 	if cachedData, ok := c.getFromCache(URL); ok {
-		reflect.ValueOf(dest).Elem().Set(reflect.ValueOf(cachedData))
+		copy, err := deepcopy.Anything(cachedData)
+		if err != nil {
+			return err
+		}
+
+		destValue := reflect.ValueOf(dest)
+		if destValue.Kind() != reflect.Ptr {
+			return fmt.Errorf("destination must be a pointer")
+		}
+		destElem := destValue.Elem()
+
+		copyValue := reflect.ValueOf(copy)
+		if copyValue.Kind() == reflect.Ptr {
+			copyValue = copyValue.Elem()
+		}
+
+		if !copyValue.Type().AssignableTo(destElem.Type()) {
+			return fmt.Errorf("cached data type %v is not assignable to destination type %v", copyValue.Type(), destElem.Type())
+		}
+
+		destElem.Set(copyValue)
+
 		return nil
 	}
 
@@ -268,7 +290,7 @@ func (c *uniqueClient) getFromCache(URL string) (interface{}, bool) {
 
 	if entry, ok := c.cache[URL]; ok {
 		if time.Now().Before(entry.expiry) {
-			return deepCopy(entry.data), true
+			return entry.data, true
 		}
 
 		delete(c.cache, URL)
@@ -278,11 +300,16 @@ func (c *uniqueClient) getFromCache(URL string) (interface{}, bool) {
 }
 
 func (c *uniqueClient) addToCache(URL string, data interface{}) {
+	copy, err := deepcopy.Anything(data)
+	if err != nil {
+		return
+	}
+
 	c.cacheMutex.Lock()
 	defer c.cacheMutex.Unlock()
 
 	c.cache[URL] = &cacheEntry{
-		data:   reflect.ValueOf(data).Elem().Interface(),
+		data:   copy,
 		expiry: time.Now().Add(c.cacheDuration),
 	}
 }
@@ -306,44 +333,5 @@ func (c *uniqueClient) removeExpiredEntries() {
 		if now.After(entry.expiry) {
 			delete(c.cache, URL)
 		}
-	}
-}
-
-func deepCopy(v interface{}) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	value := reflect.ValueOf(v)
-	switch value.Kind() {
-	case reflect.Ptr:
-		if value.IsNil() {
-			return nil
-		}
-		newPtr := reflect.New(value.Elem().Type())
-		newPtr.Elem().Set(reflect.ValueOf(deepCopy(value.Elem().Interface())))
-		return newPtr.Interface()
-	case reflect.Slice:
-		newSlice := reflect.MakeSlice(value.Type(), value.Len(), value.Cap())
-		for i := 0; i < value.Len(); i++ {
-			newSlice.Index(i).Set(reflect.ValueOf(deepCopy(value.Index(i).Interface())))
-		}
-		return newSlice.Interface()
-	case reflect.Map:
-		newMap := reflect.MakeMap(value.Type())
-		for _, key := range value.MapKeys() {
-			newValue := reflect.ValueOf(deepCopy(value.MapIndex(key).Interface()))
-			newMap.SetMapIndex(key, newValue)
-		}
-		return newMap.Interface()
-	case reflect.Struct:
-		newStruct := reflect.New(value.Type()).Elem()
-		for i := 0; i < value.NumField(); i++ {
-			newStruct.Field(i).Set(reflect.ValueOf(deepCopy(value.Field(i).Interface())))
-		}
-		return newStruct.Interface()
-	default:
-		// For basic types (int, string, etc.), return as is
-		return v
 	}
 }
