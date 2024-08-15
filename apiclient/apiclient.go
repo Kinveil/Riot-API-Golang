@@ -204,35 +204,7 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 
 	// Check if in cache
 	if cachedData, ok := c.getFromCache(URL); ok {
-		destValue := reflect.ValueOf(dest).Elem()
-		cachedValue := reflect.ValueOf(cachedData)
-
-		// Check if we're dealing with a slice
-		if cachedValue.Kind() == reflect.Slice {
-			// Create a new slice with the same length as the cached data
-			newSlice := reflect.MakeSlice(destValue.Type(), cachedValue.Len(), cachedValue.Cap())
-
-			// Copy each element individually
-			for i := 0; i < cachedValue.Len(); i++ {
-				elem := cachedValue.Index(i)
-
-				// If the element is a pointer, we need to create a new one
-				if elem.Kind() == reflect.Ptr {
-					newElem := reflect.New(elem.Type().Elem())
-					newElem.Elem().Set(elem.Elem())
-					newSlice.Index(i).Set(newElem)
-				} else {
-					newSlice.Index(i).Set(elem)
-				}
-			}
-
-			// Set the destination to our new slice
-			destValue.Set(newSlice)
-		} else {
-			// For non-slice types, we can do a direct set
-			destValue.Set(cachedValue)
-		}
-
+		reflect.ValueOf(dest).Elem().Set(reflect.ValueOf(cachedData))
 		return nil
 	}
 
@@ -296,7 +268,7 @@ func (c *uniqueClient) getFromCache(URL string) (interface{}, bool) {
 
 	if entry, ok := c.cache[URL]; ok {
 		if time.Now().Before(entry.expiry) {
-			return entry.data, true
+			return deepCopy(entry.data), true
 		}
 
 		delete(c.cache, URL)
@@ -334,5 +306,44 @@ func (c *uniqueClient) removeExpiredEntries() {
 		if now.After(entry.expiry) {
 			delete(c.cache, URL)
 		}
+	}
+}
+
+func deepCopy(v interface{}) interface{} {
+	if v == nil {
+		return nil
+	}
+
+	value := reflect.ValueOf(v)
+	switch value.Kind() {
+	case reflect.Ptr:
+		if value.IsNil() {
+			return nil
+		}
+		newPtr := reflect.New(value.Elem().Type())
+		newPtr.Elem().Set(reflect.ValueOf(deepCopy(value.Elem().Interface())))
+		return newPtr.Interface()
+	case reflect.Slice:
+		newSlice := reflect.MakeSlice(value.Type(), value.Len(), value.Cap())
+		for i := 0; i < value.Len(); i++ {
+			newSlice.Index(i).Set(reflect.ValueOf(deepCopy(value.Index(i).Interface())))
+		}
+		return newSlice.Interface()
+	case reflect.Map:
+		newMap := reflect.MakeMap(value.Type())
+		for _, key := range value.MapKeys() {
+			newValue := reflect.ValueOf(deepCopy(value.MapIndex(key).Interface()))
+			newMap.SetMapIndex(key, newValue)
+		}
+		return newMap.Interface()
+	case reflect.Struct:
+		newStruct := reflect.New(value.Type()).Elem()
+		for i := 0; i < value.NumField(); i++ {
+			newStruct.Field(i).Set(reflect.ValueOf(deepCopy(value.Field(i).Interface())))
+		}
+		return newStruct.Interface()
+	default:
+		// For basic types (int, string, etc.), return as is
+		return v
 	}
 }
