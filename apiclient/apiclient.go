@@ -159,13 +159,12 @@ func (c *uniqueClient) WithPriority(priority int) Client {
 }
 
 func (c *uniqueClient) WithCache(duration time.Duration) Client {
-	newClient := &uniqueClient{
+	return &uniqueClient{
 		sharedClient:  c.sharedClient,
 		ctx:           c.ctx,
 		priority:      c.priority,
-		cacheDuration: c.cacheDuration,
+		cacheDuration: duration,
 	}
-	return newClient
 }
 
 func (c *uniqueClient) SetUsageConservation(conserveUsage ratelimiter.ConserveUsage) {
