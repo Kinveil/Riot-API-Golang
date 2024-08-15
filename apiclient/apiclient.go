@@ -210,11 +210,20 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 		// Check if we're dealing with a slice
 		if cachedValue.Kind() == reflect.Slice {
 			// Create a new slice with the same length as the cached data
-			newSlice := reflect.MakeSlice(cachedValue.Type(), cachedValue.Len(), cachedValue.Cap())
+			newSlice := reflect.MakeSlice(destValue.Type(), cachedValue.Len(), cachedValue.Cap())
 
 			// Copy each element individually
 			for i := 0; i < cachedValue.Len(); i++ {
-				newSlice.Index(i).Set(cachedValue.Index(i))
+				elem := cachedValue.Index(i)
+
+				// If the element is a pointer, we need to create a new one
+				if elem.Kind() == reflect.Ptr {
+					newElem := reflect.New(elem.Type().Elem())
+					newElem.Elem().Set(elem.Elem())
+					newSlice.Index(i).Set(newElem)
+				} else {
+					newSlice.Index(i).Set(elem)
+				}
 			}
 
 			// Set the destination to our new slice
