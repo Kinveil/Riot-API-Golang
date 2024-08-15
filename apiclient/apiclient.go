@@ -204,7 +204,7 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 
 	// Check if in cache
 	if cachedData, ok := c.getFromCache(URL); ok {
-		reflect.ValueOf(dest).Elem().Set(reflect.ValueOf(cachedData).Elem())
+		reflect.ValueOf(dest).Elem().Set(reflect.ValueOf(cachedData))
 		return nil
 	}
 
@@ -282,7 +282,7 @@ func (c *uniqueClient) addToCache(URL string, data interface{}) {
 	defer c.cacheMutex.Unlock()
 
 	c.cache[URL] = &cacheEntry{
-		data:   data,
+		data:   reflect.ValueOf(data).Elem().Interface(),
 		expiry: time.Now().Add(c.cacheDuration),
 	}
 }
