@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -101,8 +102,8 @@ type Client interface {
 }
 
 type cacheEntry struct {
-	response *http.Response
-	expiry   time.Time
+	data   interface{}
+	expiry time.Time
 }
 
 type sharedClient struct {
@@ -188,7 +189,7 @@ type HostProvider interface {
 	String() string
 }
 
-func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) (*http.Response, error) {
+func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, method string, relativePath string, parameters url.Values, methodID ratelimiter.MethodID, dest interface{}) error {
 	var suffix, separator string
 
 	if len(parameters) > 0 {
@@ -202,8 +203,9 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 	URL := regionOrContinent.Host() + method + separator + relativePath + suffix
 
 	// Check if in cache
-	if response, ok := c.getFromCache(URL); ok {
-		return response, nil
+	if cachedData, ok := c.getFromCache(URL); ok {
+		reflect.ValueOf(dest).Elem().Set(reflect.ValueOf(cachedData).Elem())
+		return nil
 	}
 
 	responseChan := make(chan *http.Response, 1)
@@ -221,52 +223,52 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 	// Insert the request into the rate limiter
 	select {
 	case <-c.ctx.Done():
-		return nil, c.ctx.Err()
+		return c.ctx.Err()
 	case c.ratelimiter.Requests <- &newRequest:
 	}
 
 	// Wait for the response
 	select {
 	case <-c.ctx.Done():
-		return nil, c.ctx.Err()
+		return c.ctx.Err()
 	case err := <-errorChan:
-		return nil, err
+		return err
 	case response := <-responseChan:
 		if response == nil {
-			return nil, fmt.Errorf("received nil response (%s)", URL)
+			return fmt.Errorf("received nil response (%s)", URL)
 		}
 
 		defer response.Body.Close()
 
 		if response.StatusCode != http.StatusOK {
 			if err, ok := StatusToError[response.StatusCode]; ok {
-				return nil, fmt.Errorf("status code %d: %s (%s)", response.StatusCode, err, URL)
+				return fmt.Errorf("status code %d: %s (%s)", response.StatusCode, err, URL)
 			}
 
-			return nil, fmt.Errorf("status code %d: unknown error (%s)", response.StatusCode, URL)
+			return fmt.Errorf("status code %d: unknown error (%s)", response.StatusCode, URL)
 		}
 
 		decoder := json.NewDecoder(response.Body)
 		if err := decoder.Decode(dest); err != nil {
-			return nil, fmt.Errorf("failed to decode response: %w (%s)", err, URL)
+			return fmt.Errorf("failed to decode response: %w (%s)", err, URL)
 		}
 
-		// Cache the response if necessary
+		// Cache the destination
 		if c.cacheDuration > 0 {
-			c.addToCache(URL, response)
+			c.addToCache(URL, dest)
 		}
 
-		return response, nil
+		return nil
 	}
 }
 
-func (c *uniqueClient) getFromCache(URL string) (*http.Response, bool) {
+func (c *uniqueClient) getFromCache(URL string) (interface{}, bool) {
 	c.cacheMutex.RLock()
 	defer c.cacheMutex.RUnlock()
 
 	if entry, ok := c.cache[URL]; ok {
 		if time.Now().Before(entry.expiry) {
-			return entry.response, true
+			return entry.data, true
 		}
 
 		delete(c.cache, URL)
@@ -275,13 +277,13 @@ func (c *uniqueClient) getFromCache(URL string) (*http.Response, bool) {
 	return nil, false
 }
 
-func (c *uniqueClient) addToCache(URL string, response *http.Response) {
+func (c *uniqueClient) addToCache(URL string, data interface{}) {
 	c.cacheMutex.Lock()
 	defer c.cacheMutex.Unlock()
 
 	c.cache[URL] = &cacheEntry{
-		response: response,
-		expiry:   time.Now().Add(c.cacheDuration),
+		data:   data,
+		expiry: time.Now().Add(c.cacheDuration),
 	}
 }
 

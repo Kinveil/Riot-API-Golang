@@ -56,6 +56,6 @@ type Update struct {
 
 func (c *uniqueClient) GetStatusPlatformData(r region.Region) (*StatusPlatformData, error) {
 	var res StatusPlatformData
-	_, err := c.dispatchAndUnmarshal(r, "/lol/status/v4/platform-data", "", nil, ratelimiter.GetStatusPlatformData, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/status/v4/platform-data", "", nil, ratelimiter.GetStatusPlatformData, &res)
 	return &res, err
 }

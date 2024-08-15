@@ -90,36 +90,36 @@ type ClashTournament struct {
 
 func (c *uniqueClient) GetClashPlayersByPuuid(r region.Region, puuid string) (*ClashPlayers, error) {
 	var res ClashPlayers
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetClashPlayersByPuuid, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetClashPlayersByPuuid, &res)
 	return &res, err
 }
 
 func (c *uniqueClient) GetClashPlayersBySummonerID(r region.Region, summonerID string) (*ClashPlayers, error) {
 	var res ClashPlayers
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetClashPlayersBySummonerID, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/players/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetClashPlayersBySummonerID, &res)
 	return &res, err
 }
 
 func (c *uniqueClient) GetClashTeamByID(r region.Region, teamID string) (*ClashTeam, error) {
 	var res ClashTeam
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/teams", fmt.Sprintf("/%s", teamID), nil, ratelimiter.GetClashTeamByID, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/teams", fmt.Sprintf("/%s", teamID), nil, ratelimiter.GetClashTeamByID, &res)
 	return &res, err
 }
 
 func (c *uniqueClient) GetClashTournaments(r region.Region) (*ClashTournaments, error) {
 	var res ClashTournaments
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments", "", nil, ratelimiter.GetClashTournaments, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments", "", nil, ratelimiter.GetClashTournaments, &res)
 	return &res, err
 }
 
 func (c *uniqueClient) GetClashTournamentByTeamID(r region.Region, teamID string) (*ClashTournament, error) {
 	var res ClashTournament
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments/by-team", fmt.Sprintf("/%s", teamID), nil, ratelimiter.GetClashTournamentByTeamID, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments/by-team", fmt.Sprintf("/%s", teamID), nil, ratelimiter.GetClashTournamentByTeamID, &res)
 	return &res, err
 }
 
 func (c *uniqueClient) GetClashTournamentByID(r region.Region, tournamentID string) (*ClashTournament, error) {
 	var res ClashTournament
-	_, err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments", fmt.Sprintf("/%s", tournamentID), nil, ratelimiter.GetClashTournamentByID, &res)
+	err := c.dispatchAndUnmarshal(r, "/lol/clash/v1/tournaments", fmt.Sprintf("/%s", tournamentID), nil, ratelimiter.GetClashTournamentByID, &res)
 	return &res, err
 }
