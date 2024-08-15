@@ -204,7 +204,26 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 
 	// Check if in cache
 	if cachedData, ok := c.getFromCache(URL); ok {
-		reflect.ValueOf(dest).Elem().Set(reflect.ValueOf(cachedData))
+		destValue := reflect.ValueOf(dest).Elem()
+		cachedValue := reflect.ValueOf(cachedData)
+
+		// Check if we're dealing with a slice
+		if cachedValue.Kind() == reflect.Slice {
+			// Create a new slice with the same length as the cached data
+			newSlice := reflect.MakeSlice(cachedValue.Type(), cachedValue.Len(), cachedValue.Cap())
+
+			// Copy each element individually
+			for i := 0; i < cachedValue.Len(); i++ {
+				newSlice.Index(i).Set(cachedValue.Index(i))
+			}
+
+			// Set the destination to our new slice
+			destValue.Set(newSlice)
+		} else {
+			// For non-slice types, we can do a direct set
+			destValue.Set(cachedValue)
+		}
+
 		return nil
 	}
 
