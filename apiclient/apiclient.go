@@ -110,7 +110,7 @@ type cacheEntry struct {
 type sharedClient struct {
 	ratelimiter          *ratelimiter.RateLimiter
 	cache                map[string]*cacheEntry
-	cacheMutex           sync.RWMutex
+	cacheMutex           sync.Mutex
 	cacheCleanupDuration time.Duration
 }
 
@@ -285,8 +285,8 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 }
 
 func (c *uniqueClient) getFromCache(URL string) (interface{}, bool) {
-	c.cacheMutex.RLock()
-	defer c.cacheMutex.RUnlock()
+	c.cacheMutex.Lock()
+	defer c.cacheMutex.Unlock()
 
 	if entry, ok := c.cache[URL]; ok {
 		if time.Now().Before(entry.expiry) {
