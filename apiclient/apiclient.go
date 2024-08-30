@@ -286,16 +286,18 @@ func (c *uniqueClient) dispatchAndUnmarshal(regionOrContinent HostProvider, meth
 
 func (c *uniqueClient) getFromCache(URL string) (interface{}, bool) {
 	c.cacheMutex.Lock()
-	defer c.cacheMutex.Unlock()
 
 	if entry, ok := c.cache[URL]; ok {
 		if time.Now().Before(entry.expiry) {
-			return entry.data, true
+			value := entry.data
+			c.cacheMutex.Unlock()
+			return value, true
 		}
 
 		delete(c.cache, URL)
 	}
 
+	c.cacheMutex.Unlock()
 	return nil, false
 }
 
@@ -306,12 +308,11 @@ func (c *uniqueClient) addToCache(URL string, data interface{}) {
 	}
 
 	c.cacheMutex.Lock()
-	defer c.cacheMutex.Unlock()
-
 	c.cache[URL] = &cacheEntry{
 		data:   copy,
 		expiry: time.Now().Add(c.cacheDuration),
 	}
+	c.cacheMutex.Unlock()
 }
 
 func (c *uniqueClient) cleanupCache() {
@@ -326,7 +327,6 @@ func (c *uniqueClient) cleanupCache() {
 
 func (c *uniqueClient) removeExpiredEntries() {
 	c.cacheMutex.Lock()
-	defer c.cacheMutex.Unlock()
 
 	now := time.Now()
 	for URL, entry := range c.cache {
@@ -334,4 +334,6 @@ func (c *uniqueClient) removeExpiredEntries() {
 			delete(c.cache, URL)
 		}
 	}
+
+	c.cacheMutex.Unlock()
 }
