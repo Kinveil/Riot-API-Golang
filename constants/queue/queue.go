@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-type ID int
+type ID int16
 type PrettyString string
 
 const (

@@ -6,9 +6,9 @@ import (
 )
 
 type ChampionRotations struct {
-	FreeChampionIDs              []int `json:"freeChampionIds"`
-	FreeChampionIDsForNewPlayers []int `json:"freeChampionIdsForNewPlayers"`
-	MaxNewPlayerLevel            int   `json:"maxNewPlayerLevel"`
+	FreeChampionIDs              []int16 `json:"freeChampionIds"`
+	FreeChampionIDsForNewPlayers []int16 `json:"freeChampionIdsForNewPlayers"`
+	MaxNewPlayerLevel            int16   `json:"maxNewPlayerLevel"`
 }
 
 func (c *uniqueClient) GetChampionRotations(r region.Region) (*ChampionRotations, error) {

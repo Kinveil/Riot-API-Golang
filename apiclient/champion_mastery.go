@@ -9,14 +9,14 @@ import (
 
 type ChampionMastery struct {
 	Puuid                        string `json:"puuid"`
-	ChampionID                   int    `json:"championId"`
-	ChampionLevel                int    `json:"championLevel"`
-	ChampionPoints               int    `json:"championPoints"`
-	LastPlayTime                 int    `json:"lastPlayTime"`
-	ChampionPointsSinceLastLevel int    `json:"championPointsSinceLastLevel"`
-	ChampionPointsUntilNextLevel int    `json:"championPointsUntilNextLevel"`
+	ChampionID                   int32  `json:"championId"`
+	ChampionLevel                int64  `json:"championLevel"`
+	ChampionPoints               int64  `json:"championPoints"`
+	LastPlayTime                 int64  `json:"lastPlayTime"`
+	ChampionPointsSinceLastLevel int64  `json:"championPointsSinceLastLevel"`
+	ChampionPointsUntilNextLevel int64  `json:"championPointsUntilNextLevel"`
 	ChestGranted                 bool   `json:"chestGranted"`
-	TokensEarned                 int    `json:"tokensEarned"`
+	TokensEarned                 int64  `json:"tokensEarned"`
 	SummonerID                   string `json:"summonerId"`
 }
 

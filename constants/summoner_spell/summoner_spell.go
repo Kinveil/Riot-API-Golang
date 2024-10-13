@@ -1,12 +1,12 @@
 package summoner_spell
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
-	"encoding/json"
 )
 
-type ID int
+type ID int16
 type String string
 type PrettyString string
 
@@ -104,9 +104,9 @@ func (s *ID) UnmarshalJSON(data []byte) error {
 
 // UnmarshalGQL implements the graphql.Unmarshaler interface
 func (s *ID) UnmarshalGQL(v interface{}) error {
-	intValue, ok := v.(int)
+	intValue, ok := v.(int16)
 	if !ok {
-		return fmt.Errorf("rank must be an int")
+		return fmt.Errorf("rank must be an int16")
 	}
 
 	*s = ID(intValue)

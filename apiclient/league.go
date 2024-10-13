@@ -20,10 +20,10 @@ type LeagueList struct {
 
 type LeagueItem struct {
 	SummonerID   string      `json:"summonerId"`
-	LeaguePoints int         `json:"leaguePoints"`
+	LeaguePoints int32       `json:"leaguePoints"`
 	Rank         rank.String `json:"rank"`
-	Wins         int         `json:"wins"`
-	Losses       int         `json:"losses"`
+	Wins         int32       `json:"wins"`
+	Losses       int32       `json:"losses"`
 	Veteran      bool        `json:"veteran"`
 	Inactive     bool        `json:"inactive"`
 	FreshBlood   bool        `json:"freshBlood"`
@@ -35,14 +35,14 @@ type LeagueEntry struct {
 	HotStreak    bool                `json:"hotStreak"`
 	Inactive     bool                `json:"inactive"`
 	LeagueID     string              `json:"leagueId"`
-	LeaguePoints int                 `json:"leaguePoints"`
-	Losses       int                 `json:"losses"`
+	LeaguePoints int32               `json:"leaguePoints"`
+	Losses       int32               `json:"losses"`
 	QueueType    queue_ranked.String `json:"queueType"`
 	Rank         rank.String         `json:"rank"`
 	SummonerID   string              `json:"summonerId"`
 	Tier         tier.String         `json:"tier"`
 	Veteran      bool                `json:"veteran"`
-	Wins         int                 `json:"wins"`
+	Wins         int32               `json:"wins"`
 }
 
 func (c *uniqueClient) GetLeagueEntriesChallenger(r region.Region, q queue_ranked.String) (*LeagueList, error) {

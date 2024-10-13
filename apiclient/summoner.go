@@ -11,10 +11,10 @@ import (
 type Summoner struct {
 	AccountID     string `json:"accountId"`
 	ID            string `json:"id"`
-	ProfileIconID int    `json:"profileIconId"`
+	ProfileIconID int32  `json:"profileIconId"`
 	Puuid         string `json:"puuid"`
-	RevisionDate  int    `json:"revisionDate"`
-	SummonerLevel int    `json:"summonerLevel"`
+	RevisionDate  int64  `json:"revisionDate"`
+	SummonerLevel int32  `json:"summonerLevel"`
 }
 
 func (s Summoner) MarshalBinary() ([]byte, error) {

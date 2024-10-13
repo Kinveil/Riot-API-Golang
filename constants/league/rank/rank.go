@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-type Int int
+type Int int16
 type String string
 
 const (
@@ -39,9 +39,9 @@ func (r Int) String() String {
 
 // UnmarshalGQL implements the graphql.Unmarshaler interface
 func (r *Int) UnmarshalGQL(v interface{}) error {
-	intValue, ok := v.(int)
+	intValue, ok := v.(int16)
 	if !ok {
-		return fmt.Errorf("rank must be an int")
+		return fmt.Errorf("rank must be an int16")
 	}
 
 	*r = Int(intValue)

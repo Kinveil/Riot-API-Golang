@@ -42,9 +42,9 @@ func (q String) PrettyString() queue.PrettyString {
 
 // UnmarshalGQL implements the graphql.Unmarshaler interface
 func (q *ID) UnmarshalGQL(v interface{}) error {
-	intValue, ok := v.(int)
+	intValue, ok := v.(int16)
 	if !ok {
-		return fmt.Errorf("rank must be an int")
+		return fmt.Errorf("rank must be an int16")
 	}
 
 	*q = ID(intValue)
