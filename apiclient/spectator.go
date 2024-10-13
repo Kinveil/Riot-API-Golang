@@ -10,8 +10,8 @@ import (
 )
 
 type ActiveGame struct {
-	GameID            int                     `json:"gameId"`            // The ID of the game
-	MapID             int                     `json:"mapId"`             // The ID of the map
+	GameID            int64                   `json:"gameId"`            // The ID of the game
+	MapID             int16                   `json:"mapId"`             // The ID of the map
 	GameMode          string                  `json:"gameMode"`          // The game mode
 	GameType          string                  `json:"gameType"`          // The game type
 	GameQueueConfigID queue.ID                `json:"gameQueueConfigId"` // The queue type (queue types are documented on the Game Constants page)
@@ -19,17 +19,17 @@ type ActiveGame struct {
 	Observers         Observers               `json:"observers"`         // The observer information
 	PlatformID        region.Region           `json:"platformId"`        // The ID of the platform on which the game is being played
 	BannedChampions   []BannedChampion        `json:"bannedChampions"`   // Banned champion information
-	GameStartTime     int                     `json:"gameStartTime"`     // The game start time represented in epoch milliseconds
-	GameLength        int                     `json:"gameLength"`        // The amount of time in seconds that has passed since the game started
+	GameStartTime     int64                   `json:"gameStartTime"`     // The game start time represented in epoch milliseconds
+	GameLength        int64                   `json:"gameLength"`        // The amount of time in seconds that has passed since the game started
 }
 
 type ActiveGameParticipant struct {
 	Puuid         *string           `json:"puuid"`         // The Puuid of the player
 	RiotID        *string           `json:"riotId"`        // The Riot ID of the player
 	SummonerID    *string           `json:"summonerId"`    // The encrypted summoner ID of this participant
-	ProfileIconID *int              `json:"profileIconId"` // The ID of the profile icon used by this participant
-	ChampionID    int               `json:"championId"`    // The ID of the champion played by this participant
-	TeamID        int               `json:"teamId"`        // The team ID of this participant, indicating the participant's team
+	ProfileIconID *int32            `json:"profileIconId"` // The ID of the profile icon used by this participant
+	ChampionID    int32             `json:"championId"`    // The ID of the champion played by this participant
+	TeamID        int16             `json:"teamId"`        // The team ID of this participant, indicating the participant's team
 	Bot           bool              `json:"bot"`           // Flag indicating whether or not this participant is a bot
 	Spell1ID      summoner_spell.ID `json:"spell1Id"`      // The ID of the first summoner spell used by this participant
 	Spell2ID      summoner_spell.ID `json:"spell2Id"`      // The ID of the second summoner spell used by this participant
@@ -37,9 +37,9 @@ type ActiveGameParticipant struct {
 }
 
 type Perks struct {
-	PerkIDs      []int `json:"perkIds"`
-	PerkStyle    int   `json:"perkStyle"`
-	PerkSubStyle int   `json:"perkSubStyle"`
+	PerkIDs      []int16 `json:"perkIds"`
+	PerkStyle    int16   `json:"perkStyle"`
+	PerkSubStyle int16   `json:"perkSubStyle"`
 }
 
 type Observers struct {
@@ -47,9 +47,9 @@ type Observers struct {
 }
 
 type BannedChampion struct {
-	ChampionID int `json:"championId"` // The ID of the banned champion
-	TeamID     int `json:"teamId"`     // The ID of the team that banned the champion
-	PickTurn   int `json:"pickTurn"`   // The turn during which the champion was banned
+	ChampionID int32 `json:"championId"` // The ID of the banned champion
+	TeamID     int16 `json:"teamId"`     // The ID of the team that banned the champion
+	PickTurn   int16 `json:"pickTurn"`   // The turn during which the champion was banned
 }
 
 func (c *uniqueClient) GetSpectatorActiveGameByPuuid(r region.Region, puuid string) (*ActiveGame, error) {
@@ -63,8 +63,8 @@ type FeaturedGames struct {
 }
 
 type FeaturedGame struct {
-	GameID            int                     `json:"gameId"`            // The ID of the game
-	MapID             int                     `json:"mapId"`             // The ID of the map
+	GameID            int64                   `json:"gameId"`            // The ID of the game
+	MapID             int16                   `json:"mapId"`             // The ID of the map
 	GameMode          string                  `json:"gameMode"`          // The game mode
 	GameType          string                  `json:"gameType"`          // The game type
 	GameQueueConfigID queue.ID                `json:"gameQueueConfigId"` // The queue type (queue types are documented on the Game Constants page)
@@ -72,17 +72,17 @@ type FeaturedGame struct {
 	Observers         Observers               `json:"observers"`         // The observer information
 	PlatformID        region.Region           `json:"platformId"`        // The ID of the platform on which the game is being played
 	BannedChampions   []BannedChampion        `json:"bannedChampions"`   // Banned champion information
-	GameStartTime     int                     `json:"gameStartTime"`     // The game start time represented in epoch milliseconds
-	GameLength        int                     `json:"gameLength"`        // The amount of time in seconds that has passed since the game started
+	GameStartTime     int64                   `json:"gameStartTime"`     // The game start time represented in epoch milliseconds
+	GameLength        int64                   `json:"gameLength"`        // The amount of time in seconds that has passed since the game started
 }
 
 type FeaturedGameParticipant struct {
 	Puuid         *string           `json:"puuid"`         // The Puuid of the player
 	RiotID        *string           `json:"riotId"`        // The Riot ID of the player
 	SummonerID    *string           `json:"summonerId"`    // The encrypted summoner ID of this participant
-	ChampionID    int               `json:"championId"`    // The ID of the champion played by this participant
-	TeamID        int               `json:"teamId"`        // The team ID of this participant, indicating the participant's team
-	ProfileIconID int               `json:"profileIconId"` // The ID of the profile icon used by this participant
+	ChampionID    int32             `json:"championId"`    // The ID of the champion played by this participant
+	TeamID        int16             `json:"teamId"`        // The team ID of this participant, indicating the participant's team
+	ProfileIconID int32             `json:"profileIconId"` // The ID of the profile icon used by this participant
 	Bot           bool              `json:"bot"`           // Flag indicating whether or not this participant is a bot
 	Spell1ID      summoner_spell.ID `json:"spell1Id"`      // The ID of the first summoner spell used by this participant
 	Spell2ID      summoner_spell.ID `json:"spell2Id"`      // The ID of the second summoner spell used by this participant
