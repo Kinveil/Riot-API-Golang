@@ -358,18 +358,18 @@ type MatchInfoParticipantChallenges struct {
 }
 
 type MatchInfoParticipantMissions struct {
-	PlayerScore0  int32 `json:"playerScore0"`
-	PlayerScore1  int32 `json:"playerScore1"`
-	PlayerScore2  int32 `json:"playerScore2"`
-	PlayerScore3  int32 `json:"playerScore3"`
-	PlayerScore4  int32 `json:"playerScore4"`
-	PlayerScore5  int32 `json:"playerScore5"`
-	PlayerScore6  int32 `json:"playerScore6"`
-	PlayerScore7  int32 `json:"playerScore7"`
-	PlayerScore8  int32 `json:"playerScore8"`
-	PlayerScore9  int32 `json:"playerScore9"`
-	PlayerScore10 int32 `json:"playerScore10"`
-	PlayerScore11 int32 `json:"playerScore11"`
+	PlayerScore0  int16 `json:"playerScore0"`
+	PlayerScore1  int16 `json:"playerScore1"`
+	PlayerScore2  int16 `json:"playerScore2"`
+	PlayerScore3  int16 `json:"playerScore3"`
+	PlayerScore4  int16 `json:"playerScore4"`
+	PlayerScore5  int16 `json:"playerScore5"`
+	PlayerScore6  int16 `json:"playerScore6"`
+	PlayerScore7  int16 `json:"playerScore7"`
+	PlayerScore8  int16 `json:"playerScore8"`
+	PlayerScore9  int16 `json:"playerScore9"`
+	PlayerScore10 int16 `json:"playerScore10"`
+	PlayerScore11 int16 `json:"playerScore11"`
 }
 
 type MatchInfoParticipantPerks struct {
@@ -535,7 +535,7 @@ type MatchTimelineEvent_ChampionKill struct {
 type MatchTimelineEvent_ChampionSpecialKill struct {
 	KillType        MatchTimelineEvent_KillType `json:"killType"`
 	KillerID        int16                       `json:"killerId"`
-	MultiKillLength *int                        `json:"multiKillLength"`
+	MultiKillLength *int16                      `json:"multiKillLength"`
 	Position        MatchTimelinePosition       `json:"position"`
 	Timestamp       int32                       `json:"timestamp"`
 	Type            MatchTimelineFrameEventType `json:"type"`
