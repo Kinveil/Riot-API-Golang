@@ -391,9 +391,9 @@ type MatchInfoParticipantPerksStyles struct {
 
 type MatchInfoParticipantPerksStylesSelection struct {
 	Perk int16 `json:"perk"`
-	Var1 int16 `json:"var1"`
-	Var2 int16 `json:"var2"`
-	Var3 int16 `json:"var3"`
+	Var1 int32 `json:"var1"`
+	Var2 int32 `json:"var2"`
+	Var3 int32 `json:"var3"`
 }
 
 type MatchInfoTeam struct {
