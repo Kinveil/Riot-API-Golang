@@ -139,13 +139,13 @@ type MatchInfoParticipant struct {
 	InhibitorKills                 int16                           `json:"inhibitorKills"`
 	InhibitorTakedowns             int16                           `json:"inhibitorTakedowns"`
 	InhibitorsLost                 int16                           `json:"inhibitorsLost"`
-	Item0                          int16                           `json:"item0"`
-	Item1                          int16                           `json:"item1"`
-	Item2                          int16                           `json:"item2"`
-	Item3                          int16                           `json:"item3"`
-	Item4                          int16                           `json:"item4"`
-	Item5                          int16                           `json:"item5"`
-	Item6                          int16                           `json:"item6"`
+	Item0                          int32                           `json:"item0"`
+	Item1                          int32                           `json:"item1"`
+	Item2                          int32                           `json:"item2"`
+	Item3                          int32                           `json:"item3"`
+	Item4                          int32                           `json:"item4"`
+	Item5                          int32                           `json:"item5"`
+	Item6                          int32                           `json:"item6"`
 	ItemsPurchased                 int16                           `json:"itemsPurchased"`
 	KillingSprees                  int16                           `json:"killingSprees"`
 	Kills                          int16                           `json:"kills"`
@@ -291,7 +291,7 @@ type MatchInfoParticipantChallenges struct {
 	LandSkillShotsEarlyGame                  int32   `json:"landSkillShotsEarlyGame"`
 	LaneMinionsFirst10Minutes                int16   `json:"laneMinionsFirst10Minutes"`
 	LegendaryCount                           int16   `json:"legendaryCount"`
-	LegendaryItemUsed                        []int16 `json:"legendaryItemUsed"`
+	LegendaryItemUsed                        []int32 `json:"legendaryItemUsed"`
 	LostAnInhibitor                          int16   `json:"lostAnInhibitor"`
 	MaxKillDeficit                           int16   `json:"maxKillDeficit"`
 	MejaisFullStackInTime                    int16   `json:"mejaisFullStackInTime"`
@@ -583,29 +583,29 @@ type MatchTimelineEvent_GameEnd struct {
 }
 
 type MatchTimelineEvent_ItemDestroyed struct {
-	ItemID        int16                       `json:"itemId"`
+	ItemID        int32                       `json:"itemId"`
 	ParticipantID int16                       `json:"participantId"`
 	Timestamp     int32                       `json:"timestamp"`
 	Type          MatchTimelineFrameEventType `json:"type"`
 }
 
 type MatchTimelineEvent_ItemPurchased struct {
-	ItemID        int16                       `json:"itemId"`
+	ItemID        int32                       `json:"itemId"`
 	ParticipantID int16                       `json:"participantId"`
 	Timestamp     int32                       `json:"timestamp"`
 	Type          MatchTimelineFrameEventType `json:"type"`
 }
 
 type MatchTimelineEvent_ItemSold struct {
-	ItemID        int16                       `json:"itemId"`
+	ItemID        int32                       `json:"itemId"`
 	ParticipantID int16                       `json:"participantId"`
 	Timestamp     int32                       `json:"timestamp"`
 	Type          MatchTimelineFrameEventType `json:"type"`
 }
 
 type MatchTimelineEvent_ItemUndo struct {
-	AfterID       int16                       `json:"afterId"`
-	BeforeID      int16                       `json:"beforeId"`
+	AfterID       int32                       `json:"afterId"`
+	BeforeID      int32                       `json:"beforeId"`
 	GoldGain      int16                       `json:"goldGain"`
 	ParticipantID int16                       `json:"participantId"`
 	Timestamp     int32                       `json:"timestamp"`
