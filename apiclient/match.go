@@ -915,7 +915,7 @@ type MatchTimelineDamage struct {
 	ParticipantID  int16                   `json:"participantId"`
 	PhysicalDamage int16                   `json:"physicalDamage"`
 	SpellName      string                  `json:"spellName"`
-	SpellSlot      int16                   `json:"spellSlot"`
+	SpellSlot      int32                   `json:"spellSlot"`
 	TrueDamage     int16                   `json:"trueDamage"`
 	Type           MatchTimelineDamageType `json:"type"`
 }
