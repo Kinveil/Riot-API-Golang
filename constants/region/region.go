@@ -182,6 +182,7 @@ var regionToContinentAccountV1 = map[Region]continent.Continent{
 	KR:   continent.ASIA,
 	LA1:  continent.AMERICAS,
 	LA2:  continent.AMERICAS,
+	ME1:  continent.EUROPE,
 	NA1:  continent.AMERICAS,
 	OC1:  continent.AMERICAS,
 	PH2:  continent.AMERICAS,
