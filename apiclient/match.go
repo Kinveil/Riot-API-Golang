@@ -239,7 +239,7 @@ type MatchInfoParticipantChallenges struct {
 	AlliedJungleMonsterKills                 int16   `json:"alliedJungleMonsterKills"`
 	BaronTakedowns                           int16   `json:"baronTakedowns"`
 	BlastConeOppositeOpponentCount           int16   `json:"blastConeOppositeOpponentCount"`
-	BountyGold                               int16   `json:"bountyGold"`
+	BountyGold                               float64 `json:"bountyGold"`
 	BuffsStolen                              int16   `json:"buffsStolen"`
 	CompleteSupportQuestInTime               int16   `json:"completeSupportQuestInTime"`
 	ControlWardsPlaced                       int16   `json:"controlWardsPlaced"`
