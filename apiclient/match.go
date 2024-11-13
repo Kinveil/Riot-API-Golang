@@ -260,7 +260,7 @@ type MatchInfoParticipantChallenges struct {
 	EpicMonsterSteals                        int16   `json:"epicMonsterSteals"`
 	FastestLegendary                         float64 `json:"fastestLegendary"`
 	EpicMonsterStolenWithoutSmite            int16   `json:"epicMonsterStolenWithoutSmite"`
-	FirstTurretKilled                        int16   `json:"firstTurretKilled"`
+	FirstTurretKilled                        float64 `json:"firstTurretKilled"`
 	FirstTurretKilledTime                    float64 `json:"firstTurretKilledTime"`
 	FistBumpParticipation                    int16   `json:"fistBumpParticipation"`
 	FlawlessAces                             int16   `json:"flawlessAces"`
