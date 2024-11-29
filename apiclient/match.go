@@ -910,10 +910,10 @@ type MatchTimelinePosition struct {
 
 type MatchTimelineDamage struct {
 	Basic          bool                    `json:"basic"`
-	MagicDamage    int16                   `json:"magicDamage"`
+	MagicDamage    int32                   `json:"magicDamage"`
 	Name           string                  `json:"name"`
 	ParticipantID  int16                   `json:"participantId"`
-	PhysicalDamage int16                   `json:"physicalDamage"`
+	PhysicalDamage int32                   `json:"physicalDamage"`
 	SpellName      string                  `json:"spellName"`
 	SpellSlot      int32                   `json:"spellSlot"`
 	TrueDamage     int32                   `json:"trueDamage"`
