@@ -1,6 +1,7 @@
 package ratelimiter
 
 import (
+	"fmt"
 	"net/http"
 	"sync"
 )
@@ -28,10 +29,6 @@ type HTTPClient interface {
 }
 
 func NewRateLimiter(requests chan *APIRequest, apiKey string) *RateLimiter {
-	if requests == nil {
-		panic("requests channel cannot be nil")
-	}
-
 	return &RateLimiter{
 		Requests:   requests,
 		httpClient: &http.Client{},
@@ -51,16 +48,17 @@ func NewRateLimiter(requests chan *APIRequest, apiKey string) *RateLimiter {
 
 // SetUsageConservation sets the usage conservation percentages for regions and methods.
 // Both region and method percentages must be between 0 and 100.
-func (rl *RateLimiter) SetUsageConservation(conserveUsage ConserveUsage) {
+func (rl *RateLimiter) SetUsageConservation(conserveUsage ConserveUsage) error {
 	if conserveUsage.RegionPercent < 0 || conserveUsage.RegionPercent > 100 {
-		panic("regionPercent must be between 0 and 100")
+		return fmt.Errorf("region percent must be between 0 and 100")
 	}
 
 	if conserveUsage.MethodPercent < 0 || conserveUsage.MethodPercent > 100 {
-		panic("methodPercent must be between 0 and 100")
+		return fmt.Errorf("method percent must be between 0 and 100")
 	}
 
 	rl.conserveUsage = conserveUsage
+	return nil
 }
 
 func (rl *RateLimiter) SetAPIKey(apiKey string) {

@@ -1,7 +1,6 @@
 package region
 
 import (
-	"fmt"
 	"strings"
 	"unicode"
 
@@ -93,14 +92,14 @@ var stringToRegion = map[string]Region{
 	"VN":  VN2,
 }
 
-func FromString(rgn string) Region {
+func FromString(rgn string) (Region, bool) {
 	// Capitalize the string
 	rgn = strings.ToUpper(rgn)
 
 	// Special handling for Latin America regions
 	if strings.HasPrefix(rgn, "LA") {
 		if region, ok := stringToRegion[rgn]; ok {
-			return region
+			return region, true
 		}
 	} else {
 		// Remove all numbers from the string for other regions
@@ -112,11 +111,8 @@ func FromString(rgn string) Region {
 		}, rgn)
 	}
 
-	if region, ok := stringToRegion[rgn]; ok {
-		return region
-	}
-
-	panic(fmt.Sprintf("region %s is invalid", rgn))
+	region, ok := stringToRegion[rgn]
+	return region, ok
 }
 
 var regionToHost = map[Region]string{
@@ -142,11 +138,7 @@ var regionToHost = map[Region]string{
 
 // Returns the full hostname corresponding to the region.
 func (r Region) Host() string {
-	if host, ok := regionToHost[r]; ok {
-		return host
-	}
-
-	panic(fmt.Sprintf("region %s does not have a configured host", r))
+	return regionToHost[r]
 }
 
 var regionToContinentMatchV5 = map[Region]continent.Continent{
@@ -172,11 +164,7 @@ var regionToContinentMatchV5 = map[Region]continent.Continent{
 
 // Returns the continent that the region is in
 func (r Region) ContinentMatchV5() continent.Continent {
-	if continent, ok := regionToContinentMatchV5[r]; ok {
-		return continent
-	}
-
-	panic(fmt.Sprintf("region %s does not have a configured continent", r))
+	return regionToContinentMatchV5[r]
 }
 
 // Map the nearest region to the continent
@@ -203,9 +191,5 @@ var regionToContinentAccountV1 = map[Region]continent.Continent{
 
 // Returns the continent that the region is in
 func (r Region) ContinentAccountV1() continent.Continent {
-	if continent, ok := regionToContinentAccountV1[r]; ok {
-		return continent
-	}
-
-	panic(fmt.Sprintf("region %s does not have a configured continent", r))
+	return regionToContinentAccountV1[r]
 }

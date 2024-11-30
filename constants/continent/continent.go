@@ -1,7 +1,6 @@
 package continent
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -25,14 +24,10 @@ var stringToContinent = map[string]Continent{
 	"SEA":      SEA,
 }
 
-func FromString(cntnt string) Continent {
+func FromString(cntnt string) (Continent, bool) {
 	cntnt = strings.ToUpper(cntnt)
-
-	if continent, ok := stringToContinent[cntnt]; ok {
-		return continent
-	}
-
-	panic(fmt.Sprintf("continent %s does not have a configured continent", cntnt))
+	continent, ok := stringToContinent[cntnt]
+	return continent, ok
 }
 
 var continentToHost = map[Continent]string{
@@ -44,9 +39,5 @@ var continentToHost = map[Continent]string{
 
 // Returns the full hostname corresponding to the region.
 func (c Continent) Host() string {
-	if host, ok := continentToHost[c]; ok {
-		return host
-	}
-
-	panic(fmt.Sprintf("continent %s does not have a configured host", c))
+	return continentToHost[c]
 }
