@@ -874,7 +874,7 @@ type MatchTimelineChampionStats struct {
 	CooldownReduction    int16 `json:"cooldownReduction"`
 	Health               int32 `json:"health"`
 	HealthMax            int32 `json:"healthMax"`
-	HealthRegen          int16 `json:"healthRegen"`
+	HealthRegen          int32 `json:"healthRegen"`
 	Lifesteal            int16 `json:"lifesteal"`
 	MagicPen             int16 `json:"magicPen"`
 	MagicPenPercent      int16 `json:"magicPenPercent"`
