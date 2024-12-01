@@ -40,9 +40,6 @@ const (
 	// Oceania
 	OC1 Region = "OC1"
 
-	// Public Beta Environment
-	PBE Region = "PBE"
-
 	// Philippines
 	PH2 Region = "PH2"
 
@@ -82,7 +79,6 @@ var stringToRegion = map[string]Region{
 	"ME":  ME1,
 	"NA":  NA1,
 	"OC":  OC1,
-	"PBE": PBE,
 	"PH":  PH2,
 	"RU":  RU,
 	"SG":  SG2,
@@ -126,7 +122,6 @@ var regionToHost = map[Region]string{
 	ME1:  "https://me1.api.riotgames.com",
 	NA1:  "https://na1.api.riotgames.com",
 	OC1:  "https://oc1.api.riotgames.com",
-	PBE:  "https://pbe.api.riotgames.com",
 	PH2:  "https://ph2.api.riotgames.com",
 	RU:   "https://ru.api.riotgames.com",
 	SG2:  "https://sg2.api.riotgames.com",
@@ -152,7 +147,6 @@ var regionToContinentMatchV5 = map[Region]continent.Continent{
 	ME1:  continent.EUROPE,
 	NA1:  continent.AMERICAS,
 	OC1:  continent.SEA,
-	PBE:  continent.AMERICAS,
 	PH2:  continent.SEA,
 	RU:   continent.EUROPE,
 	SG2:  continent.SEA,
@@ -179,7 +173,6 @@ var regionToContinentAccountV1 = map[Region]continent.Continent{
 	ME1:  continent.EUROPE,
 	NA1:  continent.AMERICAS,
 	OC1:  continent.AMERICAS,
-	PBE:  continent.AMERICAS,
 	PH2:  continent.AMERICAS,
 	RU:   continent.ASIA,
 	SG2:  continent.ASIA,
