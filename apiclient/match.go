@@ -851,6 +851,7 @@ type MatchTimelineParticipantFrame struct {
 	ChampionStats            MatchTimelineChampionStats `json:"championStats"`
 	CurrentGold              int32                      `json:"currentGold"`
 	DamageStats              MatchTimelineDamageStats   `json:"damageStats"`
+	JungleMinionsKilled      int16                      `json:"jungleMinionsKilled"`
 	Level                    int16                      `json:"level"`
 	MinionsKilled            int16                      `json:"minionsKilled"`
 	ParticipantID            int16                      `json:"participantId"`
