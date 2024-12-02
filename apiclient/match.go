@@ -350,7 +350,7 @@ type MatchInfoParticipantChallenges struct {
 	TwentyMinionsIn3SecondsCount             int16   `json:"twentyMinionsIn3SecondsCount"`
 	TwoWardsOneSweeperCount                  int16   `json:"twoWardsOneSweeperCount"`
 	UnseenRecalls                            int16   `json:"unseenRecalls"`
-	VisionScorePerMinute                     float64 `json:"visionScorePerMinute"`
+	VisionScorePerMinute                     float32 `json:"visionScorePerMinute"`
 	VoidMonsterKill                          int16   `json:"voidMonsterKill"`
 	WardTakedowns                            int16   `json:"wardTakedowns"`
 	WardTakedownsBefore20M                   int16   `json:"wardTakedownsBefore20M"`
