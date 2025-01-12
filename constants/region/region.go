@@ -40,17 +40,11 @@ const (
 	// Oceania
 	OC1 Region = "OC1"
 
-	// Philippines
-	PH2 Region = "PH2"
-
 	// Russia
 	RU Region = "RU"
 
-	// Singapore
-	SG2 Region = "SG2"
-
-	// Thailand
-	TH2 Region = "TH2"
+	// Southeast Asia
+	SEA Region = "SG2"
 
 	// Turkey
 	TR1 Region = "TR1"
@@ -79,10 +73,9 @@ var stringToRegion = map[string]Region{
 	"ME":  ME1,
 	"NA":  NA1,
 	"OC":  OC1,
-	"PH":  PH2,
 	"RU":  RU,
-	"SG":  SG2,
-	"TH":  TH2,
+	"SEA": SEA,
+	"SG":  SEA,
 	"TR":  TR1,
 	"TW":  TW2,
 	"VN":  VN2,
@@ -122,10 +115,8 @@ var regionToHost = map[Region]string{
 	ME1:  "https://me1.api.riotgames.com",
 	NA1:  "https://na1.api.riotgames.com",
 	OC1:  "https://oc1.api.riotgames.com",
-	PH2:  "https://ph2.api.riotgames.com",
 	RU:   "https://ru.api.riotgames.com",
-	SG2:  "https://sg2.api.riotgames.com",
-	TH2:  "https://th2.api.riotgames.com",
+	SEA:  "https://sg2.api.riotgames.com",
 	TR1:  "https://tr1.api.riotgames.com",
 	TW2:  "https://tw2.api.riotgames.com",
 	VN2:  "https://vn2.api.riotgames.com",
@@ -147,10 +138,8 @@ var regionToContinentMatchV5 = map[Region]continent.Continent{
 	ME1:  continent.EUROPE,
 	NA1:  continent.AMERICAS,
 	OC1:  continent.SEA,
-	PH2:  continent.SEA,
 	RU:   continent.EUROPE,
-	SG2:  continent.SEA,
-	TH2:  continent.SEA,
+	SEA:  continent.SEA,
 	TR1:  continent.EUROPE,
 	TW2:  continent.SEA,
 	VN2:  continent.SEA,
@@ -173,10 +162,8 @@ var regionToContinentAccountV1 = map[Region]continent.Continent{
 	ME1:  continent.EUROPE,
 	NA1:  continent.AMERICAS,
 	OC1:  continent.AMERICAS,
-	PH2:  continent.AMERICAS,
 	RU:   continent.ASIA,
-	SG2:  continent.ASIA,
-	TH2:  continent.ASIA,
+	SEA:  continent.ASIA,
 	TR1:  continent.EUROPE,
 	TW2:  continent.ASIA,
 	VN2:  continent.ASIA,
