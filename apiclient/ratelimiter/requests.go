@@ -123,7 +123,11 @@ func (rl *RateLimiter) handleHTTPResponse(req *APIRequest, resp *http.Response, 
 func (rl *RateLimiter) handleRateLimitedResponse(resp *http.Response, regionLimiter *RateLimit, methodLimiter *RateLimit, retryRequest bool) {
 	retryAfterHeader := resp.Header.Get("Retry-After")
 	rateLimitTypeHeader := resp.Header.Get("X-Rate-Limit-Type")
-	retryAfter, _ := strconv.Atoi(retryAfterHeader)
+	retryAfter, err := strconv.Atoi(retryAfterHeader)
+	if err != nil {
+		retryAfter = 15
+	}
+
 	retryAfterDuration := time.Duration(retryAfter) * time.Second
 
 	if rateLimitTypeHeader == "application" {
@@ -177,9 +181,18 @@ func (rl *RateLimiter) updateRateLimit(methodID MethodID, limitInfo, countInfo s
 	limitSplit := strings.Split(limitInfo, ":")
 	countSplit := strings.Split(countInfo, ":")
 
-	limit, _ := strconv.Atoi(limitSplit[0])
-	limitTimeout, _ := strconv.Atoi(limitSplit[1])
-	count, _ := strconv.Atoi(countSplit[0])
+	limit, errLimit := strconv.Atoi(limitSplit[0])
+	limitTimeout, errTimeout := strconv.Atoi(limitSplit[1])
+	count, errCount := strconv.Atoi(countSplit[0])
+
+	if errLimit != nil || errTimeout != nil || errCount != nil {
+		if limitTimeout == 0 {
+			limitTimeout = 60
+		}
+
+		go limiterChannel.ReleaseAfterDelay(time.Duration(limitTimeout) * time.Second)
+		return
+	}
 
 	var limitWithConservation int = limit
 

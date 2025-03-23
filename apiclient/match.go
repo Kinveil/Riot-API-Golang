@@ -157,7 +157,6 @@ type MatchInfoParticipant struct {
 	MagicDamageDealt               int32                           `json:"magicDamageDealt"`
 	MagicDamageDealtToChampions    int32                           `json:"magicDamageDealtToChampions"`
 	MagicDamageTaken               int32                           `json:"magicDamageTaken"`
-	Missions                       *MatchInfoParticipantMissions   `json:"missions"`
 	NeedVisionPings                int16                           `json:"needVisionPings"`
 	NeutralMinionsKilled           int16                           `json:"neutralMinionsKilled"`
 	NexusKills                     int16                           `json:"nexusKills"`
@@ -355,21 +354,6 @@ type MatchInfoParticipantChallenges struct {
 	WardTakedowns                            int16   `json:"wardTakedowns"`
 	WardTakedownsBefore20M                   int16   `json:"wardTakedownsBefore20M"`
 	WardsGuarded                             int16   `json:"wardsGuarded"`
-}
-
-type MatchInfoParticipantMissions struct {
-	PlayerScore0  int16 `json:"playerScore0"`
-	PlayerScore1  int16 `json:"playerScore1"`
-	PlayerScore2  int16 `json:"playerScore2"`
-	PlayerScore3  int16 `json:"playerScore3"`
-	PlayerScore4  int16 `json:"playerScore4"`
-	PlayerScore5  int16 `json:"playerScore5"`
-	PlayerScore6  int16 `json:"playerScore6"`
-	PlayerScore7  int16 `json:"playerScore7"`
-	PlayerScore8  int16 `json:"playerScore8"`
-	PlayerScore9  int16 `json:"playerScore9"`
-	PlayerScore10 int16 `json:"playerScore10"`
-	PlayerScore11 int16 `json:"playerScore11"`
 }
 
 type MatchInfoParticipantPerks struct {
