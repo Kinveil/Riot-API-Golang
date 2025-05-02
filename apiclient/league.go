@@ -20,6 +20,7 @@ type LeagueList struct {
 
 type LeagueItem struct {
 	SummonerID   string      `json:"summonerId"`
+	Puuid        string      `json:"puuid"`
 	LeaguePoints int32       `json:"leaguePoints"`
 	Rank         rank.String `json:"rank"`
 	Wins         int32       `json:"wins"`
@@ -40,6 +41,7 @@ type LeagueEntry struct {
 	QueueType    queue_ranked.String `json:"queueType"`
 	Rank         rank.String         `json:"rank"`
 	SummonerID   string              `json:"summonerId"`
+	Puuid        string              `json:"puuid"`
 	Tier         tier.String         `json:"tier"`
 	Veteran      bool                `json:"veteran"`
 	Wins         int32               `json:"wins"`
@@ -78,5 +80,11 @@ func (c *uniqueClient) GetLeagueEntriesByID(r region.Region, leagueID string) (*
 func (c *uniqueClient) GetLeagueEntriesBySummonerID(r region.Region, summonerID string) ([]LeagueEntry, error) {
 	var res []LeagueEntry
 	err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries/by-summoner", fmt.Sprintf("/%s", summonerID), nil, ratelimiter.GetLeagueEntriesBySummonerID, &res)
+	return res, err
+}
+
+func (c *uniqueClient) GetLeagueEntriesByPuuid(r region.Region, puuid string) ([]LeagueEntry, error) {
+	var res []LeagueEntry
+	err := c.dispatchAndUnmarshal(r, "/lol/league/v4/entries/by-puuid", fmt.Sprintf("/%s", puuid), nil, ratelimiter.GetLeagueEntriesByPuuid, &res)
 	return res, err
 }

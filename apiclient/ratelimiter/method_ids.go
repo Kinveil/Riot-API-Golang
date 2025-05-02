@@ -38,6 +38,7 @@ const (
 	GetLeagueEntries             MethodID = "GetLeagueEntries"
 	GetLeagueEntriesByID         MethodID = "GetLeagueEntriesByID"
 	GetLeagueEntriesBySummonerID MethodID = "GetLeagueEntriesBySummonerID"
+	GetLeagueEntriesByPuuid      MethodID = "GetLeagueEntriesByPuuid"
 
 	// ----- LOL Challenges API -----
 	GetChallengesConfig              MethodID = "GetChallengesConfig"
