@@ -69,6 +69,7 @@ type Client interface {
 	GetLeagueEntries(region region.Region, q queue_ranked.String, tier tier.String, rank rank.String, page int) ([]LeagueEntry, error)
 	GetLeagueEntriesByID(region region.Region, leagueID string) (*LeagueList, error)
 	GetLeagueEntriesBySummonerID(region region.Region, summonerID string) ([]LeagueEntry, error)
+	GetLeagueEntriesByPuuid(region region.Region, puuid string) ([]LeagueEntry, error)
 
 	/* LOL Challenges API */
 
