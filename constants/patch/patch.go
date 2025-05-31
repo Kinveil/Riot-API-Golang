@@ -65,6 +65,21 @@ func (v Patch) ShortPatch() ShortPatch {
 	return ShortPatch(val)
 }
 
+// Season returns the major version (season) of the patch
+func (v Patch) Season() int {
+	parts := strings.Split(string(v), ".")
+	if len(parts) == 0 {
+		return 0
+	}
+
+	season, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0
+	}
+
+	return season
+}
+
 // Compare returns -1 if v < other, 0 if v == other, 1 if v > other
 func (v Patch) Compare(other Patch) int {
 	vParts := strings.Split(string(v), ".")
@@ -83,6 +98,23 @@ func (v Patch) Compare(other Patch) int {
 	}
 
 	return 0
+}
+
+// Season returns the major version (season) of the short patch
+func (v ShortPatch) Season() int {
+	// Convert to string and extract the part before the decimal
+	str := fmt.Sprintf("%.1f", float32(v))
+	parts := strings.Split(str, ".")
+	if len(parts) == 0 {
+		return 0
+	}
+
+	season, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0
+	}
+
+	return season
 }
 
 // Compare returns -1 if v < other, 0 if v == other, 1 if v > other
