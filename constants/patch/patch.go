@@ -2,6 +2,7 @@ package patch
 
 import (
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
 	"time"
@@ -23,6 +24,30 @@ func (v *ShortPatch) FromString(s string) error {
 	}
 	*v = ShortPatch(val)
 	return nil
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (v *ShortPatch) UnmarshalGQL(input any) error {
+	switch input := input.(type) {
+	case float64:
+		*v = ShortPatch(input)
+		return nil
+	case float32:
+		*v = ShortPatch(input)
+		return nil
+	case int:
+		*v = ShortPatch(input)
+		return nil
+	case string:
+		return v.FromString(input)
+	default:
+		return fmt.Errorf("cannot unmarshal %T into ShortPatch", input)
+	}
+}
+
+// MarshalGQL implements the graphql.Marshaler interface
+func (v ShortPatch) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, float32(v))
 }
 
 type Patch string
@@ -47,6 +72,21 @@ func (v *Patch) FromString(s string) error {
 
 	*v = Patch(s)
 	return nil
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (v *Patch) UnmarshalGQL(input any) error {
+	switch input := input.(type) {
+	case string:
+		return v.FromString(input)
+	default:
+		return fmt.Errorf("cannot unmarshal %T into Patch", input)
+	}
+}
+
+// MarshalGQL implements the graphql.Marshaler interface
+func (v Patch) MarshalGQL(w io.Writer) {
+	fmt.Fprintf(w, "%q", string(v))
 }
 
 // ShortPatch returns the short version of the patch (removes patch component)
