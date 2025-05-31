@@ -9,45 +9,26 @@ import (
 	"github.com/Kinveil/Riot-API-Golang/constants/region"
 )
 
-type ShortPatch struct {
-	Major int
-	Minor int
-}
+type ShortPatch float32
 
 func (v ShortPatch) String() string {
-	return fmt.Sprintf("%d.%d", v.Major, v.Minor)
+	return fmt.Sprintf("%.1f", float32(v))
 }
 
 // FromString creates a ShortPatch from a string like "13.2"
 func (v *ShortPatch) FromString(s string) error {
-	parts := strings.Split(s, ".")
-	if len(parts) != 2 {
+	val, err := strconv.ParseFloat(s, 32)
+	if err != nil {
 		return fmt.Errorf("invalid short patch format: %s", s)
 	}
-
-	major, err := strconv.Atoi(parts[0])
-	if err != nil {
-		return err
-	}
-
-	minor, err := strconv.Atoi(parts[1])
-	if err != nil {
-		return err
-	}
-
-	v.Major = major
-	v.Minor = minor
+	*v = ShortPatch(val)
 	return nil
 }
 
-type Patch struct {
-	Major int
-	Minor int
-	Patch int
-}
+type Patch string
 
 func (v Patch) String() string {
-	return fmt.Sprintf("%d.%d.%d", v.Major, v.Minor, v.Patch)
+	return string(v)
 }
 
 // FromString creates a Patch from a string like "13.2.1"
@@ -57,56 +38,48 @@ func (v *Patch) FromString(s string) error {
 		return fmt.Errorf("invalid patch format: %s", s)
 	}
 
-	major, err := strconv.Atoi(parts[0])
-	if err != nil {
-		return err
+	// Validate each part is a number
+	for _, part := range parts {
+		if _, err := strconv.Atoi(part); err != nil {
+			return fmt.Errorf("invalid patch format: %s", s)
+		}
 	}
 
-	minor, err := strconv.Atoi(parts[1])
-	if err != nil {
-		return err
-	}
-
-	patch, err := strconv.Atoi(parts[2])
-	if err != nil {
-		return err
-	}
-
-	v.Major = major
-	v.Minor = minor
-	v.Patch = patch
+	*v = Patch(s)
 	return nil
 }
 
 // ShortPatch returns the short version of the patch (removes patch component)
 func (v Patch) ShortPatch() ShortPatch {
-	return ShortPatch{
-		Major: v.Major,
-		Minor: v.Minor,
+	parts := strings.Split(string(v), ".")
+	if len(parts) < 2 {
+		return ShortPatch(0)
 	}
+
+	shortStr := parts[0] + "." + parts[1]
+	val, err := strconv.ParseFloat(shortStr, 32)
+	if err != nil {
+		return ShortPatch(0)
+	}
+
+	return ShortPatch(val)
 }
 
 // Compare returns -1 if v < other, 0 if v == other, 1 if v > other
 func (v Patch) Compare(other Patch) int {
-	if v.Major != other.Major {
-		if v.Major < other.Major {
-			return -1
-		}
-		return 1
-	}
+	vParts := strings.Split(string(v), ".")
+	otherParts := strings.Split(string(other), ".")
 
-	if v.Minor != other.Minor {
-		if v.Minor < other.Minor {
-			return -1
-		}
-		return 1
-	}
+	for i := 0; i < 3; i++ {
+		vNum, _ := strconv.Atoi(vParts[i])
+		otherNum, _ := strconv.Atoi(otherParts[i])
 
-	if v.Patch != other.Patch {
-		if v.Patch < other.Patch {
+		if vNum < otherNum {
 			return -1
 		}
-		return 1
+		if vNum > otherNum {
+			return 1
+		}
 	}
 
 	return 0
@@ -114,20 +87,12 @@ func (v Patch) Compare(other Patch) int {
 
 // Compare returns -1 if v < other, 0 if v == other, 1 if v > other
 func (v ShortPatch) Compare(other ShortPatch) int {
-	if v.Major != other.Major {
-		if v.Major < other.Major {
-			return -1
-		}
+	if v < other {
+		return -1
+	}
+	if v > other {
 		return 1
 	}
-
-	if v.Minor != other.Minor {
-		if v.Minor < other.Minor {
-			return -1
-		}
-		return 1
-	}
-
 	return 0
 }
 
