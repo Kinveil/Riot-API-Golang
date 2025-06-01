@@ -43,8 +43,13 @@ func GetPatchesWithStartTime() (PatchesWithStartTime, error) {
 
 	var patches PatchesWithStartTime
 	for _, p := range res.Patches {
+		nsp, err := patch.NewShortPatchFromString(p.Name)
+		if err != nil {
+			return nil, err
+		}
+
 		patches = append(patches, patch.PatchWithStartTime{
-			Patch:     patch.ShortPatch(p.Name),
+			Patch:     nsp,
 			StartTime: time.Unix(int64(p.Start), 0),
 			Shifts:    res.Shifts,
 		})
